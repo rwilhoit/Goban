@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+
 
 @interface GobanViewController : UIViewController
+
+-(void)playStone;
+-(void)score;
+-(BOOL *)checkKo;
 
 @end

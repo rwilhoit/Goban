@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35C8733616F7D31000A828B9 /* Goban.png in Resources */ = {isa = PBXBuildFile; fileRef = 35C8733516F7D31000A828B9 /* Goban.png */; };
+		35C8733816F7EE6600A828B9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C8733716F7EE6600A828B9 /* QuartzCore.framework */; };
+		35C8733B16F8197700A828B9 /* Goban.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C8733A16F8197700A828B9 /* Goban.m */; };
+		35C8733E16F8218900A828B9 /* Stone.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C8733D16F8218800A828B9 /* Stone.m */; };
 		35CCC7A816F6A3500012D577 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CCC7A716F6A3500012D577 /* UIKit.framework */; };
 		35CCC7AA16F6A3500012D577 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CCC7A916F6A3500012D577 /* Foundation.framework */; };
 		35CCC7AC16F6A3500012D577 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CCC7AB16F6A3500012D577 /* CoreGraphics.framework */; };
@@ -21,6 +25,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		35C8733516F7D31000A828B9 /* Goban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Goban.png; path = ../../../Desktop/Goban.png; sourceTree = "<group>"; };
+		35C8733716F7EE6600A828B9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		35C8733916F8197700A828B9 /* Goban.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Goban.h; sourceTree = "<group>"; };
+		35C8733A16F8197700A828B9 /* Goban.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Goban.m; sourceTree = "<group>"; };
+		35C8733C16F8218800A828B9 /* Stone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stone.h; sourceTree = "<group>"; };
+		35C8733D16F8218800A828B9 /* Stone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stone.m; sourceTree = "<group>"; };
 		35CCC7A416F6A3500012D577 /* Goban.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Goban.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35CCC7A716F6A3500012D577 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		35CCC7A916F6A3500012D577 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -44,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35C8733816F7EE6600A828B9 /* QuartzCore.framework in Frameworks */,
 				35CCC7A816F6A3500012D577 /* UIKit.framework in Frameworks */,
 				35CCC7AA16F6A3500012D577 /* Foundation.framework in Frameworks */,
 				35CCC7AC16F6A3500012D577 /* CoreGraphics.framework in Frameworks */,
@@ -73,6 +84,7 @@
 		35CCC7A616F6A3500012D577 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				35C8733716F7EE6600A828B9 /* QuartzCore.framework */,
 				35CCC7A716F6A3500012D577 /* UIKit.framework */,
 				35CCC7A916F6A3500012D577 /* Foundation.framework */,
 				35CCC7AB16F6A3500012D577 /* CoreGraphics.framework */,
@@ -83,6 +95,10 @@
 		35CCC7AD16F6A3500012D577 /* Goban */ = {
 			isa = PBXGroup;
 			children = (
+				35C8733916F8197700A828B9 /* Goban.h */,
+				35C8733A16F8197700A828B9 /* Goban.m */,
+				35C8733C16F8218800A828B9 /* Stone.h */,
+				35C8733D16F8218800A828B9 /* Stone.m */,
 				35CCC7B616F6A3500012D577 /* GobanAppDelegate.h */,
 				35CCC7B716F6A3500012D577 /* GobanAppDelegate.m */,
 				35CCC7BF16F6A3500012D577 /* MainStoryboard.storyboard */,
@@ -96,6 +112,7 @@
 		35CCC7AE16F6A3500012D577 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				35C8733516F7D31000A828B9 /* Goban.png */,
 				35CCC7AF16F6A3500012D577 /* Goban-Info.plist */,
 				35CCC7B016F6A3500012D577 /* InfoPlist.strings */,
 				35CCC7B316F6A3500012D577 /* main.m */,
@@ -164,6 +181,7 @@
 				35CCC7BC16F6A3500012D577 /* Default@2x.png in Resources */,
 				35CCC7BE16F6A3500012D577 /* Default-568h@2x.png in Resources */,
 				35CCC7C116F6A3500012D577 /* MainStoryboard.storyboard in Resources */,
+				35C8733616F7D31000A828B9 /* Goban.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,6 +195,8 @@
 				35CCC7B416F6A3500012D577 /* main.m in Sources */,
 				35CCC7B816F6A3500012D577 /* GobanAppDelegate.m in Sources */,
 				35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */,
+				35C8733B16F8197700A828B9 /* Goban.m in Sources */,
+				35C8733E16F8218900A828B9 /* Stone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +321,7 @@
 				35CCC7C916F6A3500012D577 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
