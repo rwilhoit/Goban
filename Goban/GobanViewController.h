@@ -16,4 +16,6 @@
 -(void)score;
 -(BOOL *)checkKo;
 
+- (IBAction)genericButton:(id)sender;
+
 @end

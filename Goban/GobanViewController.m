@@ -55,4 +55,8 @@
     return NO;
 }
 
+- (IBAction)genericButton:(id)sender {
+    NSLog(@"Touched button");
+}
+
 @end

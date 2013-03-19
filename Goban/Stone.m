@@ -9,7 +9,7 @@
 #import "Stone.h"
 
 @implementation Stone
-@synthesize stone;
+@synthesize stone, image;
 
 -(id)init:(NSNumber *) goStone
 {

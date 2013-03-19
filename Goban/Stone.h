@@ -10,9 +10,11 @@
 
 @interface Stone : NSObject {
     NSNumber *color;
+    UIImageView *image;
 }
 
 @property (weak, nonatomic) NSNumber *stone;
+@property (nonatomic, retain) UIImageView *image;
 
 -(CALayer *)drawStone;
 
