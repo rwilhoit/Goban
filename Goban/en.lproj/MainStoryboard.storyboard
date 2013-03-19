@@ -11,40 +11,14 @@
                     <view key="view" contentMode="scaleToFill" id="60Q-5M-rDU">
                         <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vCo-It-kOF">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="genericButton:" destination="2" eventType="touchDown" id="qtS-tk-Ou8"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="vCo-It-kOF" firstAttribute="top" secondItem="60Q-5M-rDU" secondAttribute="top" constant="436" id="HH0-XR-IE2"/>
-                            <constraint firstItem="vCo-It-kOF" firstAttribute="centerX" secondItem="60Q-5M-rDU" secondAttribute="centerX" type="default" id="JKA-sO-4Vp"/>
-                        </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Goban Version 1.0" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
-                        <barButtonItem key="leftBarButtonItem" title="New Game" id="uka-SX-zvc">
-                            <connections>
-                                <action selector="What:" destination="2" id="isF-5K-jHk"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="leftBarButtonItem" title="New Game" id="J3k-Oq-RzW"/>
                         <barButtonItem key="rightBarButtonItem" title="Pass" id="hEf-w3-Lmb"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="newGameButton" destination="uka-SX-zvc" id="fAf-UN-Szc"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
@@ -72,12 +46,6 @@
     <classes>
         <class className="GobanViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GobanViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="genericButton:"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

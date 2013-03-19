@@ -9,9 +9,9 @@
 #import "Stone.h"
 
 @implementation Stone
-@synthesize stone, image;
+@synthesize stone;//image;
 
--(id)init:(NSNumber *) goStone
+-(id)init:(NSNumber *)goStone
 {
     if (self = [super init])
     {

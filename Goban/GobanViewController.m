@@ -49,14 +49,10 @@
     NSLog(@"Called score");
 }
 
--(BOOL *)checkKo
+/*-(BOOL *)checkKo
 {
     NSLog(@"Called checkKo");
     return NO;
-}
-
-- (IBAction)genericButton:(id)sender {
-    NSLog(@"Touched button");
-}
+} */
 
 @end

@@ -14,8 +14,6 @@
 
 -(void)playStone;
 -(void)score;
--(BOOL *)checkKo;
-
-- (IBAction)genericButton:(id)sender;
+//-(BOOL *)checkKo;
 
 @end
