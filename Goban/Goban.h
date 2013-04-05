@@ -11,6 +11,7 @@
 
 @interface Goban : NSObject {
     NSMutableArray *goban;
+    NSString *lastMove;
     int whiteStones;
     int blackStones;
     int capturedBlackStones;
@@ -18,10 +19,11 @@
 }
 
 @property (nonatomic, retain) NSMutableArray *goban;
+@property (nonatomic, retain) NSString *lastMove;
 @property (nonatomic) int whiteStones;
 
 -(id)init:(NSMutableArray *) goban;
 - (void)printBoardToConsole;
-
+- (BOOL)isLegalMove:(NSString*)newMove;
 
 @end

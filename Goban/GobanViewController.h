@@ -13,8 +13,9 @@
 #define ROW_LENGTH 19
 #define COLUMN_LENGTH 19
 
-
-@interface GobanViewController : UIViewController
+@interface GobanViewController : UIViewController {
+    BOOL isBlacksTurn;
+}
 
 -(void)playStone;
 -(void)score;

@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.h"
-         timestampString = "386826752.157788"
+         timestampString = "386874332.819664"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "24"
-         endingLineNumber = "24"
+         startingLineNumber = "25"
+         endingLineNumber = "25"
          landmarkName = "@interface GobanViewController"
          landmarkType = "2">
       </FileBreakpoint>
@@ -21,13 +21,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.h"
-         timestampString = "386826752.923569"
+         timestampString = "386874332.819664"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "25"
-         endingLineNumber = "25"
-         landmarkName = "goStone"
-         landmarkType = "19">
+         startingLineNumber = "27"
+         endingLineNumber = "27"
+         landmarkName = "@interface GobanViewController"
+         landmarkType = "2">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

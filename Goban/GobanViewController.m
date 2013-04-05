@@ -33,50 +33,33 @@ Goban *goBoard;
     
     //Populate the goBoard populate it
     goBoard = [[Goban alloc] init];
-/*    goBoard.goban = [NSMutableArray arrayWithObjects:
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
-                     @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ "
-                     ,nil];
-*/
+
     goBoard.goban = [NSMutableArray arrayWithObjects:
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil],
-                     [NSMutableArray arrayWithObjects:@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",nil], nil];
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                     [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
     
      [goBoard printBoardToConsole];
+    
+    //Set it to black's term
+    isBlacksTurn = YES;
+    
      [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 }
@@ -92,25 +75,45 @@ Goban *goBoard;
     NSLog(@"Called score");
 }
 
-/*-(BOOL *)checkKo
+-(BOOL *)checkKo
 {
     NSLog(@"Called checkKo");
     return NO;
-} */
+} 
 
 
 - (IBAction)playStone:(id)sender
 {
-    NSLog(@" The button's title is %@.", ((UIButton *)sender).currentTitle);
+    NSString *newMove = ((UIButton *)sender).currentTitle;
+    NSLog(@" The button's title is %@.", newMove);
     
     //Get specific coordinates from title
-    NSArray *coordinateArray = [((UIButton *)sender).currentTitle componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
-    NSLog(@"Row coordingate: %@", coordinateArray[0]);
-    NSLog(@"Columns coordinate: %@", coordinateArray[1]);
+    NSArray *coordinateArray = [newMove componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
+    int rowValue = [coordinateArray[0] integerValue];
+    int columnValue = [coordinateArray[1] integerValue];
+    NSLog(@"Row coordingate: %d", rowValue);
+    NSLog(@"Columns coordinate: %d", columnValue);
     
-    //Alter array
-    goBoard.goban[[coordinateArray[0] integerValue]][[coordinateArray[1] integerValue]] = @"x ";
-                                                     
+    
+    //Check if new move is legal
+    if([goBoard isLegalMove:newMove])
+    {
+        if(isBlacksTurn)
+        {
+            NSLog(@"Played black's turn");
+            goBoard.goban[rowValue][columnValue] = @"B";
+            NSLog(@"Set to white's turn");
+            isBlacksTurn = NO;
+        }
+        else
+        {
+            NSLog(@"Played white's turn");
+            goBoard.goban[rowValue][columnValue] = @"W";
+            NSLog(@"Set to black's turn");
+            isBlacksTurn = YES;
+        }
+    }
+    
     //Print results
     [goBoard printBoardToConsole];
 }
