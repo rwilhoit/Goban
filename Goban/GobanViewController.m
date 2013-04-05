@@ -15,6 +15,8 @@
 
 @implementation GobanViewController
 
+Goban *goBoard;
+
 - (void)viewDidLoad
 {
     // Add the main view image
@@ -29,8 +31,8 @@
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
     
-    //initialize the Go board and populate it
-    Goban *goBoard = [[Goban alloc] init];
+    //Populate the goBoard populate it
+    goBoard = [[Goban alloc] init];
 /*    goBoard.goban = [NSMutableArray arrayWithObjects:
                      @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
                      @"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",@"+ ",
@@ -99,8 +101,18 @@
 
 - (IBAction)playStone:(id)sender
 {
-    NSLog(@"Pressed button");
-    //NSLog(@"Title: %@", self.title);
+    NSLog(@" The button's title is %@.", ((UIButton *)sender).currentTitle);
+    
+    //Get specific coordinates from title
+    NSArray *coordinateArray = [((UIButton *)sender).currentTitle componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
+    NSLog(@"Row coordingate: %@", coordinateArray[0]);
+    NSLog(@"Columns coordinate: %@", coordinateArray[1]);
+    
+    //Alter array
+    goBoard.goban[[coordinateArray[0] integerValue]][[coordinateArray[1] integerValue]] = @"x ";
+                                                     
+    //Print results
+    [goBoard printBoardToConsole];
 }
 
 @end

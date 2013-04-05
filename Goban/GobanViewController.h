@@ -18,12 +18,11 @@
 
 -(void)playStone;
 -(void)score;
-//-(BOOL *)checkKo;
-@property (strong, nonatomic) IBOutlet UIButton *middleButton;
+
 - (IBAction)hideButton:(id)sender;
+- (IBAction)playStone:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIButton *goStone;
 
-- (IBAction)playStone:(id)sender;
 
 @end
