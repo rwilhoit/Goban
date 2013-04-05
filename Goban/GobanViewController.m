@@ -100,15 +100,27 @@ Goban *goBoard;
     {
         if(isBlacksTurn)
         {
+            //Play black's turn
             NSLog(@"Played black's turn");
             goBoard.goban[rowValue][columnValue] = @"B";
+
+            //Check the life of adjacent pieces of the opposite color
+            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForCoordinateValue:columnValue];
+            
+            //Set to white's turn
             NSLog(@"Set to white's turn");
             isBlacksTurn = NO;
         }
         else
         {
+            //Play white's turn
             NSLog(@"Played white's turn");
             goBoard.goban[rowValue][columnValue] = @"W";
+            
+            //Check the life of adjacent pieces of the opposite color
+            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForCoordinateValue:columnValue];
+            
+            //Set to black's turn
             NSLog(@"Set to black's turn");
             isBlacksTurn = YES;
         }

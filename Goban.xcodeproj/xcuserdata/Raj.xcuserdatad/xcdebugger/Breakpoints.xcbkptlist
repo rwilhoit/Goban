@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.h"
-         timestampString = "386874332.819664"
+         timestampString = "386893859.461937"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "25"
-         endingLineNumber = "25"
+         startingLineNumber = "22"
+         endingLineNumber = "22"
          landmarkName = "@interface GobanViewController"
          landmarkType = "2">
       </FileBreakpoint>
@@ -21,13 +21,39 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.h"
-         timestampString = "386874332.819664"
+         timestampString = "386893859.461937"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "27"
-         endingLineNumber = "27"
+         startingLineNumber = "24"
+         endingLineNumber = "24"
          landmarkName = "@interface GobanViewController"
          landmarkType = "2">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Goban/GobanViewController.m"
+         timestampString = "386892287.298231"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "108"
+         endingLineNumber = "108"
+         landmarkName = "-playStone:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Goban/Goban.m"
+         timestampString = "386894990.853759"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "64"
+         endingLineNumber = "64"
+         landmarkName = "-isLegalMove:"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

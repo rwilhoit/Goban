@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GobanViewController.h"
+#define BOARD_SIZE 361
+#define ROW_LENGTH 18
+#define COLUMN_LENGTH 18
 
 @interface Goban : NSObject {
     NSMutableArray *goban;
@@ -23,7 +25,12 @@
 @property (nonatomic) int whiteStones;
 
 -(id)init:(NSMutableArray *) goban;
-- (void)printBoardToConsole;
-- (BOOL)isLegalMove:(NSString*)newMove;
+-(void)printBoardToConsole;
+-(BOOL)isLegalMove:(NSString*)newMove;
+-(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
+-(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
+-(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
+
+
 
 @end

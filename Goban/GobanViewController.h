@@ -9,9 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "Goban.h"
-#define BOARD_SIZE 361
-#define ROW_LENGTH 19
-#define COLUMN_LENGTH 19
 
 @interface GobanViewController : UIViewController {
     BOOL isBlacksTurn;
