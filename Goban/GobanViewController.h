@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import "Goban.h"
+#define BOARD_SIZE 361
+#define ROW_LENGTH 19
+#define COLUMN_LENGTH 19
 
 
 @interface GobanViewController : UIViewController
@@ -15,5 +19,11 @@
 -(void)playStone;
 -(void)score;
 //-(BOOL *)checkKo;
+@property (strong, nonatomic) IBOutlet UIButton *middleButton;
+- (IBAction)hideButton:(id)sender;
+
+@property (strong, nonatomic) IBOutlet UIButton *goStone;
+
+- (IBAction)playStone:(id)sender;
 
 @end

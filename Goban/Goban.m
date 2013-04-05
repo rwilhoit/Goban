@@ -10,6 +10,7 @@
 
 @implementation Goban
 @synthesize goban;
+@synthesize whiteStones;
 
 -(id)init:(NSMutableArray *) goBoard
 {
@@ -23,6 +24,23 @@
 -(id)init
 {
     return [super init];
+}
+
+-(void)printBoardToConsole{
+    NSMutableString *printRow = [[NSMutableString alloc] init];
+    [printRow appendString:@"\n"];
+    for(int i=0;i<COLUMN_LENGTH-1; i++)
+    {
+        for(int j=0; j<ROW_LENGTH-1; j++)
+        {
+            [printRow appendString:self.goban[j][i]];
+        }
+        [printRow appendString:@"\n"];
+    }
+    
+    NSLog(@"%@", printRow);
+
+    
 }
 
 @end
