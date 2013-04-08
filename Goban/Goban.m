@@ -48,7 +48,9 @@
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
 {
     if(rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH)
+    {
         return NO;
+    }
     return YES;
 }
 
@@ -108,24 +110,406 @@
     //Check right
     if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:opponentColor])
     {
+        NSLog(@"Checking right enemy stone");
         [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
     }
     //Check left
     if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:opponentColor])
     {
+        NSLog(@"Checking left enemy stone");
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
     //Check up
     if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:opponentColor])
     {
+        NSLog(@"Checking up enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
     //Check down
     if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:opponentColor])
     {
+        NSLog(@"Checking down enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
     }
-
 }
+
+-(BOOL)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue
+{
+    //It is already implied that if we are at this point in the code, then the piece at the given location is a valid piece
+    
+    //Figure out what is an enemy color and what is an ally piece
+    NSString *allyColor = [[NSString alloc] init];
+    NSString *enemyColor = [[NSString alloc] init];
+    allyColor = self.goban[rowValue][columnValue];
+    if([allyColor isEqualToString:@"B"])
+    {
+        enemyColor = @"W";
+    }
+    else
+    {
+        enemyColor = @"B";
+    }
+    
+    /*
+    //Check if there are any free spaces, because then we can return immediately
+    //Check right for free spaces
+    if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
+    {
+        NSLog(@"Still alive!");
+        return YES;
+    }
+    //Check left for free spaces
+    if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
+    {
+        NSLog(@"Still alive!");
+        return YES;
+    }
+    //Check up for free spaces
+    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
+    {
+        NSLog(@"Still alive!");
+        return YES;
+    }
+    //Check down for free spaces
+    if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
+    {
+        NSLog(@"Still alive!");
+        return YES;
+    }
+    
+    //Check if each of the four adjacent locations are enemy pieces or if they are out of bounds
+    //Check right for enemy pieces or walls
+    if(![self isInBounds:(rowValue+1) andForColumnValue:columnValue] || [self.goban[rowValue+1][columnValue] isEqualToString:enemyPiece])
+    {
+        numberOfLiberties--;
+    }
+    //Check left for enemy pieces or walls
+    if(![self isInBounds:(rowValue-1) andForColumnValue:columnValue] || [self.goban[rowValue-1][columnValue] isEqualToString:enemyPiece])
+    {
+        numberOfLiberties--;
+    }
+    //Check up for enemy pieces or walls
+    if(![self isInBounds:rowValue andForColumnValue:(columnValue+1)] || [self.goban[rowValue][columnValue+1] isEqualToString:enemyPiece])
+    {
+        numberOfLiberties--;
+    }
+    //Check down for enemy pieces or walls
+    if(![self isInBounds:rowValue andForColumnValue:(columnValue-1)] || [self.goban[rowValue][columnValue-1] isEqualToString:enemyPiece])
+    {
+        numberOfLiberties--;
+    }
+    
+    if(numberOfLiberties > 0)
+    {
+        //Check for ally pieces
+    }
+    else
+    {
+        //Kill piece!
+    } */
+    
+    //You can easily check the life of a piece by looking for any existing liberties.
+    //Implement this using a breadth-first search.
+    
+    //Algorithmic Steps
+    //Step 1: Push the root node in the Queue.
+    //Step 2: Loop until the queue is empty.
+    //Step 3: Remove the node from the Queue.
+    //Step 4: If the removed node has unvisited child nodes, mark them as visited and insert the unvisited children in the queue.
+    
+    /*
+     1  procedure BFS(G,v):
+     2      create a queue Q
+     3      enqueue v onto Q
+     4      mark v
+     5      while Q is not empty:
+     6          t ← Q.dequeue()
+     7          if t is what we are looking for:
+     8              return t
+     9          for all edges e in G.adjacentEdges(t) do
+     12             u ← G.adjacentVertex(t,e)
+     13             if u is not marked:
+     14                  mark u
+     15                  enqueue u onto Q
+     16     return none
+     */
+    
+    //1. Need searched coordinates (need to actually check location)
+    //Follow these rules:
+        //1. Each opposite color is a vertex
+        //2. Any adjacent + is a goal.
+        //3. When all adjacent W's are visited, then the group is dead
+    
+    
+    // BFS Algorithm:
+    // 1. Mark the root as visited.
+    // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
+    // 3. Add all adjacent nodes (stones of the same color) to the root to the end of the queue
+        
+    // When we've finished all the vertices adjacent to the root then
+    // 1. Pick the vertex at the head of the queue
+    // 2. Dequeue the vertex at the head of the queue
+    // 3. Mark all unvisited vertices as visited and check for free spaces around the current node, ending if one is found.
+    // 4. Add them to the end of the queue
+       
+    
+    //WILL THERE EVER BE A POINT WEHERE THE QUEUE IS EMPTY BECAUSE THERE IS NO WHERE ELSE TO SEARCH AND THAT SCREWS THINGS UP?
+    
+    //Put the coordinates in a point and then add the point to the queue and visited nodes list
+    Stone *vertex = [[Stone alloc] init];
+    [vertex setColumnValue:columnValue];
+    [vertex setRowValue:rowValue];
+    NSLog(@"Set column value to: %d", vertex.columnValue);
+    NSLog(@"Set row value to: %d", vertex.rowValue);
+        
+    //Push the root node into the queue (I don't actually think this is how you do it)
+    // 1. Mark the root as visited.
+    //NSMutableArray *queue = [NSMutableArray arrayWithObject:vertex];
+    NSMutableArray *queue = [[NSMutableArray alloc] init];
+    NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
+    
+    NSString *goal = @"+";
+    
+    // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
+    //Check all spots around where the vertex is
+    
+    //Check spot to the right of vertex
+    if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue])
+    {        
+        //If it is an ally color, add it to the visited queue and the actual queue
+        if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
+        {
+            //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
+            //Create a new point and insert it into the queue
+            Stone *point = [[Stone alloc] init];
+            [point setRowValue:vertex.rowValue+1];
+            [point setColumnValue:vertex.columnValue];
+
+            //Mark the object as visited and insert it to the end of the visited queue
+            [visitedNodes addObject:point];
+            //Insert the object into the end of the queue
+            [queue addObject:point];
+        }
+        //If it is a free space then we're done!
+        else if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:goal])
+        {
+            //We have found a free space, so remove all objects from the queue
+            [queue removeAllObjects];
+            NSLog(@"Stone or stone cluster is alive");            
+        }
+        else
+        {
+            //If it is an ally piece, then what do we do?
+        }
+    }
+    //Check spot to the left of the vertex
+    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+    {
+        //If it is an ally color, add it to the visited queue and the actual queue
+        if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
+        {
+            //Create a new point and insert it into the queue
+            Stone *point = [[Stone alloc] init];
+            [point setRowValue:vertex.rowValue-1];
+            [point setColumnValue:vertex.columnValue];
+            
+            //Mark the object as visited and insert it to the end of the visited queue
+            [visitedNodes addObject:point];
+            //Insert the object into the end of the queue
+            [queue addObject:point];
+        }
+        else if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:goal])
+        {
+            //We have found a free space, so remove all objects from the queue
+            [queue removeAllObjects];
+            NSLog(@"Stone or stone cluster is alive");            
+        }
+        else
+        {
+            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+        }
+    }
+    //Check spot above the vertex
+    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0)
+    {
+        //If it is an ally color, add it to the visited queue and the actual queue
+        if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
+        {
+            //Create a new point and insert it into the queue
+            Stone *point = [[Stone alloc] init];
+            [point setRowValue:vertex.rowValue];
+            [point setColumnValue:vertex.columnValue+1];
+            
+            //Mark the object as visited and insert it to the end of the visited queue
+            [visitedNodes addObject:point];
+            //Insert the object into the end of the queue
+            [queue addObject:point];
+        }
+        else if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:goal])
+        {
+            //We have found a free space, so remove all objects from the queue
+            [queue removeAllObjects];
+            NSLog(@"Stone or stone cluster is alive");            
+        }
+        else
+        {
+            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+        }
+    }
+    //Check the spot below the vertex
+    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0)
+    {
+        //If it is an ally color, add it to the visited queue and the actual queue
+        if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
+        {
+            //Create a new point and insert it into the queue
+            Stone *point = [[Stone alloc] init];
+            [point setRowValue:vertex.rowValue];
+            [point setColumnValue:vertex.columnValue-1];
+            
+            //Mark the object as visited and insert it to the end of the visited queue
+            [visitedNodes addObject:point];
+            //Insert the object into the end of the queue
+            [queue addObject:point];
+        }
+        else if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:goal])
+        {
+            //We have found a free space, so remove all objects from the queue
+            [queue removeAllObjects];
+            NSLog(@"Stone or stone cluster is alive");            
+        }
+        else
+        {
+            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+        }
+    }
+    
+    //Loop until the queue is empty
+    while([queue count] > 0) 
+    {
+        // 1. Pick the vertex at the head of the queue
+        Stone *topOfQueue = queue[0];
+        vertex.rowValue = topOfQueue.rowValue;
+        vertex.columnValue = topOfQueue.columnValue;
+        
+        // 2. Dequeue the vertex at the head of the queue, syntax: - (void)removeObjectAtIndex:(NSUInteger)index
+        [queue removeObjectAtIndex:0];
+        
+        // 3. Mark all unvisited vertices as visited and check for free spaces around the current node, ending if one is found.
+        //Check spot to the right of vertex
+        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+        {
+            //If it is an ally color, add it to the visited queue and the actual queue
+            if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
+            {
+                //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
+                //Create a new point and insert it into the queue
+                Stone *point = [[Stone alloc] init];
+                [point setRowValue:vertex.rowValue+1];
+                [point setColumnValue:vertex.columnValue];
+                
+                //Mark the object as visited and insert it to the end of the visited queue
+                [visitedNodes addObject:point];
+                //Insert the object into the end of the queue
+                [queue addObject:point];
+            }
+            //If it is a free space then we're done!
+            else if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:goal])
+            {
+                //We have found a free space, so remove all objects from the queue
+                [queue removeAllObjects];
+                NSLog(@"Stone or stone cluster is alive");                
+            }
+            else
+            {
+                //If it is an ally piece, then what do we do?
+            }
+        }
+        //Check spot to the left of the vertex
+        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+        {
+            //If it is an ally color, add it to the visited queue and the actual queue
+            if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
+            {
+                //Create a new point and insert it into the queue
+                Stone *point = [[Stone alloc] init];
+                [point setRowValue:vertex.rowValue-1];
+                [point setColumnValue:vertex.columnValue];
+                
+                //Mark the object as visited and insert it to the end of the visited queue
+                [visitedNodes addObject:point];
+                //Insert the object into the end of the queue
+                [queue addObject:point];
+            }
+            else if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:goal])
+            {
+                //We have found a free space, so remove all objects from the queue
+                [queue removeAllObjects];
+                NSLog(@"Stone or stone cluster is alive");                
+            }
+            else
+            {
+                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            }
+        }
+        //Check spot above the vertex
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0)
+        {
+            //If it is an ally color, add it to the visited queue and the actual queue
+            if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
+            {
+                //Create a new point and insert it into the queue
+                Stone *point = [[Stone alloc] init];
+                [point setRowValue:vertex.rowValue];
+                [point setColumnValue:vertex.columnValue+1];
+                
+                //Mark the object as visited and insert it to the end of the visited queue
+                [visitedNodes addObject:point];
+                //Insert the object into the end of the queue
+                [queue addObject:point];
+            }
+            else if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:goal])
+            {
+                //We have found a free space, so remove all objects from the queue
+                [queue removeAllObjects];
+                NSLog(@"Stone or stone cluster is alive");
+            }
+            else
+            {
+                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            }
+        }
+        //Check the spot below the vertex
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0)
+        {
+            //If it is an ally color, add it to the visited queue and the actual queue
+            if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
+            {
+                //Create a new point and insert it into the queue
+                Stone *point = [[Stone alloc] init];
+                [point setRowValue:vertex.rowValue];
+                [point setColumnValue:vertex.columnValue-1];
+                
+                //Mark the object as visited and insert it to the end of the visited queue
+                [visitedNodes addObject:point];
+                //Insert the object into the end of the queue
+                [queue addObject:point];
+            }
+            else if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:goal])
+            {
+                //We have found a free space, so remove all objects from the queue
+                [queue removeAllObjects];
+                NSLog(@"Stone or stone cluster is alive");
+            }
+            else
+            {
+                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            }
+        }
+    }
+    
+    //Probably something needs to be done here
+}
+
 
 @end

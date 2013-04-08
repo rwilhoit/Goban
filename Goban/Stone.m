@@ -9,7 +9,9 @@
 #import "Stone.h"
 
 @implementation Stone
-@synthesize stone;//image;
+@synthesize stone;
+@synthesize rowValue;
+@synthesize columnValue;
 
 -(id)init:(NSNumber *)goStone
 {

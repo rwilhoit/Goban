@@ -15,6 +15,7 @@
 
 @implementation GobanViewController
 
+//Go board declared as a global variable
 Goban *goBoard;
 
 - (void)viewDidLoad
@@ -31,7 +32,7 @@ Goban *goBoard;
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
     
-    //Populate the goBoard populate it
+    //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
 
     goBoard.goban = [NSMutableArray arrayWithObjects:
@@ -105,7 +106,7 @@ Goban *goBoard;
             goBoard.goban[rowValue][columnValue] = @"B";
 
             //Check the life of adjacent pieces of the opposite color
-            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForCoordinateValue:columnValue];
+            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
@@ -118,7 +119,7 @@ Goban *goBoard;
             goBoard.goban[rowValue][columnValue] = @"W";
             
             //Check the life of adjacent pieces of the opposite color
-            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForCoordinateValue:columnValue];
+            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Set to black's turn
             NSLog(@"Set to black's turn");

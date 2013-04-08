@@ -4,17 +4,18 @@
 //
 //  Created by Raj Wilhoit on 3/19/13.
 //  Copyright (c) 2013 UF.rajwilhoit. All rights reserved.
-//
+//  (Essentially this is just a point class)
 
 #import <Foundation/Foundation.h>
 
 @interface Stone : NSObject {
-    NSNumber *color;
-    //UIImageView *image;
+    int rowValue;
+    int columnValue;
 }
 
 @property (weak, nonatomic) NSNumber *stone;
-//@property (nonatomic, retain) UIImageView *image;
+@property (nonatomic) int rowValue;
+@property (nonatomic) int columnValue;
 
 -(CALayer *)drawStone;
 

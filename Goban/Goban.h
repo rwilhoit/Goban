@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Stone.h"
 #define BOARD_SIZE 361
 #define ROW_LENGTH 18
 #define COLUMN_LENGTH 18
@@ -29,7 +30,7 @@
 -(BOOL)isLegalMove:(NSString*)newMove;
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
--(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
+-(BOOL)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
 
 
 
