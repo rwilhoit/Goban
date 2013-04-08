@@ -29,6 +29,7 @@
 -(void)printBoardToConsole;
 -(BOOL)isLegalMove:(NSString *)newMove;
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
+-(BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList forRowValue:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck;
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)killStones:(NSMutableArray *)stonesToKill;

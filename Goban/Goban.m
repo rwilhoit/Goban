@@ -10,7 +10,6 @@
 
 @implementation Goban
 
-//Synthesized values
 @synthesize goban;
 @synthesize lastMove;
 @synthesize whiteStones;
@@ -84,6 +83,24 @@
     
     NSLog(@"Legal move");
     return YES;
+}
+
+-(BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList forRowValue:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck
+{
+    BOOL hasBeenVisited = NO;
+    Stone *stoneInVisitedNodeList = [[Stone alloc] init];
+    
+    for(int i=0;i<[visitedNodeList count];i++)
+    {
+        stoneInVisitedNodeList = visitedNodeList[i];
+        //Check if the coordinates match the coordinates of any nodes in the visited node queue
+        if(stoneInVisitedNodeList.rowValue == rowValueToCheck && stoneInVisitedNodeList.columnValue == columnValueToCheck)
+        {
+            hasBeenVisited = YES;
+        }
+    }
+    
+    return hasBeenVisited;
 }
 
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
@@ -300,7 +317,7 @@
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
         }
     }
-    
+        
     //Loop until the queue is empty
     while([queue count] > 0) 
     {
@@ -312,9 +329,9 @@
         // 2. Dequeue the vertex at the head of the queue, syntax: - (void)removeObjectAtIndex:(NSUInteger)index
         [queue removeObjectAtIndex:0];
         
-        // 3. Mark all unvisited vertices as visited and check for free spaces around the current node, ending if one is found.
+        // 3. Mark all unvisited vertices as visited (only if they aren't visited already!) and check for free spaces around the current node, ending if one is found.
         //Check spot to the right of vertex
-        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue+1) andForColumnValue:columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
@@ -344,7 +361,7 @@
             }
         }
         //Check spot to the left of the vertex
-        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue-1) andForColumnValue:vertex.columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
@@ -372,7 +389,7 @@
             }
         }
         //Check spot above the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0)
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(columnValue+1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
@@ -400,7 +417,7 @@
             }
         }
         //Check the spot below the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0)
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(vertex.columnValue-1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
