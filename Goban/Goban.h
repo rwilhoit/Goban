@@ -27,10 +27,11 @@
 
 -(id)init:(NSMutableArray *) goban;
 -(void)printBoardToConsole;
--(BOOL)isLegalMove:(NSString*)newMove;
+-(BOOL)isLegalMove:(NSString *)newMove;
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
--(BOOL)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
+-(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
+-(void)killStones:(NSMutableArray *)stonesToKill;
 
 
 

@@ -133,14 +133,15 @@
     }
 }
 
--(BOOL)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue
+-(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue
 {
     //It is already implied that if we are at this point in the code, then the piece at the given location is a valid piece
     
     //Figure out what is an enemy color and what is an ally piece
-    NSString *allyColor = [[NSString alloc] init];
-    NSString *enemyColor = [[NSString alloc] init];
-    allyColor = self.goban[rowValue][columnValue];
+    NSString *allyColor = [[NSString alloc] init];  //Color of ally stones
+    NSString *enemyColor = [[NSString alloc] init]; //Color of enemy stones
+    BOOL stonesAreDead = YES;                        //Flag for if the stones are dead or not
+    allyColor = self.goban[rowValue][columnValue];  //Set the ally color to the stone we are checking
     if([allyColor isEqualToString:@"B"])
     {
         enemyColor = @"W";
@@ -150,96 +151,8 @@
         enemyColor = @"B";
     }
     
-    /*
-    //Check if there are any free spaces, because then we can return immediately
-    //Check right for free spaces
-    if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
-    {
-        NSLog(@"Still alive!");
-        return YES;
-    }
-    //Check left for free spaces
-    if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
-    {
-        NSLog(@"Still alive!");
-        return YES;
-    }
-    //Check up for free spaces
-    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
-    {
-        NSLog(@"Still alive!");
-        return YES;
-    }
-    //Check down for free spaces
-    if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
-    {
-        NSLog(@"Still alive!");
-        return YES;
-    }
-    
-    //Check if each of the four adjacent locations are enemy pieces or if they are out of bounds
-    //Check right for enemy pieces or walls
-    if(![self isInBounds:(rowValue+1) andForColumnValue:columnValue] || [self.goban[rowValue+1][columnValue] isEqualToString:enemyPiece])
-    {
-        numberOfLiberties--;
-    }
-    //Check left for enemy pieces or walls
-    if(![self isInBounds:(rowValue-1) andForColumnValue:columnValue] || [self.goban[rowValue-1][columnValue] isEqualToString:enemyPiece])
-    {
-        numberOfLiberties--;
-    }
-    //Check up for enemy pieces or walls
-    if(![self isInBounds:rowValue andForColumnValue:(columnValue+1)] || [self.goban[rowValue][columnValue+1] isEqualToString:enemyPiece])
-    {
-        numberOfLiberties--;
-    }
-    //Check down for enemy pieces or walls
-    if(![self isInBounds:rowValue andForColumnValue:(columnValue-1)] || [self.goban[rowValue][columnValue-1] isEqualToString:enemyPiece])
-    {
-        numberOfLiberties--;
-    }
-    
-    if(numberOfLiberties > 0)
-    {
-        //Check for ally pieces
-    }
-    else
-    {
-        //Kill piece!
-    } */
-    
-    //You can easily check the life of a piece by looking for any existing liberties.
+    //You can easily check the life of a stone or cluster of stones by looking for any existing liberties.
     //Implement this using a breadth-first search.
-    
-    //Algorithmic Steps
-    //Step 1: Push the root node in the Queue.
-    //Step 2: Loop until the queue is empty.
-    //Step 3: Remove the node from the Queue.
-    //Step 4: If the removed node has unvisited child nodes, mark them as visited and insert the unvisited children in the queue.
-    
-    /*
-     1  procedure BFS(G,v):
-     2      create a queue Q
-     3      enqueue v onto Q
-     4      mark v
-     5      while Q is not empty:
-     6          t ← Q.dequeue()
-     7          if t is what we are looking for:
-     8              return t
-     9          for all edges e in G.adjacentEdges(t) do
-     12             u ← G.adjacentVertex(t,e)
-     13             if u is not marked:
-     14                  mark u
-     15                  enqueue u onto Q
-     16     return none
-     */
-    
-    //1. Need searched coordinates (need to actually check location)
-    //Follow these rules:
-        //1. Each opposite color is a vertex
-        //2. Any adjacent + is a goal.
-        //3. When all adjacent W's are visited, then the group is dead
-    
     
     // BFS Algorithm:
     // 1. Mark the root as visited.
@@ -252,8 +165,8 @@
     // 3. Mark all unvisited vertices as visited and check for free spaces around the current node, ending if one is found.
     // 4. Add them to the end of the queue
        
-    
     //WILL THERE EVER BE A POINT WEHERE THE QUEUE IS EMPTY BECAUSE THERE IS NO WHERE ELSE TO SEARCH AND THAT SCREWS THINGS UP?
+    //CHECK THAT NO SPACES WILL EVER BE MARKED AS VISITED IF THEY AREN'T A WHITE STONE
     
     //Put the coordinates in a point and then add the point to the queue and visited nodes list
     Stone *vertex = [[Stone alloc] init];
@@ -295,6 +208,7 @@
         {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
+            stonesAreDead = NO;
             NSLog(@"Stone or stone cluster is alive");            
         }
         else
@@ -322,6 +236,7 @@
         {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
+            stonesAreDead = NO;
             NSLog(@"Stone or stone cluster is alive");            
         }
         else
@@ -349,6 +264,7 @@
         {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
+            stonesAreDead = NO;
             NSLog(@"Stone or stone cluster is alive");            
         }
         else
@@ -376,6 +292,7 @@
         {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
+            stonesAreDead = NO;
             NSLog(@"Stone or stone cluster is alive");            
         }
         else
@@ -418,6 +335,7 @@
             {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
+                stonesAreDead = NO;
                 NSLog(@"Stone or stone cluster is alive");                
             }
             else
@@ -445,6 +363,7 @@
             {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
+                stonesAreDead = NO;
                 NSLog(@"Stone or stone cluster is alive");                
             }
             else
@@ -472,6 +391,7 @@
             {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
+                stonesAreDead = NO;
                 NSLog(@"Stone or stone cluster is alive");
             }
             else
@@ -499,6 +419,7 @@
             {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
+                stonesAreDead = NO;
                 NSLog(@"Stone or stone cluster is alive");
             }
             else
@@ -508,7 +429,26 @@
         }
     }
     
-    //Probably something needs to be done here
+    //If stones are dead, set them back to unplayed spots
+    if(stonesAreDead)
+    {
+        NSLog(@"Killing stones");
+        [self printBoardToConsole];
+        [self killStones:visitedNodes];
+    }
+}
+
+-(void)killStones:(NSMutableArray *)stonesToKill
+{
+    Stone *stone = [[Stone alloc] init];
+    //This takes the nodes from the visited Nodes array and sets them back to "+"
+    for(int i=0;i<[stonesToKill count]; i++)
+    {
+        stone = stonesToKill[i];
+        self.goban[stone.rowValue][stone.columnValue] = @"+";
+    }
+    NSLog(@"Killed stones");
+    [self printBoardToConsole];
 }
 
 
