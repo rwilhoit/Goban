@@ -21,6 +21,7 @@ Goban *goBoard;
 - (void)viewDidLoad
 {
     // Add the main view image
+    /*
     self.view.layer.backgroundColor = [UIColor blackColor].CGColor;
     self.view.layer.cornerRadius = 20.0;
     self.view.layer.frame = CGRectInset(self.view.layer.frame, 20, 20);
@@ -31,6 +32,7 @@ Goban *goBoard;
     sublayer.frame = CGRectMake(0,0,768,768);
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
+     */
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];

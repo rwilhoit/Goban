@@ -46,10 +46,16 @@
 
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
 {
+    NSLog(@"From within isInBounds...");
+    NSLog(@"rowValue = %d and columnValue = %d", rowValue, columnValue);
+    NSLog(@"ROW_LENGTH = %d and COLUMN_LENGTH = %d", ROW_LENGTH, COLUMN_LENGTH);
     if(rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH)
     {
+        NSLog(@"(From within isInBounds) Stone was out of bounds");
         return NO;
     }
+    
+    NSLog(@"(From within isInBounds) Stone was in bounds");
     return YES;
 }
 
@@ -73,11 +79,39 @@
         NSLog(@"Illegal move: Ko");
         return NO;
     }
-    
     //Check if the move has already been played
     if(![self.goban[rowValue][columnValue] isEqualToString:@"+"])
     {
-        NSLog(@"Illegal move: move has already been played");
+        NSLog(@"Illegal move: Move has already been played");
+        return NO;
+    }
+    
+    BOOL hasLiberties = NO;
+    //Check if space has liberties still (while we could use the checkLifeOfStone function, it also does much more than we need so I'll just write one long if-statement
+    //Check right for liberties
+    if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
+    {
+        hasLiberties = YES;
+    }
+    //Check left for liberties
+    if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"] && !hasLiberties)
+    {
+        hasLiberties = YES;
+    }
+    //Check up for liberties
+    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"] && !hasLiberties)
+    {
+        hasLiberties = YES;
+    }
+    //Check down for liberties
+    if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"] && !hasLiberties)
+    {
+        hasLiberties = YES;
+    }
+    //Check if any liberties were found and return NO and print a log statement if they weren't
+    if(!hasLiberties)
+    {
+        NSLog(@"Illegal move: No liberties");
         return NO;
     }
     
@@ -125,28 +159,80 @@
     
     //Check adjacent enemy stones
     //Check right
+    NSLog(@"About to check right enemy stone where rowValue = %d and columnValue = %d", (rowValue+1), columnValue);
     if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:opponentColor])
     {
         NSLog(@"Checking right enemy stone");
         [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
     }
+    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
+    {
+        NSLog(@"Space to the right of stone was a free space");
+    }
+    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:myColor])
+    {
+        NSLog(@"Space to the right of stone was my color");
+    }
+    else
+    {
+        NSLog(@"Right enemy stone was out of bounds or was not an enemy");
+    }
     //Check left
+    NSLog(@"About to check left enemy stone");    
     if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:opponentColor])
     {
         NSLog(@"Checking left enemy stone");
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
+    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
+    {
+        NSLog(@"Space to the left of stone was a free space");
+    }
+    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:myColor])
+    {
+        NSLog(@"Space to the left of stone was my color");
+    }
+    else
+    {
+        NSLog(@"Left enemy stone was out of bounds or was not an enemy");
+    }
     //Check up
+    NSLog(@"About to check up enemy stone");    
     if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:opponentColor])
     {
         NSLog(@"Checking up enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
+    {
+        NSLog(@"Space to the up of stone was a free space");
+    }
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:myColor])
+    {
+        NSLog(@"Space to the up of stone was my color");
+    }
+    else
+    {
+        NSLog(@"Up enemy stone was out of bounds or was not an enemy");
+    }
     //Check down
+    NSLog(@"About to check down enemy stone");    
     if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:opponentColor])
     {
         NSLog(@"Checking down enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
+    }
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
+    {
+        NSLog(@"Space to the down of stone was a free space");
+    }
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:myColor])
+    {
+        NSLog(@"Space to the down of stone was my color");
+    }
+    else
+    {
+        NSLog(@"Down enemy stone was out of bounds or was not an enemy");
     }
 }
 
@@ -157,7 +243,7 @@
     //Figure out what is an enemy color and what is an ally piece
     NSString *allyColor = [[NSString alloc] init];  //Color of ally stones
     NSString *enemyColor = [[NSString alloc] init]; //Color of enemy stones
-    BOOL stonesAreDead = YES;                        //Flag for if the stones are dead or not
+    BOOL stonesAreDead = YES;                       //Flag for if the stones are dead or not
     allyColor = self.goban[rowValue][columnValue];  //Set the ally color to the stone we are checking
     if([allyColor isEqualToString:@"B"])
     {
@@ -204,11 +290,13 @@
     //Check all spots around where the vertex is
     
     //Check spot to the right of vertex
+    NSLog(@"Checking spot to the right of the vertex");
     if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue])
     {        
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
         {
+            NSLog(@"ALLY STONE TO THE RIGHT");            
             //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
@@ -226,19 +314,26 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Stone or stone cluster is alive");            
+            NSLog(@"Free space found to the right. Stone or stone cluster is alive (found at vertex)");
+            NSLog(@"FREE SPACE TO THE RIGHT");        
+            NSLog(@"STONES ARE ALIVE (RIGHT)");
         }
         else
         {
             //If it is an ally piece, then what do we do?
+            NSLog(@"PROBABLY AN ENEMY STONE RIGHT");            
+            NSLog(@"Free space not found (right) and piece was most likely an enemy stone (found at vertex)");
         }
     }
     //Check spot to the left of the vertex
-    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0)
+    NSLog(@"Checking spot to the left of the vertex");
+    //    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0 && stonesAreDead)
+    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && stonesAreDead)
     {
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
         {
+            NSLog(@"ALLY STONE TO THE LEFT");            
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue-1];
@@ -254,19 +349,24 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Stone or stone cluster is alive");            
+            NSLog(@"Free space found to the left. Stone or stone cluster is alive (found at vertex)");
+            NSLog(@"FREE SPACE TO THE LEFT");
+            NSLog(@"STONES ARE ALIVE (LEFT)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            NSLog(@"PROBABLY AN ENEMY STONE LEFT");
+            NSLog(@"Free space not found (left) and piece was most likely an enemy stone (found at vertex)");
         }
     }
     //Check spot above the vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0)
+    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && stonesAreDead)
     {
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
         {
+            NSLog(@"ALLY STONE TO THE UP");
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue];
@@ -282,19 +382,24 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Stone or stone cluster is alive");            
+            NSLog(@"Free space found to the up. Stone or stone cluster is alive (found at vertex)");
+            NSLog(@"FREE SPACE TO THE UP");            
+            NSLog(@"STONES ARE ALIVE (UP)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            NSLog(@"Free space not found (up) and piece was most likely an enemy stone (found at vertex)");
+
         }
     }
     //Check the spot below the vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0)
+    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && stonesAreDead)
     {
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
         {
+            NSLog(@"ALLY STONE TO THE DOWN");
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue];
@@ -310,17 +415,24 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Stone or stone cluster is alive");            
+            NSLog(@"Free space found to the down. Stone or stone cluster is alive (found at vertex)");
+            NSLog(@"FREE SPACE TO THE DOWN");            
+            NSLog(@"STONES ARE ALIVE (DOWN)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
+            NSLog(@"PROBABLY AN ENEMY STONE DOWN");
+            NSLog(@"Free space not found (down) and piece was not an ally stone (found at vertex)");
+            
         }
     }
-        
+    
+    NSLog(@"Checking nodes past the vertex, size of queue: %d", [queue count]);
     //Loop until the queue is empty
     while([queue count] > 0) 
     {
+        NSLog(@"Checking nodes past the vertex (inside loop)");
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
         vertex.rowValue = topOfQueue.rowValue;
@@ -331,7 +443,7 @@
         
         // 3. Mark all unvisited vertices as visited (only if they aren't visited already!) and check for free spaces around the current node, ending if one is found.
         //Check spot to the right of vertex
-        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue+1) andForColumnValue:columnValue])
+        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue+1) andForColumnValue:columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
@@ -361,7 +473,7 @@
             }
         }
         //Check spot to the left of the vertex
-        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue-1) andForColumnValue:vertex.columnValue])
+        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue-1) andForColumnValue:vertex.columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
@@ -389,7 +501,7 @@
             }
         }
         //Check spot above the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(columnValue+1)])
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(columnValue+1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
@@ -417,7 +529,7 @@
             }
         }
         //Check the spot below the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && [queue count] > 0 && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(vertex.columnValue-1)])
+        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(vertex.columnValue-1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
@@ -449,7 +561,7 @@
     //If stones are dead, set them back to unplayed spots
     if(stonesAreDead)
     {
-        NSLog(@"Killing stones");
+        NSLog(@"Killing stones (should not be called after stones are determined to be alive)");
         [self printBoardToConsole];
         [self killStones:visitedNodes];
     }
