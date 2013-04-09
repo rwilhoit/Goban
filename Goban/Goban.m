@@ -12,6 +12,7 @@
 
 @synthesize goban;
 @synthesize lastMove;
+@synthesize turn;
 @synthesize whiteStones;
 
 -(id)init:(NSMutableArray *) goBoard
@@ -87,6 +88,10 @@
     }
     
     BOOL hasLiberties = NO;
+    
+    //NEED TO CHECK THAT IF THERE ARE NO STONES AROUND THEN ARE THERE ANY OF THE OPPOSITE COLOR
+    //GET THE DESIRED COLOR
+    
     //Check if space has liberties still (while we could use the checkLifeOfStone function, it also does much more than we need so I'll just write one long if-statement
     //Check right for liberties
     if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
@@ -111,6 +116,12 @@
     //Check if any liberties were found and return NO and print a log statement if they weren't
     if(!hasLiberties)
     {
+        if([self.goban[rowValue+1][columnValue] isEqualToString:turn] || [self.goban[rowValue-1][columnValue] isEqualToString:turn] || [self.goban[rowValue][columnValue+1] isEqualToString:turn] || [self.goban[rowValue][columnValue-1] isEqualToString:turn])
+        {
+            NSLog(@"Something is about to die");
+            return YES;
+        }
+        
         NSLog(@"Illegal move: No liberties");
         return NO;
     }

@@ -62,6 +62,7 @@ Goban *goBoard;
     
     //Set it to black's term
     isBlacksTurn = YES;
+    [goBoard setTurn:@"B"];
     
      [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
@@ -88,7 +89,7 @@ Goban *goBoard;
 - (IBAction)playStone:(id)sender
 {
     NSString *newMove = ((UIButton *)sender).currentTitle;
-    NSLog(@" The button's title is %@.", newMove);
+    NSLog(@"The button's title is %@.", newMove);
     
     //Get specific coordinates from title
     NSArray *coordinateArray = [newMove componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
@@ -96,7 +97,6 @@ Goban *goBoard;
     int columnValue = [coordinateArray[1] integerValue];
     NSLog(@"Row coordingate: %d", rowValue);
     NSLog(@"Columns coordinate: %d", columnValue);
-    
     
     //Check if new move is legal
     if([goBoard isLegalMove:newMove])
@@ -113,6 +113,7 @@ Goban *goBoard;
             //Set to white's turn
             NSLog(@"Set to white's turn");
             isBlacksTurn = NO;
+            [goBoard setTurn:@"W"];
         }
         else
         {
@@ -126,6 +127,7 @@ Goban *goBoard;
             //Set to black's turn
             NSLog(@"Set to black's turn");
             isBlacksTurn = YES;
+            [goBoard setTurn:@"B"];            
         }
     }
     

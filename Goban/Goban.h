@@ -13,8 +13,9 @@
 #define COLUMN_LENGTH 18
 
 @interface Goban : NSObject {
-    NSMutableArray *goban;
-    NSString *lastMove;
+    NSMutableArray *goban;  //Go board object
+    NSString *lastMove;     //Specifies the coordinates of the last move
+    NSString *turn;         //Specifies who's turn it is
     int whiteStones;
     int blackStones;
     int capturedBlackStones;
@@ -23,6 +24,8 @@
 
 @property (nonatomic, retain) NSMutableArray *goban;
 @property (nonatomic, retain) NSString *lastMove;
+@property (nonatomic, retain) NSString *turn;
+
 @property (nonatomic) int whiteStones;
 
 -(id)init:(NSMutableArray *) goban;
