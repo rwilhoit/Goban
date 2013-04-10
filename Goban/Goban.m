@@ -13,7 +13,22 @@
 @synthesize goban;
 @synthesize lastMove;
 @synthesize turn;
+@synthesize moveNumber;
 @synthesize whiteStones;
+@synthesize blackStones;
+@synthesize capturedBlackStones;
+@synthesize capturedWhiteStones;
+@synthesize komi;
+
+NSMutableArray *goban;    //Go board object
+Stone *lastMove;          //The location of the last move
+NSString *turn;           //Whose turn it is
+int moveNumber;           //The move number
+int whiteStones;          //Total number of white stones
+int blackStones;          //Total number of black stones
+int capturedBlackStones;  //Number of captured black stones
+int capturedWhiteStones;  //Number of captured white stones
+double komi;              //Komi, specified as a double because komi is oftem 6.5
 
 -(id)init:(NSMutableArray *) goBoard
 {
@@ -60,12 +75,8 @@
     return YES;
 }
 
--(BOOL)isLegalMove:(NSString*)newMove
+-(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue
 {
-    //Get specific coordinates from title
-    NSArray *coordinateArray = [newMove componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
-    int rowValue = [coordinateArray[0] integerValue];
-    int columnValue = [coordinateArray[1] integerValue];
     NSLog(@"Row coordingate: %d", rowValue);
     NSLog(@"Columns coordinate: %d", columnValue);
 
@@ -75,7 +86,7 @@
         return NO;
     }
     //Check if the move is a ko
-    if([newMove isEqualToString:self.lastMove])
+    if(lastMove.rowValue == rowValue && lastMove.columnValue == columnValue)
     {
         NSLog(@"Illegal move: Ko");
         return NO;
@@ -88,9 +99,6 @@
     }
     
     BOOL hasLiberties = NO;
-    
-    //NEED TO CHECK THAT IF THERE ARE NO STONES AROUND THEN ARE THERE ANY OF THE OPPOSITE COLOR
-    //GET THE DESIRED COLOR
     
     //Check if space has liberties still (while we could use the checkLifeOfStone function, it also does much more than we need so I'll just write one long if-statement
     //Check right for liberties
@@ -581,11 +589,34 @@
 -(void)killStones:(NSMutableArray *)stonesToKill
 {
     Stone *stone = [[Stone alloc] init];
+
+    //Check what color the stone in the 0th index is to get the color of the stone
+    stone = stonesToKill[0];
+    
+    //Get the color of the stones that are dying
+    NSString *dyingColor = self.goban[stone.rowValue][stone.columnValue];
+    if([dyingColor isEqualToString:@"B"])
+    {
+        NSLog(@"Old number of captured black stones: %d", self.capturedBlackStones);
+        //Add the number of dead stones to black's captured stone count
+        [self setCapturedBlackStones:(self.capturedBlackStones + [stonesToKill count])];
+        NSLog(@"New number of captured black stones: %d", self.capturedBlackStones);
+    }
+    else
+    {
+        //Add the number of dead stones to white's dead stone count
+        NSLog(@"Old number of captured white stones: %d", self.capturedWhiteStones);
+        //Add the number of dead stones to white's captured stone count
+        [self setCapturedWhiteStones:(self.capturedWhiteStones + [stonesToKill count])];
+        NSLog(@"New number of captured white stones: %d", self.capturedWhiteStones);
+    }
+        
     //This takes the nodes from the visited Nodes array and sets them back to "+"
     for(int i=0;i<[stonesToKill count]; i++)
     {
         stone = stonesToKill[i];
         self.goban[stone.rowValue][stone.columnValue] = @"+";
+        NSLog(@"KILLING STONE at row %d and column %d", stone.rowValue, stone.columnValue);
     }
     NSLog(@"Killed stones");
     [self printBoardToConsole];
