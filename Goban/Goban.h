@@ -15,9 +15,6 @@
 @interface Goban : NSObject {
     NSMutableArray *goban;               //Go board object
     NSMutableArray *previousStateOfBoard; //Previous state of the Go board object, used for backs and ko checks
-    NSMutableArray *potentialStateOfBoard; //Potential previous state of the Go board object, used for checking kos
-    Stone *currentMove;                  //The location of the new move you are about to attempt
-    Stone *lastMove;                     //The location of the last move
     NSString *turn;                      //Whose turn it is
     int moveNumber;                      //The move number
     int whiteStones;                     //Total number of white stones
@@ -29,9 +26,6 @@
 
 @property (nonatomic, retain) NSMutableArray *goban;
 @property (nonatomic, retain) NSMutableArray *previousStateOfBoard;
-@property (nonatomic, retain) NSMutableArray *potentialStateOfBoard;
-@property (nonatomic, retain) Stone *currentMove;
-@property (nonatomic, retain) Stone *lastMove;
 @property (nonatomic, retain) NSString *turn;
 @property (nonatomic) int moveNumber;
 @property (nonatomic) int whiteStones;
@@ -45,13 +39,8 @@
 -(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue;
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
 -(BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList forRowValue:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck;
--(BOOL)checkKo:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck;
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)killStones:(NSMutableArray *)stonesToKill;
--(id) copyWithZone: (NSZone *) zone;
-
-
-
 
 @end

@@ -12,9 +12,6 @@
 
 @synthesize goban;
 @synthesize previousStateOfBoard;
-@synthesize potentialStateOfBoard;
-@synthesize currentMove;
-@synthesize lastMove;
 @synthesize turn;
 @synthesize moveNumber;
 @synthesize whiteStones;
@@ -253,53 +250,6 @@
     }
     
     return hasBeenVisited;
-}
-
--(BOOL)checkKo:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck
-{
-    BOOL koFound = YES;
-    //We need to see what the array will look like it its new state and compare it to the previous state
-    //Just play the move and then set it back after you know if it's legal or not
-    int tempWhiteCaptureCount = self.capturedWhiteStones;
-    int tempBlackCaptureCount = self.capturedBlackStones;
-    self.goban[rowValueToCheck][columnValueToCheck] = self.turn;
-    [self checkLifeOfAdjacentEnemyStones:rowValueToCheck andForColumnValue:columnValueToCheck];
-    NSLog(@"Printing board to console inside checkKo");
-    [self printBoardToConsole];
-    
-    //Compare the state of this board with the state of the previous board
-    for(int i=0;i<[self.goban count];i++)
-    {
-        for(int j=0;j<[self.goban count];j++)
-        {
-            if(![self.goban[j][i] isEqualToString:self.previousStateOfBoard[j][i]])
-            {
-                NSLog(@"Ko not found, breaking");
-                NSLog(@"Value 1: %@, Value 2: %@", self.goban[j][i], self.previousStateOfBoard[j][i]);
-
-                koFound = NO;
-                break;
-            }
-            else
-            {
-                NSLog(@"Checking Ko...");
-                NSLog(@"Value 1: %@, Value 2: %@", self.goban[j][i], self.previousStateOfBoard[j][i]);
-            }
-        }
-        if(!koFound)
-        {
-            NSLog(@"Breaking again");
-            break;
-        }
-    }
-        
-    //Set it back
-    self.goban[rowValueToCheck][columnValueToCheck] = @"+";
-    [self setCapturedWhiteStones:tempWhiteCaptureCount];
-    [self setCapturedBlackStones:tempBlackCaptureCount];
-    [self printBoardToConsole];
-    
-    return koFound;
 }
 
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
@@ -767,16 +717,5 @@
     NSLog(@"Killed stones");
     [self printBoardToConsole];
 }
-
-/*-(id) copyWithZone: (NSZone *) zone
-{
-    NSMutableArray *gobanCopy = [[NSMutableArray allocWithZone: zone] init];
-    //BankAccount *accountCopy = [[BankAccount allocWithZone: zone] init];
-    
-    //[accountCopy setAccount: accountNumber andBalance: accountBalance]
-    
-    
-    return gobanCopy;
-}*/
 
 @end
