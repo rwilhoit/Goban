@@ -214,7 +214,7 @@ Goban *goBoard;
                 //Code to draw a black stone
                 
                 CALayer *stoneLayer = [CALayer layer];
-                stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
+                //stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
                 stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
                 stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                 [self.view.layer addSublayer:stoneLayer];
@@ -224,7 +224,7 @@ Goban *goBoard;
                 NSLog(@"Draw a white stone at coordinates (%d,%d) and location (%f,%f)",j,i,j*stoneSize,i*stoneSize);
                 //Code to draw a white stone
                 CALayer *stoneLayer = [CALayer layer];
-                stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
+                //stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
                 stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
                 stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                 [self.view.layer addSublayer:stoneLayer];
