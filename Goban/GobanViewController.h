@@ -14,6 +14,7 @@
     BOOL isBlacksTurn;
 }
 
+-(void)drawBoard; //Called in the event that someone plays a stone
 -(void)playStone;
 -(void)score;
 

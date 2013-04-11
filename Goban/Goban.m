@@ -539,7 +539,6 @@
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             NSLog(@"PROBABLY AN ENEMY STONE DOWN");
             NSLog(@"Free space not found (down) and piece was not an ally stone (found at vertex)");
-            
         }
     }
     
