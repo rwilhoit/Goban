@@ -13,15 +13,9 @@
 @interface GobanViewController : UIViewController {
     BOOL isBlacksTurn;
 }
+- (IBAction)pressedBack:(id)sender;
 
--(void)drawBoard; //Called in the event that someone plays a stone
--(void)playStone;
+-(void)drawBoard; 
 -(void)score;
-
-- (IBAction)hideButton:(id)sender;
-- (IBAction)playStone:(id)sender;
-
-@property (strong, nonatomic) IBOutlet UIButton *goStone;
-
 
 @end

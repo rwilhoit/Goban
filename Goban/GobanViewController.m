@@ -237,6 +237,54 @@ Goban *goBoard;
     }
 }
 
+- (IBAction)pressedBack:(id)sender
+{
+    NSLog(@"Pressed back");
+    
+    //restore the board to it's previous state
+    for(int i=0;i<[goBoard.goban count];i++)
+    {
+        for(int j=0;j<[goBoard.goban count];j++)
+        {
+            if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"+"])
+            {
+                goBoard.goban[j][i] = @"+";
+            }
+            else if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"B"])
+            {
+                goBoard.goban[j][i] = @"B";
+            }
+            else if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"W"])
+            {
+                goBoard.goban[j][i] = @"W";
+            }
+        }
+    }
+    
+    //Put the turn back also
+    if([goBoard.turn isEqualToString:@"B"])
+    {
+        NSLog(@"Set to white's turn: %@", goBoard.turn);
+        goBoard.turn = @"W";
+        isBlacksTurn = NO;
+    }
+    else
+    {
+        goBoard.turn = @"B";
+        NSLog(@"Set to black's turn: %@", goBoard.turn);
+        isBlacksTurn = YES;
+    }
+    
+    //Put the move count back also
+    if(goBoard.moveNumber > 0)
+    {
+        [goBoard setMoveNumber:(goBoard.moveNumber-1)];
+    }
+    
+    [goBoard printBoardToConsole];
+    [self drawBoard];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
