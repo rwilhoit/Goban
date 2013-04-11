@@ -34,11 +34,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/Goban.m"
-         timestampString = "387310482.449483"
+         timestampString = "387347320.799738"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "83"
-         endingLineNumber = "83"
+         startingLineNumber = "76"
+         endingLineNumber = "76"
          landmarkName = "-isLegalMove:andForColumnValue:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -47,12 +47,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/Goban.m"
-         timestampString = "387310482.449483"
+         timestampString = "387357848.146616"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "295"
-         endingLineNumber = "295"
+         startingLineNumber = "441"
+         endingLineNumber = "441"
          landmarkName = "-checkLifeOfStone:andForColumnValue:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Goban/Goban.m"
+         timestampString = "387357486.061159"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "110"
+         endingLineNumber = "110"
+         landmarkName = "-isLegalMove:andForColumnValue:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

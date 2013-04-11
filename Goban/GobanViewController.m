@@ -59,14 +59,18 @@ Goban *goBoard;
      [goBoard printBoardToConsole];
     
     //Set the lastMove
-    //[goBoard.lastMove setRowValue:-1];
-    
-    //Not sure why I can't just set the default values directly and have to create a new object
     Stone* lastMoveDefault = [[Stone alloc] init];
     [lastMoveDefault setRowValue:-1];
     [lastMoveDefault setColumnValue:-1];
     [goBoard setLastMove:lastMoveDefault];
     NSLog(@"Last move x: %d, Last move y: %d", goBoard.lastMove.rowValue, goBoard.lastMove.columnValue);
+    
+    //Set the currentMove
+    Stone* currentMoveDefault = [[Stone alloc] init];
+    [currentMoveDefault setRowValue:-2];
+    [currentMoveDefault setColumnValue:-2];
+    [goBoard setCurrentMove:currentMoveDefault];
+    NSLog(@"Current move x: %d, current move y: %d", goBoard.currentMove.rowValue, goBoard.currentMove.columnValue);
     
     //Set the moveNumber
     [goBoard setMoveNumber:0];
@@ -92,7 +96,6 @@ Goban *goBoard;
     [goBoard setTurn:@"B"];
     
      [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 //Where the stones are played
@@ -118,6 +121,8 @@ Goban *goBoard;
 
     }];
     
+    //Need to set the lastMove somewhere and the new current move somewhere 
+    
     NSLog(@"Row coordingate: %d", rowValue);
     NSLog(@"Columns coordinate: %d", columnValue);
     
@@ -126,19 +131,44 @@ Goban *goBoard;
     {
         if(isBlacksTurn)
         {
+            //Save the previous state of the board
+            goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
+            
             //Play black's turn
             NSLog(@"Played black's turn");
             goBoard.goban[rowValue][columnValue] = @"B";
             
+            if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
+            {
+                NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
+            }
+            else
+            {
+                NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
+            }
+            
             //Increment the move number
+            NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
-            NSLog(@"Move number: %d", goBoard.moveNumber);
+            NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
-            //Set the last move
+            //Set the last move to the old current move
+            NSLog(@"Old last move values are: (%d, %d)", goBoard.lastMove.rowValue, goBoard.lastMove.columnValue);
+            //Stone *lastMoveTemp = [[Stone alloc] init];
+            //lastMoveTemp = goBoard.currentMove;
+            [goBoard setLastMove:goBoard.currentMove];
+            NSLog(@"New last move values are: (%d, %d)", goBoard.lastMove.rowValue, goBoard.lastMove.columnValue);
             
+            //Set the current move to the move that was just played
+            NSLog(@"Old current move values are: (%d, %d)", goBoard.currentMove.rowValue, goBoard.currentMove.columnValue);
+            Stone *currentMoveTemp = [[Stone alloc] init];
+            [currentMoveTemp setRowValue:rowValue];
+            [currentMoveTemp setColumnValue:columnValue];
+            [goBoard setCurrentMove:currentMoveTemp];
+            NSLog(@"New current move values are: (%d, %d)", goBoard.currentMove.rowValue, goBoard.currentMove.columnValue);
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
@@ -147,9 +177,21 @@ Goban *goBoard;
         }
         else
         {
+            //Save the previous state of the board
+            goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
+            
             //Play white's turn
             NSLog(@"Played white's turn");
             goBoard.goban[rowValue][columnValue] = @"W";
+            
+            if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
+            {
+                NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
+            }
+            else
+            {
+                NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
+            }
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
@@ -158,6 +200,23 @@ Goban *goBoard;
             NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
             NSLog(@"Incremented move number: %d", goBoard.moveNumber);
+            
+            //Set the last move to the old current move
+            NSLog(@"Old last move values are: (%d, %d)", goBoard.lastMove.rowValue, goBoard.lastMove.columnValue);
+            //Stone *lastMoveTemp = [[Stone alloc] init];
+            //lastMoveTemp = goBoard.currentMove;
+            [goBoard setLastMove:goBoard.currentMove];
+            NSLog(@"New last move values are: (%d, %d)", goBoard.lastMove.rowValue, goBoard.lastMove.columnValue);
+            
+            //Set the current move to the move that was just played
+            NSLog(@"Old current move values are: (%d, %d)", goBoard.currentMove.rowValue, goBoard.currentMove.columnValue);
+            Stone *currentMoveTemp = [[Stone alloc] init];
+            [currentMoveTemp setRowValue:rowValue];
+            [currentMoveTemp setColumnValue:columnValue];
+            [goBoard setCurrentMove:currentMoveTemp];
+            NSLog(@"New current move values are: (%d, %d)", goBoard.currentMove.rowValue, goBoard.currentMove.columnValue);
+            
+            
             
             //Set to black's turn
             NSLog(@"Set to black's turn");

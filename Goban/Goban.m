@@ -11,6 +11,9 @@
 @implementation Goban
 
 @synthesize goban;
+@synthesize previousStateOfBoard;
+@synthesize potentialStateOfBoard;
+@synthesize currentMove;
 @synthesize lastMove;
 @synthesize turn;
 @synthesize moveNumber;
@@ -19,16 +22,6 @@
 @synthesize capturedBlackStones;
 @synthesize capturedWhiteStones;
 @synthesize komi;
-
-NSMutableArray *goban;    //Go board object
-Stone *lastMove;          //The location of the last move
-NSString *turn;           //Whose turn it is
-int moveNumber;           //The move number
-int whiteStones;          //Total number of white stones
-int blackStones;          //Total number of black stones
-int capturedBlackStones;  //Number of captured black stones
-int capturedWhiteStones;  //Number of captured white stones
-double komi;              //Komi, specified as a double because komi is oftem 6.5
 
 -(id)init:(NSMutableArray *) goBoard
 {
@@ -47,9 +40,9 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
 -(void)printBoardToConsole{
     NSMutableString *printRow = [[NSMutableString alloc] init];
     [printRow appendString:@"\n"];
-    for(int i=0;i<COLUMN_LENGTH; i++)
+    for(int i=0;i<COLUMN_LENGTH+1; i++)
     {
-        for(int j=0; j<ROW_LENGTH; j++)
+        for(int j=0; j<ROW_LENGTH+1; j++)
         {
             [printRow appendString:self.goban[j][i]];
             [printRow appendString:@" "];
@@ -85,12 +78,6 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
         NSLog(@"Illegal move: move was out of bounds");
         return NO;
     }
-    //Check if the move is a ko
-    if(lastMove.rowValue == rowValue && lastMove.columnValue == columnValue)
-    {
-        NSLog(@"Illegal move: Ko");
-        return NO;
-    }
     //Check if the move has already been played
     if(![self.goban[rowValue][columnValue] isEqualToString:@"+"])
     {
@@ -98,9 +85,8 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
         return NO;
     }
     
+    //Check if space has liberties still
     BOOL hasLiberties = NO;
-    
-    //Check if space has liberties still (while we could use the checkLifeOfStone function, it also does much more than we need so I'll just write one long if-statement
     //Check right for liberties
     if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
     {
@@ -124,14 +110,127 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
     //Check if any liberties were found and return NO and print a log statement if they weren't
     if(!hasLiberties)
     {
-        if([self.goban[rowValue+1][columnValue] isEqualToString:turn] || [self.goban[rowValue-1][columnValue] isEqualToString:turn] || [self.goban[rowValue][columnValue+1] isEqualToString:turn] || [self.goban[rowValue][columnValue-1] isEqualToString:turn])
+        //This checks just if any of the pieces around the piece are of an ally color
+        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:self.turn])
         {
-            NSLog(@"Something is about to die");
+            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
+            NSLog(@"Legal move");
             return YES;
         }
+        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:self.turn])
+        {
+            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
+            NSLog(@"Legal move");
+            return YES;
+        }
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:self.turn])
+        {
+            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
+            NSLog(@"Legal move");
+            return YES;
+        }
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:self.turn])
+        {
+            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
+            NSLog(@"Legal move");
+            return YES;
+        }
+        else
+        {
+            //else nothing
+        }
+         
+        //Just play the move and then set it back after you know if it's legal or not
+        int tempWhiteCaptureCount = self.capturedWhiteStones;
+        int tempBlackCaptureCount = self.capturedBlackStones;
+        self.goban[rowValue][columnValue] = self.turn;
+        [self checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
+        NSLog(@"THIS IS WHERE THE BOARD GOES CRAZY");
+        [self printBoardToConsole];
         
-        NSLog(@"Illegal move: No liberties");
-        return NO;
+        //Check if any adjacent stones died, once they died, check if they match the previous board and if they do we have a ko, if they don't then we don't
+        int deathRow;
+        int deathColumn;
+        BOOL stonesDied = NO;
+        BOOL koFound = NO;
+        NSString *enemyColor = [[NSMutableString alloc] init];
+
+        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
+        {
+            deathRow = rowValue + 1;
+            deathColumn = columnValue;
+            stonesDied = YES;
+        }
+        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
+        {
+            deathRow = rowValue - 1;
+            deathColumn = columnValue;
+            stonesDied = YES;
+        }
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
+        {
+            deathRow = rowValue;
+            deathColumn = columnValue + 1;
+            stonesDied = YES;
+        }
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
+        {
+            deathRow = rowValue;
+            deathColumn = columnValue - 1;
+            stonesDied = YES;
+        }
+        else
+        {
+            NSLog(@"No stones died");
+        }
+        
+        if(stonesDied)
+        {
+            //Check if any adjacent stones died, once they died, check if they match the previous board and if they do we have a ko, if they don't then we don't
+            //Set it back
+            if([self.turn isEqualToString:@"B"])
+            {
+                enemyColor = @"W";
+            }
+            else
+            {
+                enemyColor = @"B";
+            }
+            //check if this new board matches the previous board
+            if([self.goban isEqualToArray:self.previousStateOfBoard])
+            {
+                NSLog(@"Illegal Move: Ko found Error 352");
+                koFound = YES;
+            }
+            else
+            {
+                NSLog(@"Ko not found");
+            }
+            
+            NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);
+            self.goban[deathRow][deathColumn] = enemyColor;
+            self.goban[rowValue][columnValue] = @"+";
+            [self setCapturedWhiteStones:tempWhiteCaptureCount];
+            [self setCapturedBlackStones:tempBlackCaptureCount];
+            NSLog(@"Board set back to previous state");
+            [self printBoardToConsole];
+            if(koFound)
+            {
+                return NO;                
+            }
+        }
+        else
+        {
+            //Set it back if no stones died
+            //self.goban[deathRow][deathColumn] = enemyColor;
+            self.goban[rowValue][columnValue] = @"+";
+            [self setCapturedWhiteStones:tempWhiteCaptureCount];
+            [self setCapturedBlackStones:tempBlackCaptureCount];
+            NSLog(@"Set board back to its previous state");
+            [self printBoardToConsole];
+            NSLog(@"Illegal move: No liberties");
+            return NO;
+        }
     }
     
     NSLog(@"Legal move");
@@ -154,6 +253,53 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
     }
     
     return hasBeenVisited;
+}
+
+-(BOOL)checkKo:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck
+{
+    BOOL koFound = YES;
+    //We need to see what the array will look like it its new state and compare it to the previous state
+    //Just play the move and then set it back after you know if it's legal or not
+    int tempWhiteCaptureCount = self.capturedWhiteStones;
+    int tempBlackCaptureCount = self.capturedBlackStones;
+    self.goban[rowValueToCheck][columnValueToCheck] = self.turn;
+    [self checkLifeOfAdjacentEnemyStones:rowValueToCheck andForColumnValue:columnValueToCheck];
+    NSLog(@"Printing board to console inside checkKo");
+    [self printBoardToConsole];
+    
+    //Compare the state of this board with the state of the previous board
+    for(int i=0;i<[self.goban count];i++)
+    {
+        for(int j=0;j<[self.goban count];j++)
+        {
+            if(![self.goban[j][i] isEqualToString:self.previousStateOfBoard[j][i]])
+            {
+                NSLog(@"Ko not found, breaking");
+                NSLog(@"Value 1: %@, Value 2: %@", self.goban[j][i], self.previousStateOfBoard[j][i]);
+
+                koFound = NO;
+                break;
+            }
+            else
+            {
+                NSLog(@"Checking Ko...");
+                NSLog(@"Value 1: %@, Value 2: %@", self.goban[j][i], self.previousStateOfBoard[j][i]);
+            }
+        }
+        if(!koFound)
+        {
+            NSLog(@"Breaking again");
+            break;
+        }
+    }
+        
+    //Set it back
+    self.goban[rowValueToCheck][columnValueToCheck] = @"+";
+    [self setCapturedWhiteStones:tempWhiteCaptureCount];
+    [self setCapturedBlackStones:tempBlackCaptureCount];
+    [self printBoardToConsole];
+    
+    return koFound;
 }
 
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
@@ -622,5 +768,15 @@ double komi;              //Komi, specified as a double because komi is oftem 6.
     [self printBoardToConsole];
 }
 
+/*-(id) copyWithZone: (NSZone *) zone
+{
+    NSMutableArray *gobanCopy = [[NSMutableArray allocWithZone: zone] init];
+    //BankAccount *accountCopy = [[BankAccount allocWithZone: zone] init];
+    
+    //[accountCopy setAccount: accountNumber andBalance: accountBalance]
+    
+    
+    return gobanCopy;
+}*/
 
 @end
