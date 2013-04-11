@@ -21,6 +21,8 @@
 		35CCC7BE16F6A3500012D577 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7BD16F6A3500012D577 /* Default-568h@2x.png */; };
 		35CCC7C116F6A3500012D577 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7BF16F6A3500012D577 /* MainStoryboard.storyboard */; };
 		35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCC7C316F6A3500012D577 /* GobanViewController.m */; };
+		35E34D181716A0340073B258 /* blackStone.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E34D171716A0340073B258 /* blackStone.png */; };
+		35E34D1A1716A0410073B258 /* whiteStone.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E34D191716A0410073B258 /* whiteStone.png */; };
 		35E4640D16FA286A00EBA995 /* Goban.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E4640C16FA286A00EBA995 /* Goban.png */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +48,8 @@
 		35CCC7C016F6A3500012D577 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		35CCC7C216F6A3500012D577 /* GobanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GobanViewController.h; sourceTree = "<group>"; };
 		35CCC7C316F6A3500012D577 /* GobanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GobanViewController.m; sourceTree = "<group>"; };
+		35E34D171716A0340073B258 /* blackStone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackStone.png; sourceTree = "<group>"; };
+		35E34D191716A0410073B258 /* whiteStone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteStone.png; sourceTree = "<group>"; };
 		35E4640C16FA286A00EBA995 /* Goban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Goban.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -112,6 +116,8 @@
 		35CCC7AE16F6A3500012D577 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				35E34D191716A0410073B258 /* whiteStone.png */,
+				35E34D171716A0340073B258 /* blackStone.png */,
 				35E4640C16FA286A00EBA995 /* Goban.png */,
 				35CCC7AF16F6A3500012D577 /* Goban-Info.plist */,
 				35CCC7B016F6A3500012D577 /* InfoPlist.strings */,
@@ -182,6 +188,8 @@
 				35CCC7BE16F6A3500012D577 /* Default-568h@2x.png in Resources */,
 				35CCC7C116F6A3500012D577 /* MainStoryboard.storyboard in Resources */,
 				35E4640D16FA286A00EBA995 /* Goban.png in Resources */,
+				35E34D181716A0340073B258 /* blackStone.png in Resources */,
+				35E34D1A1716A0410073B258 /* whiteStone.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
