@@ -57,7 +57,7 @@ Goban *goBoard;
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
     
      [goBoard printBoardToConsole];
-    
+
     //Set the moveNumber
     [goBoard setMoveNumber:0];
     NSLog(@"Move number: %d", goBoard.moveNumber);
@@ -196,7 +196,7 @@ Goban *goBoard;
     float stoneSize = 40.4210526316;
     NSLog(@"Stone size: %f", stoneSize);
     CALayer *boardLayer = [CALayer layer];
-    boardLayer.backgroundColor = [UIColor blackColor].CGColor;
+    //boardLayer.backgroundColor = [UIColor blackColor].CGColor;
     //sublayer.frame = CGRectMake(self.view.layer.bounds.origin.x,self.view.layer.bounds.origin.y,self.view.layer.bounds.size.width, self.view.layer.bounds.size.height);
     boardLayer.frame = CGRectMake(0,0,768,768);
     boardLayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;

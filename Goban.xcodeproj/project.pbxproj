@@ -23,6 +23,7 @@
 		35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCC7C316F6A3500012D577 /* GobanViewController.m */; };
 		35E34D181716A0340073B258 /* blackStone.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E34D171716A0340073B258 /* blackStone.png */; };
 		35E34D1A1716A0410073B258 /* whiteStone.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E34D191716A0410073B258 /* whiteStone.png */; };
+		35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35E34D1C171774400073B258 /* MainMenuViewController.m */; };
 		35E4640D16FA286A00EBA995 /* Goban.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E4640C16FA286A00EBA995 /* Goban.png */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,8 @@
 		35CCC7C316F6A3500012D577 /* GobanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GobanViewController.m; sourceTree = "<group>"; };
 		35E34D171716A0340073B258 /* blackStone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackStone.png; sourceTree = "<group>"; };
 		35E34D191716A0410073B258 /* whiteStone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteStone.png; sourceTree = "<group>"; };
+		35E34D1B171774400073B258 /* MainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuViewController.h; sourceTree = "<group>"; };
+		35E34D1C171774400073B258 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		35E4640C16FA286A00EBA995 /* Goban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Goban.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -99,6 +102,8 @@
 		35CCC7AD16F6A3500012D577 /* Goban */ = {
 			isa = PBXGroup;
 			children = (
+				35E34D1B171774400073B258 /* MainMenuViewController.h */,
+				35E34D1C171774400073B258 /* MainMenuViewController.m */,
 				35C8733916F8197700A828B9 /* Goban.h */,
 				35C8733A16F8197700A828B9 /* Goban.m */,
 				35C8733C16F8218800A828B9 /* Stone.h */,
@@ -205,6 +210,7 @@
 				35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */,
 				35C8733B16F8197700A828B9 /* Goban.m in Sources */,
 				35C8733E16F8218900A828B9 /* Stone.m in Sources */,
+				35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
