@@ -136,7 +136,28 @@
         {
             //else nothing
         }
-         
+        
+        //Save the state of the board first
+        NSMutableArray *savedStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goban copyItems:YES];
+        for(int i=0;i<[self.goban count];i++)
+        {
+            for(int j=0;j<[self.goban count];j++)
+            {
+                if([self.goban[j][i] isEqualToString:@"+"])
+                {
+                    savedStateOfBoard[j][i] = @"+";
+                }
+                else if([self.goban[j][i] isEqualToString:@"B"])
+                {
+                    savedStateOfBoard[j][i] = @"B";
+                }
+                else if([self.goban[j][i] isEqualToString:@"W"])
+                {
+                    savedStateOfBoard[j][i] = @"W";
+                }
+            }
+        } //State of the board saved
+        
         //Just play the move and then set it back after you know if it's legal or not
         int tempWhiteCaptureCount = self.capturedWhiteStones;
         int tempBlackCaptureCount = self.capturedBlackStones;
@@ -152,24 +173,28 @@
         BOOL koFound = NO;
         NSString *enemyColor = [[NSMutableString alloc] init];
 
+        //Check if stones died to the right
         if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
         {
             deathRow = rowValue + 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
+        //Check if stones died to the left
         else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
         {
             deathRow = rowValue - 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
+        //Check if stones died to the up
         else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
         {
             deathRow = rowValue;
             deathColumn = columnValue + 1;
             stonesDied = YES;
         }
+        //Check if stones died to the down
         else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
         {
             deathRow = rowValue;
@@ -207,9 +232,33 @@
                 NSLog(@"Ko not found");
             }
             
+            
+            //SET THE BOARD BACK TO ITS SAVED STATE AFTER THE TEST IS DONE
             NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);
-            self.goban[deathRow][deathColumn] = enemyColor;
-            self.goban[rowValue][columnValue] = @"+";
+            //self.goban[deathRow][deathColumn] = enemyColor;
+            //self.goban[rowValue][columnValue] = @"+";
+            
+            //Setting the board back to its saved state
+            for(int i=0;i<[self.goban count];i++)
+            {
+                for(int j=0;j<[self.goban count];j++)
+                {
+                    if([savedStateOfBoard[j][i] isEqualToString:@"+"])
+                    {
+                        self.goban[j][i] = @"+";
+                    }
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"])
+                    {
+                        self.goban[j][i] = @"B";
+                    }
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"])
+                    {
+                        self.goban[j][i] = @"W";
+                    }
+                }
+            } //Board set back to its saved state
+            
+            //MIGHT NEED TO SET BACK SOME OTHER THINGS SUCH AS NUMBER OF CAPTURED STONES
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
             NSLog(@"Board set back to previous state");
@@ -252,6 +301,7 @@
             hasBeenVisited = YES;
         }
     }
+    NSLog(@"Count of visited stones: %d", [visitedNodeList count]);
     
     return hasBeenVisited;
 }
@@ -546,6 +596,13 @@
     }
     
     NSLog(@"Checking nodes past the vertex, size of queue: %d", [queue count]);
+    NSLog(@"Number of visited stones as we are going into the loop: %d", [visitedNodes count]);
+    for(int i=0;i<[visitedNodes count];i++)
+    {
+        Stone *visitedNode = visitedNodes[i];
+        NSLog(@"Node stored at position %d is: (%d,%d)", i,visitedNode.rowValue,visitedNode.columnValue);
+    }
+    
     //Loop until the queue is empty
     while([queue count] > 0) 
     {
@@ -729,6 +786,52 @@
     }
     NSLog(@"Killed stones");
     [self printBoardToConsole];
+}
+
+-(void)back
+{
+    //restore the board to it's previous state
+    for(int i=0;i<[self.goban count];i++)
+    {
+        for(int j=0;j<[self.goban count];j++)
+        {
+            if([self.previousStateOfBoard[j][i] isEqualToString:@"+"])
+            {
+                self.goban[j][i] = @"+";
+            }
+            else if([self.previousStateOfBoard[j][i] isEqualToString:@"B"])
+            {
+                self.goban[j][i] = @"B";
+            }
+            else if([self.previousStateOfBoard[j][i] isEqualToString:@"W"])
+            {
+                self.goban[j][i] = @"W";
+            }
+        }
+    }
+    
+    //Put the turn back also
+    if([self.turn isEqualToString:@"B"])
+    {
+        NSLog(@"Set to white's turn: %@", self.turn);
+        self.turn = @"W";
+        //isBlacksTurn = NO;
+    }
+    else
+    {
+        self.turn = @"B";
+        NSLog(@"Set to black's turn: %@", self.turn);
+        //isBlacksTurn = YES;
+    }
+    
+    //Put the move count back also
+    if(self.moveNumber > 0)
+    {
+        [self setMoveNumber:(self.moveNumber-1)];
+    }
+    
+    [self printBoardToConsole];
+
 }
 
 @end

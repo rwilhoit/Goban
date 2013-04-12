@@ -78,7 +78,7 @@ Goban *goBoard;
     [goBoard setKomi:6.5];
     
     //Set it to black's turn
-    isBlacksTurn = YES;
+    //isBlacksTurn = YES;
     [goBoard setTurn:@"B"];
     
      [super viewDidLoad];
@@ -115,7 +115,7 @@ Goban *goBoard;
     //Check if new move is legal
     if([goBoard isLegalMove:rowValue andForColumnValue:columnValue])
     {
-        if(isBlacksTurn)
+        if([goBoard.turn isEqualToString:@"B"])
         {
             //Save the previous state of the board
             goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
@@ -146,7 +146,7 @@ Goban *goBoard;
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
-            isBlacksTurn = NO;
+            //isBlacksTurn = NO;
             [goBoard setTurn:@"W"];
         }
         else
@@ -180,7 +180,7 @@ Goban *goBoard;
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
-            isBlacksTurn = YES;
+            //isBlacksTurn = YES;
             [goBoard setTurn:@"B"];
         }
     }
@@ -242,7 +242,8 @@ Goban *goBoard;
     NSLog(@"Pressed back");
     
     //restore the board to it's previous state
-    for(int i=0;i<[goBoard.goban count];i++)
+    [goBoard back];
+    /*for(int i=0;i<[goBoard.goban count];i++)
     {
         for(int j=0;j<[goBoard.goban count];j++)
         {
@@ -266,13 +267,13 @@ Goban *goBoard;
     {
         NSLog(@"Set to white's turn: %@", goBoard.turn);
         goBoard.turn = @"W";
-        isBlacksTurn = NO;
+        //isBlacksTurn = NO;
     }
     else
     {
         goBoard.turn = @"B";
         NSLog(@"Set to black's turn: %@", goBoard.turn);
-        isBlacksTurn = YES;
+        //isBlacksTurn = YES;
     }
     
     //Put the move count back also
@@ -282,6 +283,8 @@ Goban *goBoard;
     }
     
     [goBoard printBoardToConsole];
+    */
+    
     [self drawBoard];
 }
 

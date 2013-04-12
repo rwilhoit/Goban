@@ -42,5 +42,6 @@
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)killStones:(NSMutableArray *)stonesToKill;
+-(void)back;
 
 @end
