@@ -20,11 +20,7 @@ Goban *goBoard;
 
 - (void)viewDidLoad
 {
-    // Add the main view image
-    self.view.layer.backgroundColor = [UIColor blackColor].CGColor;
-    self.view.layer.cornerRadius = 20.0;
-    self.view.layer.frame = CGRectInset(self.view.layer.frame, 20, 20);
-    
+    // Add the main view image    
     CALayer *sublayer = [CALayer layer];
     sublayer.backgroundColor = [UIColor blackColor].CGColor;
     //sublayer.frame = CGRectMake(self.view.layer.bounds.origin.x,self.view.layer.bounds.origin.y,self.view.layer.bounds.size.width, self.view.layer.bounds.size.height);
@@ -83,6 +79,9 @@ Goban *goBoard;
     //Set redraw needed
     [goBoard setRedrawBoardNeeded:NO];
     
+    //Start the timer
+    [self startTimer];
+    
      [super viewDidLoad];
 }
 
@@ -136,9 +135,11 @@ Goban *goBoard;
             //Draw the entire board again
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
+            //Update the captured stone count
+            self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedWhiteStones];
+            
             //Set to white's turn
             NSLog(@"Set to white's turn");
-            //isBlacksTurn = NO;
             [goBoard setTurn:@"W"];
         }
         else
@@ -169,6 +170,9 @@ Goban *goBoard;
             
             //Draw the entire board again, or just the new move
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
+            
+            //Update the captured stone count
+            self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedBlackStones];
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
@@ -257,7 +261,70 @@ Goban *goBoard;
     //If anything breaks the back button, this would be it
     [goBoard setRedrawBoardNeeded:YES];
     [self drawBoardForNewMove:0 andForColumn:0];
+    //Reset the number of captured stones
+    self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.previousCapturedWhiteStones];
+    self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.previousCapturedBlackStones];
+
 }
+
+- (void) startTimer {
+    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+
+}
+
+//Countdown blacks timer if it is black's turn
+- (void) timerCallback {
+    NSMutableString *result = [[NSMutableString alloc] init];
+    NSString *minutes = [[NSString alloc] init];
+    NSString *seconds = [[NSString alloc] init];
+    int iMinutes = 25;
+    int iSeconds = 0;
+    if([goBoard.turn isEqualToString:@"B"]) //Countdown blacks timer if it is black's turn
+    {
+        NSLog(@"Minutes: %@, Seconds: %@", [self.blackRemainingTimeLabel.text substringToIndex:2], [self.blackRemainingTimeLabel.text substringFromIndex:3]);
+        iMinutes = [[self.blackRemainingTimeLabel.text substringToIndex:2] integerValue];
+        iSeconds = [[self.blackRemainingTimeLabel.text substringFromIndex:3] integerValue];
+        NSLog(@"int representation of iSeconds: %d", iSeconds);
+        if(iSeconds <= 0)
+        {
+            iMinutes--;
+            iSeconds = 59;
+            NSLog(@"Reset iSeconds %d", iSeconds);
+        }
+        else
+        {
+            iSeconds--;
+        }
+        result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+        self.blackRemainingTimeLabel.text = result;
+        NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
+    }
+    else if([goBoard.turn isEqualToString:@"W"])
+    {
+        NSLog(@"Minutes: %@, Seconds: %@", [self.whiteRemainingTimeLabel.text substringToIndex:2], [self.whiteRemainingTimeLabel.text substringFromIndex:3]);
+        iMinutes = [[self.whiteRemainingTimeLabel.text substringToIndex:2] integerValue];
+        iSeconds = [[self.whiteRemainingTimeLabel.text substringFromIndex:3] integerValue];
+        NSLog(@"int representation of iSeconds: %d", iSeconds);
+        if(iSeconds <= 0)
+        {
+            iMinutes--;
+            iSeconds = 59;
+            NSLog(@"Reset iSeconds %d", iSeconds);
+        }
+        else
+        {
+            iSeconds--;
+        }
+        result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+        self.whiteRemainingTimeLabel.text = result;
+        NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
+    }
+    else
+    {
+        //Do nothing
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {

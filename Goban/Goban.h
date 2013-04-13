@@ -15,6 +15,8 @@
 @interface Goban : NSObject {
     NSMutableArray *goban;               //Go board object
     NSMutableArray *previousStateOfBoard; //Previous state of the Go board object, used for backs and ko checks
+    int previousCapturedBlackStones;     //Number of captured black stones before last death
+    int previousCapturedWhiteStones;     //Number of captured white stones before last death
     NSString *turn;                      //Whose turn it is
     int moveNumber;                      //The move number
     int whiteStones;                     //Total number of white stones
@@ -33,6 +35,8 @@
 @property (nonatomic) int blackStones;
 @property (nonatomic) int capturedBlackStones;
 @property (nonatomic) int capturedWhiteStones;
+@property (nonatomic) int previousCapturedBlackStones;
+@property (nonatomic) int previousCapturedWhiteStones;
 @property (nonatomic) double komi;
 @property (nonatomic) BOOL redrawBoardNeeded;
 

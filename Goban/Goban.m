@@ -18,6 +18,8 @@
 @synthesize blackStones;
 @synthesize capturedBlackStones;
 @synthesize capturedWhiteStones;
+@synthesize previousCapturedBlackStones;
+@synthesize previousCapturedWhiteStones;
 @synthesize komi;
 @synthesize redrawBoardNeeded;
 
@@ -476,7 +478,6 @@
         if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
         {
             NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
-            //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue+1];
@@ -773,6 +774,7 @@
     {
         NSLog(@"Old number of captured black stones: %d", self.capturedBlackStones);
         //Add the number of dead stones to black's captured stone count
+        [self setPreviousCapturedBlackStones:self.capturedBlackStones];
         [self setCapturedBlackStones:(self.capturedBlackStones + [stonesToKill count])];
         NSLog(@"New number of captured black stones: %d", self.capturedBlackStones);
     }
@@ -781,6 +783,7 @@
         //Add the number of dead stones to white's dead stone count
         NSLog(@"Old number of captured white stones: %d", self.capturedWhiteStones);
         //Add the number of dead stones to white's captured stone count
+        [self setPreviousCapturedWhiteStones:self.capturedWhiteStones];
         [self setCapturedWhiteStones:(self.capturedWhiteStones + [stonesToKill count])];
         NSLog(@"New number of captured white stones: %d", self.capturedWhiteStones);
     }

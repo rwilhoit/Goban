@@ -17,5 +17,13 @@
 
 -(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
 -(void)score;
+-(void)startTimer;
+-(void)timerCallback;
+
+@property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *blackCapturedStoneCountLabel;
+@property (strong, nonatomic) IBOutlet UILabel *whiteCapturedStoneCountLabel;
+
 
 @end
