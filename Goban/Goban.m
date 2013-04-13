@@ -19,6 +19,7 @@
 @synthesize capturedBlackStones;
 @synthesize capturedWhiteStones;
 @synthesize komi;
+@synthesize redrawBoardNeeded;
 
 -(id)init:(NSMutableArray *) goBoard
 {
@@ -105,44 +106,11 @@
         hasLiberties = YES;
     }
     //Check if any liberties were found and return NO and print a log statement if they weren't
-    NSLog(@"Checking if any liberties were found %c", hasLiberties);
     if(!hasLiberties)
     {
-        NSLog(@"Checking spaces for ally colors");
-        //This checks just if any of the pieces around the piece are of an ally color
-        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:self.turn])
-        {
-            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
-            NSLog(@"Legal move");
-            return YES;
-        }
-        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:self.turn])
-        {
-            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
-            NSLog(@"Legal move");
-            return YES;
-        }
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:self.turn])
-        {
-            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
-            NSLog(@"Legal move");
-            return YES;
-        }
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:self.turn])
-        {
-            //Maybe need to check if this could be adding a stone to the last place in a cluster which would kill the entire cluster
-            NSLog(@"Legal move");
-            return YES;
-        }
-        else
-        {
-            //else nothing
-        }
-        NSLog(@"Checked spaces for ally colors");
-
         NSLog(@"Saving the state of the board");
         //Save the state of the board first
-        NSLog(@"Initializing the board");
+        NSLog(@"Initializing the saved state board");
         
         //Initialize a double array
         NSMutableArray *savedStateOfBoard = [NSMutableArray arrayWithObjects:
@@ -172,17 +140,14 @@
             {
                 if([self.goban[j][i] isEqualToString:@"+"])
                 {
-                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"+";
                 }
                 else if([self.goban[j][i] isEqualToString:@"B"])
                 {
-                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"B";
                 }
                 else if([self.goban[j][i] isEqualToString:@"W"])
                 {
-                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"W";
                 }
             }
@@ -197,11 +162,12 @@
         NSLog(@"THIS IS WHERE THE BOARD GOES CRAZY");
         [self printBoardToConsole];
         
-        //Check if any adjacent stones died, once they died, check if they match the previous board and if they do we have a ko, if they don't then we don't
+        //Check if any adjacent stones died, once they died, check if they match the previous board and if they do, we have a ko, if they don't then we don't
         int deathRow;
         int deathColumn;
         BOOL stonesDied = NO;
         BOOL koFound = NO;
+        BOOL suicide = NO;
         NSString *enemyColor = [[NSMutableString alloc] init];
 
         //Check if stones died to the right
@@ -260,15 +226,54 @@
             }
             else
             {
-                NSLog(@"Ko not found");
+                NSLog(@"Ko not found, checking for suicides");
             }
             
+            NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);            
+            NSLog(@"Setting the board back to its saved state");
+            //Setting the board back to its saved state
+            for(int i=0;i<[self.goban count];i++)
+            {
+                for(int j=0;j<[self.goban count];j++)
+                {
+                    if([savedStateOfBoard[j][i] isEqualToString:@"+"])
+                    {
+                        self.goban[j][i] = @"+";
+                    }
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"])
+                    {
+                        self.goban[j][i] = @"B";
+                    }
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"])
+                    {
+                        self.goban[j][i] = @"W";
+                    }
+                }
+            } //Board set back to its saved state
+
+            //Restore the number of captured stones
+            [self setCapturedWhiteStones:tempWhiteCaptureCount];
+            [self setCapturedBlackStones:tempBlackCaptureCount];
+            NSLog(@"Board set back to previous state");
+            [self printBoardToConsole];
+            if(koFound)
+            {
+                return NO;                
+            }
+        }
+        else
+        {
+            //If no stones died, check if the move was a suicide move
+            //Check if the move was a suicide move
+            [self checkLifeOfStone:rowValue andForColumnValue:columnValue];
+            //If the space is now a + then it was a suicide
+            if([self.goban[rowValue][columnValue] isEqualToString:@"+"])
+            {
+                suicide = YES;
+            }
             
-            //SET THE BOARD BACK TO ITS SAVED STATE AFTER THE TEST IS DONE
-            NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);
-            //self.goban[deathRow][deathColumn] = enemyColor;
-            //self.goban[rowValue][columnValue] = @"+";
-            
+            //Set the board back
+            NSLog(@"Setting the board back to its saved state");
             //Setting the board back to its saved state
             for(int i=0;i<[self.goban count];i++)
             {
@@ -289,27 +294,18 @@
                 }
             } //Board set back to its saved state
             
-            //MIGHT NEED TO SET BACK SOME OTHER THINGS SUCH AS NUMBER OF CAPTURED STONES
-            [self setCapturedWhiteStones:tempWhiteCaptureCount];
-            [self setCapturedBlackStones:tempBlackCaptureCount];
-            NSLog(@"Board set back to previous state");
-            [self printBoardToConsole];
-            if(koFound)
-            {
-                return NO;                
-            }
-        }
-        else
-        {
-            //Set it back if no stones died
-            //self.goban[deathRow][deathColumn] = enemyColor;
+            
             self.goban[rowValue][columnValue] = @"+";
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
             NSLog(@"Set board back to its previous state");
             [self printBoardToConsole];
-            NSLog(@"Illegal move: No liberties");
-            return NO;
+            
+            if(suicide)
+            {
+                NSLog(@"Illegal move: Suicide");
+                return NO;
+            }
         }
     }
     
@@ -439,7 +435,6 @@
 -(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue
 {
     //It is already implied that if we are at this point in the code, then the piece at the given location is a valid piece
-    
     //Figure out what is an enemy color and what is an ally piece
     NSString *allyColor = [[NSString alloc] init];  //Color of ally stones
     NSString *enemyColor = [[NSString alloc] init]; //Color of enemy stones
@@ -624,8 +619,6 @@
         NSLog(@"Checking nodes past the vertex (inside loop)");
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
-        //vertex.rowValue = topOfQueue.rowValue;
-        //vertex.columnValue = topOfQueue.columnValue;
         
         // 2. Dequeue the vertex at the head of the queue, syntax: - (void)removeObjectAtIndex:(NSUInteger)index
         [queue removeObjectAtIndex:0];
@@ -801,6 +794,8 @@
     }
     NSLog(@"Killed stones");
     [self printBoardToConsole];
+    NSLog(@"Board needs to be redrawn");
+    [self setRedrawBoardNeeded:YES];
 }
 
 -(void)back

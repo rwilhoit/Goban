@@ -22,6 +22,7 @@
     int capturedBlackStones;             //Number of captured black stones
     int capturedWhiteStones;             //Number of captured white stones
     double komi;                         //Komi, specified as a double because komi is oftem 6.5
+    BOOL redrawBoardNeeded;              //A flag on when to redraw the board and when to just add a stone to it
 }
 
 @property (nonatomic, retain) NSMutableArray *goban;
@@ -33,6 +34,7 @@
 @property (nonatomic) int capturedBlackStones;
 @property (nonatomic) int capturedWhiteStones;
 @property (nonatomic) double komi;
+@property (nonatomic) BOOL redrawBoardNeeded;
 
 -(id)init:(NSMutableArray *) goban;
 -(void)printBoardToConsole;

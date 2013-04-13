@@ -15,7 +15,7 @@
 }
 - (IBAction)pressedBack:(id)sender;
 
--(void)drawBoard; 
+-(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
 -(void)score;
 
 @end

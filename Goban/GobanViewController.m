@@ -78,8 +78,10 @@ Goban *goBoard;
     [goBoard setKomi:6.5];
     
     //Set it to black's turn
-    //isBlacksTurn = YES;
     [goBoard setTurn:@"B"];
+    
+    //Set redraw needed
+    [goBoard setRedrawBoardNeeded:NO];
     
      [super viewDidLoad];
 }
@@ -132,7 +134,7 @@ Goban *goBoard;
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Draw the entire board again
-            [self drawBoard];
+            [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
@@ -165,12 +167,11 @@ Goban *goBoard;
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
             NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
-            //Draw the entire board again
-            [self drawBoard];
+            //Draw the entire board again, or just the new move
+            [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
-            //isBlacksTurn = YES;
             [goBoard setTurn:@"B"];
         }
     }
@@ -180,50 +181,69 @@ Goban *goBoard;
      
 }
 
-- (void)drawBoard
+-(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove
 {
-    NSLog(@"About to redraw the board");
+    //Check it we need to redraw the board or just add a stone to it
     float stoneSize = 40.4210526316;
     NSLog(@"Stone size: %f", stoneSize);
-    CALayer *boardLayer = [CALayer layer];
-    //boardLayer.backgroundColor = [UIColor blackColor].CGColor;
-    //sublayer.frame = CGRectMake(self.view.layer.bounds.origin.x,self.view.layer.bounds.origin.y,self.view.layer.bounds.size.width, self.view.layer.bounds.size.height);
-    boardLayer.frame = CGRectMake(0,0,768,768);
-    boardLayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
-    [self.view.layer addSublayer:boardLayer];
-    
-    // Check the positions you need to draw at
-    NSLog(@"Moves have been played at: ");
-    for(int i=0;i<[goBoard.goban count];i++)
+    if(!goBoard.redrawBoardNeeded)
     {
-        for(int j=0;j<[goBoard.goban count];j++)
+        NSLog(@"Drawing just 1 new stone to the board");
+        //How do I know which position to draw at?
+        if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"B"])
         {
-            if([goBoard.goban[j][i] isEqualToString:@"B"])
+            CALayer *stoneLayer = [CALayer layer];
+            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize,stoneSize,stoneSize);
+            stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
+            [self.view.layer addSublayer:stoneLayer];
+        }
+        else if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"W"])
+        {
+            CALayer *stoneLayer = [CALayer layer];
+            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize,stoneSize,stoneSize);
+            stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
+            [self.view.layer addSublayer:stoneLayer];
+        }
+        else
+        {
+            //Else nothing. This should never be reached.
+        }
+    }
+    else
+    {
+        NSLog(@"About to redraw the board");
+        CALayer *boardLayer = [CALayer layer];
+        boardLayer.frame = CGRectMake(0,0,768,768);
+        boardLayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
+        [self.view.layer addSublayer:boardLayer];
+    
+        // Check the positions you need to draw at
+        NSLog(@"Drawing stones");
+        for(int i=0;i<[goBoard.goban count];i++)
+        {
+            for(int j=0;j<[goBoard.goban count];j++)
             {
-                NSLog(@"Draw a black stone at coordinates (%d,%d) and location (%f,%f)",j,i,j*stoneSize,i*stoneSize);
-                //Code to draw a black stone
-                
-                CALayer *stoneLayer = [CALayer layer];
-                //stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
-                stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
-                stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
-                [self.view.layer addSublayer:stoneLayer];
-            }
-            else if([goBoard.goban[j][i] isEqualToString:@"W"])
-            {
-                NSLog(@"Draw a white stone at coordinates (%d,%d) and location (%f,%f)",j,i,j*stoneSize,i*stoneSize);
-                //Code to draw a white stone
-                CALayer *stoneLayer = [CALayer layer];
-                //stoneLayer.backgroundColor = [UIColor blackColor].CGColor;
-                stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
-                stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
-                [self.view.layer addSublayer:stoneLayer];
-            }
-            else
-            {
-                //NSLog(@"Draw nothing at coordinates (%d,%d)",j,i);
+                if([goBoard.goban[j][i] isEqualToString:@"B"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
+                else if([goBoard.goban[j][i] isEqualToString:@"W"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
+                else
+                {
+                    //NSLog(@"Draw nothing at coordinates (%d,%d)",j,i);
+                }
             }
         }
+        [goBoard setRedrawBoardNeeded:NO];
     }
 }
 
@@ -233,49 +253,10 @@ Goban *goBoard;
     
     //restore the board to it's previous state
     [goBoard back];
-    /*for(int i=0;i<[goBoard.goban count];i++)
-    {
-        for(int j=0;j<[goBoard.goban count];j++)
-        {
-            if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"+"])
-            {
-                goBoard.goban[j][i] = @"+";
-            }
-            else if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"B"])
-            {
-                goBoard.goban[j][i] = @"B";
-            }
-            else if([goBoard.previousStateOfBoard[j][i] isEqualToString:@"W"])
-            {
-                goBoard.goban[j][i] = @"W";
-            }
-        }
-    }
     
-    //Put the turn back also
-    if([goBoard.turn isEqualToString:@"B"])
-    {
-        NSLog(@"Set to white's turn: %@", goBoard.turn);
-        goBoard.turn = @"W";
-        //isBlacksTurn = NO;
-    }
-    else
-    {
-        goBoard.turn = @"B";
-        NSLog(@"Set to black's turn: %@", goBoard.turn);
-        //isBlacksTurn = YES;
-    }
-    
-    //Put the move count back also
-    if(goBoard.moveNumber > 0)
-    {
-        [goBoard setMoveNumber:(goBoard.moveNumber-1)];
-    }
-    
-    [goBoard printBoardToConsole];
-    */
-    
-    [self drawBoard];
+    //If anything breaks the back button, this would be it
+    [goBoard setRedrawBoardNeeded:YES];
+    [self drawBoardForNewMove:0 andForColumn:0];
 }
 
 - (void)didReceiveMemoryWarning
