@@ -52,16 +52,16 @@
 
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
 {
-    NSLog(@"From within isInBounds...");
+    NSLog(@"Start of From isInBounds...");
     NSLog(@"rowValue = %d and columnValue = %d", rowValue, columnValue);
     NSLog(@"ROW_LENGTH = %d and COLUMN_LENGTH = %d", ROW_LENGTH, COLUMN_LENGTH);
     if(rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH)
     {
-        NSLog(@"(From within isInBounds) Stone was out of bounds");
+        NSLog(@"(End of isInBounds) Stone was out of bounds");
         return NO;
     }
     
-    NSLog(@"(From within isInBounds) Stone was in bounds");
+    NSLog(@"(End of isInBounds) Stone was in bounds");
     return YES;
 }
 
@@ -105,8 +105,10 @@
         hasLiberties = YES;
     }
     //Check if any liberties were found and return NO and print a log statement if they weren't
+    NSLog(@"Checking if any liberties were found %c", hasLiberties);
     if(!hasLiberties)
     {
+        NSLog(@"Checking spaces for ally colors");
         //This checks just if any of the pieces around the piece are of an ally color
         if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:self.turn])
         {
@@ -136,28 +138,57 @@
         {
             //else nothing
         }
-        
+        NSLog(@"Checked spaces for ally colors");
+
+        NSLog(@"Saving the state of the board");
         //Save the state of the board first
-        NSMutableArray *savedStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goban copyItems:YES];
+        NSLog(@"Initializing the board");
+        
+        //Initialize a double array
+        NSMutableArray *savedStateOfBoard = [NSMutableArray arrayWithObjects:
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
+        NSLog(@"Initialized the board");
         for(int i=0;i<[self.goban count];i++)
         {
             for(int j=0;j<[self.goban count];j++)
             {
                 if([self.goban[j][i] isEqualToString:@"+"])
                 {
+                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"+";
                 }
                 else if([self.goban[j][i] isEqualToString:@"B"])
                 {
+                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"B";
                 }
                 else if([self.goban[j][i] isEqualToString:@"W"])
                 {
+                    NSLog(@"Setting value");
                     savedStateOfBoard[j][i] = @"W";
                 }
             }
         } //State of the board saved
-        
+        NSLog(@"Saved the state of the board");
+
         //Just play the move and then set it back after you know if it's legal or not
         int tempWhiteCaptureCount = self.capturedWhiteStones;
         int tempBlackCaptureCount = self.capturedBlackStones;
@@ -423,23 +454,7 @@
         enemyColor = @"B";
     }
     
-    //You can easily check the life of a stone or cluster of stones by looking for any existing liberties.
-    //Implement this using a breadth-first search.
-    
-    // BFS Algorithm:
-    // 1. Mark the root as visited.
-    // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
-    // 3. Add all adjacent nodes (stones of the same color) to the root to the end of the queue
-        
-    // When we've finished all the vertices adjacent to the root then
-    // 1. Pick the vertex at the head of the queue
-    // 2. Dequeue the vertex at the head of the queue
-    // 3. Mark all unvisited vertices as visited and check for free spaces around the current node, ending if one is found.
-    // 4. Add them to the end of the queue
-       
-    //WILL THERE EVER BE A POINT WEHERE THE QUEUE IS EMPTY BECAUSE THERE IS NO WHERE ELSE TO SEARCH AND THAT SCREWS THINGS UP?
-    //CHECK THAT NO SPACES WILL EVER BE MARKED AS VISITED IF THEY AREN'T A WHITE STONE
-    
+    //BFS
     //Put the coordinates in a point and then add the point to the queue and visited nodes list
     Stone *vertex = [[Stone alloc] init];
     [vertex setColumnValue:columnValue];
@@ -609,25 +624,25 @@
         NSLog(@"Checking nodes past the vertex (inside loop)");
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
-        vertex.rowValue = topOfQueue.rowValue;
-        vertex.columnValue = topOfQueue.columnValue;
+        //vertex.rowValue = topOfQueue.rowValue;
+        //vertex.columnValue = topOfQueue.columnValue;
         
         // 2. Dequeue the vertex at the head of the queue, syntax: - (void)removeObjectAtIndex:(NSUInteger)index
         [queue removeObjectAtIndex:0];
         
         // 3. Mark all unvisited vertices as visited (only if they aren't visited already!) and check for free spaces around the current node, ending if one is found.
         //Check spot to the right of vertex
-        if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue+1) andForColumnValue:columnValue])
+        if([self isInBounds:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
+            if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+                NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
                 //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
-                [point setRowValue:vertex.rowValue+1];
-                [point setColumnValue:vertex.columnValue];
+                [point setRowValue:topOfQueue.rowValue+1];
+                [point setColumnValue:topOfQueue.columnValue];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -635,9 +650,9 @@
                 [queue addObject:point];
             }
             //If it is a free space then we're done!
-            else if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:goal])
+            else if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -645,29 +660,29 @@
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
             }
         }
         //Check spot to the left of the vertex
-        if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(vertex.rowValue-1) andForColumnValue:vertex.columnValue])
+        if([self isInBounds:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
+            if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
+                NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
-                [point setRowValue:vertex.rowValue-1];
-                [point setColumnValue:vertex.columnValue];
+                [point setRowValue:topOfQueue.rowValue-1];
+                [point setColumnValue:topOfQueue.columnValue];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:goal])
+            else if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
+                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -675,30 +690,30 @@
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
+                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
         //Check spot below the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(columnValue+1)])
+        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
+            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
+                NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
-                [point setRowValue:vertex.rowValue];
-                [point setColumnValue:vertex.columnValue+1];
+                [point setRowValue:topOfQueue.rowValue];
+                [point setColumnValue:topOfQueue.columnValue+1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:goal])
+            else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
+                NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -706,30 +721,30 @@
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
+                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
         //Check the spot above the vertex
-        if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:rowValue andForColumnValue:(vertex.columnValue-1)])
+        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)])
         {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
+            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+                NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
-                [point setRowValue:vertex.rowValue];
-                [point setColumnValue:vertex.columnValue-1];
+                [point setRowValue:topOfQueue.rowValue];
+                [point setColumnValue:topOfQueue.columnValue-1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:goal])
+            else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+                NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -737,11 +752,11 @@
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+                NSLog(@"MOST LIKELY AN ENEMY TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
-    }
+    } //End while loop
     
     //If stones are dead, set them back to unplayed spots
     if(stonesAreDead)

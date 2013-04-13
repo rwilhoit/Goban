@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/Goban.m"
-         timestampString = "387483206.720792"
+         timestampString = "387512049.346591"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "445"
-         endingLineNumber = "445"
+         startingLineNumber = "460"
+         endingLineNumber = "460"
          landmarkName = "-checkLifeOfStone:andForColumnValue:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -34,7 +34,7 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/Goban.m"
-         timestampString = "387358582.798128"
+         timestampString = "387511362.685856"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "107"

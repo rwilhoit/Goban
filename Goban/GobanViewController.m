@@ -94,23 +94,13 @@ Goban *goBoard;
         CGPoint touchPoint = [touch locationInView:self.view];
         NSLog(@"touchPoint: %@, x: %f, y: %f", NSStringFromCGPoint(touchPoint), touchPoint.x, touchPoint.y); //Give me the coordinates of where the user touched
         NSLog(@"We want to draw at point: %d, %d", (int)floor(touchPoint.x/40.4210526316), (int)floor(touchPoint.y/40.4210526316));
-            // Draw a red circle where the touch occurred
-        //UIView *touchView = [[UIView alloc] init];
-        //[touchView setBackgroundColor:[UIColor redColor]];
-        //touchView.frame = CGRectMake(touchPoint.x, touchPoint.y, 30, 30);
-        //touchView.layer.cornerRadius = 15;
-        //[self.view addSubview:touchView];
-        //[touchView release];
         //Get specific coordinates from touch event
         rowValue = (int)floor(touchPoint.x/40.4210526316);
         columnValue = (int)floor(touchPoint.y/40.4210526316);
-
     }];
-    
-    //Need to set the lastMove somewhere and the new current move somewhere 
-    
-    NSLog(@"Row coordingate: %d", rowValue);
-    NSLog(@"Columns coordinate: %d", columnValue);
+        
+    NSLog(@"Row coordinate: %d", rowValue);
+    NSLog(@"Column coordinate: %d", columnValue);
     
     //Check if new move is legal
     if([goBoard isLegalMove:rowValue andForColumnValue:columnValue])
