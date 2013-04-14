@@ -17,6 +17,7 @@
 
 //Go board declared as a global variable
 Goban *goBoard;
+NSTimer *gameClock;
 
 - (void)viewDidLoad
 {
@@ -268,24 +269,25 @@ Goban *goBoard;
 }
 
 - (void) startTimer {
-    [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
-
+    gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
 
 //Countdown blacks timer if it is black's turn
 - (void) timerCallback {
     NSMutableString *result = [[NSMutableString alloc] init];
-    NSString *minutes = [[NSString alloc] init];
-    NSString *seconds = [[NSString alloc] init];
     int iMinutes = 25;
     int iSeconds = 0;
     if([goBoard.turn isEqualToString:@"B"]) //Countdown blacks timer if it is black's turn
     {
-        NSLog(@"Minutes: %@, Seconds: %@", [self.blackRemainingTimeLabel.text substringToIndex:2], [self.blackRemainingTimeLabel.text substringFromIndex:3]);
+        //NSLog(@"Minutes: %@, Seconds: %@", [self.blackRemainingTimeLabel.text substringToIndex:2], [self.blackRemainingTimeLabel.text substringFromIndex:3]);
         iMinutes = [[self.blackRemainingTimeLabel.text substringToIndex:2] integerValue];
         iSeconds = [[self.blackRemainingTimeLabel.text substringFromIndex:3] integerValue];
-        NSLog(@"int representation of iSeconds: %d", iSeconds);
-        if(iSeconds <= 0)
+        //NSLog(@"int representation of iSeconds: %d", iSeconds);
+        if(iMinutes < 0)
+        {
+            [self timeUp];
+        }
+        else if(iSeconds <= 0)
         {
             iMinutes--;
             iSeconds = 59;
@@ -295,29 +297,47 @@ Goban *goBoard;
         {
             iSeconds--;
         }
-        result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
-        self.blackRemainingTimeLabel.text = result;
-        NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
+        
+        if(iMinutes < 0)
+        {
+            [gameClock invalidate];
+            [self timeUp];
+        }
+        else
+        {
+            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+            self.blackRemainingTimeLabel.text = result;
+            NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
+        }
     }
     else if([goBoard.turn isEqualToString:@"W"])
     {
-        NSLog(@"Minutes: %@, Seconds: %@", [self.whiteRemainingTimeLabel.text substringToIndex:2], [self.whiteRemainingTimeLabel.text substringFromIndex:3]);
+        //NSLog(@"Minutes: %@, Seconds: %@", [self.whiteRemainingTimeLabel.text substringToIndex:2], [self.whiteRemainingTimeLabel.text substringFromIndex:3]);
         iMinutes = [[self.whiteRemainingTimeLabel.text substringToIndex:2] integerValue];
         iSeconds = [[self.whiteRemainingTimeLabel.text substringFromIndex:3] integerValue];
-        NSLog(@"int representation of iSeconds: %d", iSeconds);
+        //NSLog(@"int representation of iSeconds: %d", iSeconds);
         if(iSeconds <= 0)
         {
             iMinutes--;
             iSeconds = 59;
-            NSLog(@"Reset iSeconds %d", iSeconds);
+            //SLog(@"Reset iSeconds %d", iSeconds);
         }
         else
         {
             iSeconds--;
         }
-        result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
-        self.whiteRemainingTimeLabel.text = result;
-        NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
+        
+        if(iMinutes < 0)
+        {
+            [gameClock invalidate];
+            [self timeUp];
+        }
+        else
+        {
+            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+            self.whiteRemainingTimeLabel.text = result;
+            NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
+        }
     }
     else
     {
@@ -325,6 +345,23 @@ Goban *goBoard;
     }
 }
 
+- (void)timeUp
+{
+    if([goBoard.turn isEqualToString:@"B"])
+    {
+        //Show warning
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Loss by time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+
+        //Show warning
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"Loss by time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+
+}
 
 - (void)didReceiveMemoryWarning
 {

@@ -11,7 +11,7 @@
 #import "Goban.h"
 
 @interface GobanViewController : UIViewController {
-    BOOL isBlacksTurn;
+    //BOOL isBlacksTurn;
 }
 - (IBAction)pressedBack:(id)sender;
 
@@ -19,6 +19,7 @@
 -(void)score;
 -(void)startTimer;
 -(void)timerCallback;
+-(void)timeUp;
 
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
