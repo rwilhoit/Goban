@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12D78" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="8bo-0q-y8V">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C3006" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="8bo-0q-y8V">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--Main Menu View Controller-->
+        <!--Main Menu View Controller - Goban Version 1.0-->
         <scene sceneID="a10-Hm-hny">
             <objects>
                 <viewController id="LQj-x4-bvx" customClass="MainMenuViewController" sceneMemberID="viewController">
@@ -12,7 +12,10 @@
                         <rect key="frame" x="0.0" y="64" width="768" height="960"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qx2-S7-u0i">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cb7-zG-xiy">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="225" id="kVj-ZI-Cvz"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="New Game">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -22,10 +25,10 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="newGameSegue" modalTransitionStyle="flipHorizontal" id="In8-qz-WYB"/>
+                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="startGameSegue" animates="NO" id="Qgq-LO-El9"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tdU-fu-b86">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ajm-zs-yFh">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Load Game">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -35,25 +38,95 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pressedLoad:" destination="LQj-x4-bvx" eventType="touchUpInside" id="yMI-nv-eWH"/>
+                                    <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="2tv-JG-JcP"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Black Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUB-Qj-03Q">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="White Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yF3-Es-b2x">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KRn-B3-MC1">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWX-Zr-fdn">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Stones Captured" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="624-k5-NU5">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k9J-Dj-h4f">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Stones Captured" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnR-kP-veJ">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rer-wz-9tm">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="tdU-fu-b86" firstAttribute="top" secondItem="qx2-S7-u0i" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="DsV-X9-Whp"/>
-                            <constraint firstItem="tdU-fu-b86" firstAttribute="leading" secondItem="qx2-S7-u0i" secondAttribute="leading" type="default" id="arL-c9-Lip"/>
-                            <constraint firstItem="qx2-S7-u0i" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" type="default" id="cwQ-82-Q3r"/>
-                            <constraint firstItem="qx2-S7-u0i" firstAttribute="top" secondItem="WYd-5X-eWi" secondAttribute="top" constant="379" id="p6U-sj-WkF"/>
+                            <constraint firstItem="k9J-Dj-h4f" firstAttribute="baseline" secondItem="rer-wz-9tm" secondAttribute="baseline" type="default" id="0qc-co-tin"/>
+                            <constraint firstItem="XWX-Zr-fdn" firstAttribute="centerX" secondItem="HnR-kP-veJ" secondAttribute="centerX" type="default" id="6kf-Hr-lhU"/>
+                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="centerX" secondItem="KRn-B3-MC1" secondAttribute="centerX" type="default" id="A5r-rV-Yef"/>
+                            <constraint firstItem="cb7-zG-xiy" firstAttribute="trailing" secondItem="Ajm-zs-yFh" secondAttribute="trailing" type="default" id="AzD-N0-9wi"/>
+                            <constraint firstItem="624-k5-NU5" firstAttribute="centerX" secondItem="KRn-B3-MC1" secondAttribute="centerX" type="default" id="ERE-63-LgH"/>
+                            <constraint firstItem="rer-wz-9tm" firstAttribute="centerX" secondItem="HnR-kP-veJ" secondAttribute="centerX" type="default" id="IxG-t6-5tZ"/>
+                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="baseline" secondItem="yF3-Es-b2x" secondAttribute="baseline" type="default" id="Rxn-Uz-vrM"/>
+                            <constraint firstItem="k9J-Dj-h4f" firstAttribute="top" secondItem="624-k5-NU5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="YjO-at-WgS"/>
+                            <constraint firstAttribute="bottom" secondItem="Ajm-zs-yFh" secondAttribute="bottom" constant="71" id="drV-UJ-Nw1"/>
+                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="leading" secondItem="WYd-5X-eWi" secondAttribute="leading" constant="59" id="eTD-QA-MIf"/>
+                            <constraint firstItem="XWX-Zr-fdn" firstAttribute="centerX" secondItem="yF3-Es-b2x" secondAttribute="centerX" type="default" id="fgJ-cy-t6B"/>
+                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="leading" secondItem="cb7-zG-xiy" secondAttribute="leading" type="default" id="gYk-0q-M4v"/>
+                            <constraint firstItem="k9J-Dj-h4f" firstAttribute="centerY" secondItem="rer-wz-9tm" secondAttribute="centerY" type="default" id="jaN-qt-pDW"/>
+                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="top" secondItem="cb7-zG-xiy" secondAttribute="top" type="default" id="lEl-yg-eXP"/>
+                            <constraint firstItem="KRn-B3-MC1" firstAttribute="baseline" secondItem="XWX-Zr-fdn" secondAttribute="baseline" type="user" id="lNq-Ua-8RF"/>
+                            <constraint firstAttribute="bottom" secondItem="k9J-Dj-h4f" secondAttribute="bottom" constant="42" id="m7l-vX-QQI"/>
+                            <constraint firstItem="624-k5-NU5" firstAttribute="baseline" secondItem="HnR-kP-veJ" secondAttribute="baseline" type="default" id="nbN-5V-WwD"/>
+                            <constraint firstItem="KRn-B3-MC1" firstAttribute="top" secondItem="LUB-Qj-03Q" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ny6-6P-H4a"/>
+                            <constraint firstItem="624-k5-NU5" firstAttribute="centerX" secondItem="k9J-Dj-h4f" secondAttribute="centerX" type="default" id="v2j-Y5-TKY"/>
+                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" type="default" id="vTD-Lq-Kcm"/>
+                            <constraint firstAttribute="trailing" secondItem="yF3-Es-b2x" secondAttribute="trailing" constant="58" id="wJf-TU-vbT"/>
+                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="top" secondItem="cb7-zG-xiy" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="y4Y-lY-4fI"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="0iP-c2-yQk"/>
+                    <navigationItem key="navigationItem" title="Goban Version 1.0" id="0iP-c2-yQk"/>
+                    <connections>
+                        <outlet property="blackRemainingTimeLabel" destination="KRn-B3-MC1" id="vAL-Ec-4ER"/>
+                        <outlet property="blackRemainingTimeStaticLabel" destination="LUB-Qj-03Q" id="kip-T3-4SZ"/>
+                        <outlet property="blackStonesCapturedLabel" destination="k9J-Dj-h4f" id="MFD-lF-PK2"/>
+                        <outlet property="blackStonesCapturedStaticLabel" destination="624-k5-NU5" id="v4R-pS-tfZ"/>
+                        <outlet property="gameButton" destination="cb7-zG-xiy" id="g6N-2E-Flm"/>
+                        <outlet property="loadGameButton" destination="Ajm-zs-yFh" id="9qX-Bz-1kK"/>
+                        <outlet property="whiteRemainingTimeLabel" destination="XWX-Zr-fdn" id="9xE-0P-Uk2"/>
+                        <outlet property="whiteRemainingTimeStaticLabel" destination="yF3-Es-b2x" id="km3-bM-R56"/>
+                        <outlet property="whiteStonesCapturedLabel" destination="rer-wz-9tm" id="SAz-Ql-d6K"/>
+                        <outlet property="whiteStonesCapturedStaticLabel" destination="HnR-kP-veJ" id="GNg-dB-jVi"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GJB-UP-Z6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1639" y="-1592"/>
+            <point key="canvasLocation" x="1629" y="-1592"/>
         </scene>
-        <!--Goban View Controller - Goban-->
+        <!--Goban View Controller - Goban Version 1.0-->
         <scene sceneID="4">
             <objects>
                 <viewController id="2" customClass="GobanViewController" sceneMemberID="viewController">
@@ -63,7 +136,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sp5-8P-iVK">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="133" id="dGa-7F-bxH"/>
+                                    <constraint firstAttribute="width" constant="225" id="zI6-7b-Ygq"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Main Menu">
@@ -90,7 +163,7 @@
                                     <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="6vn-YL-3yC"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Black Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zzi-e2-Kqa">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Black Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zzi-e2-Kqa" colorLabel="IBBuiltInLabel-Red">
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -133,31 +206,32 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="baseline" secondItem="Eak-dI-BAo" secondAttribute="baseline" type="default" id="3Bn-Cp-oxP"/>
-                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="trailing" secondItem="u0W-1K-Lqj" secondAttribute="trailing" type="default" id="A3J-Y9-fBM"/>
+                            <constraint firstAttribute="bottom" secondItem="2ea-NM-pNQ" secondAttribute="bottom" constant="42" id="58d-Yh-UVa"/>
+                            <constraint firstItem="d9Z-1R-jtd" firstAttribute="baseline" secondItem="ZuK-MP-GRZ" secondAttribute="baseline" type="default" id="6Ym-7g-zjM"/>
+                            <constraint firstItem="2ea-NM-pNQ" firstAttribute="baseline" secondItem="Idp-D3-c8n" secondAttribute="baseline" type="default" id="BTu-cp-Zc8"/>
                             <constraint firstItem="0qV-fz-5JE" firstAttribute="centerX" secondItem="zzi-e2-Kqa" secondAttribute="centerX" type="default" id="DlR-du-hWK"/>
                             <constraint firstItem="u0W-1K-Lqj" firstAttribute="top" secondItem="Sp5-8P-iVK" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="FI2-KQ-dyS"/>
                             <constraint firstItem="ZuK-MP-GRZ" firstAttribute="centerX" secondItem="EYK-jG-iau" secondAttribute="centerX" type="default" id="FTL-YC-yzm"/>
-                            <constraint firstItem="Idp-D3-c8n" firstAttribute="baseline" secondItem="2ea-NM-pNQ" secondAttribute="baseline" type="default" id="Fse-ks-hAg"/>
-                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="top" secondItem="Sp5-8P-iVK" secondAttribute="top" type="default" id="HjO-7G-Mj3"/>
-                            <constraint firstItem="u0W-1K-Lqj" firstAttribute="bottom" secondItem="d9Z-1R-jtd" secondAttribute="bottom" type="default" id="IOe-ZU-bcE"/>
-                            <constraint firstItem="0qV-fz-5JE" firstAttribute="baseline" secondItem="EYK-jG-iau" secondAttribute="baseline" type="default" id="LGh-GU-Pjs"/>
-                            <constraint firstAttribute="bottom" secondItem="2ea-NM-pNQ" secondAttribute="bottom" constant="46" id="TrP-mU-taZ"/>
+                            <constraint firstAttribute="trailing" secondItem="Eak-dI-BAo" secondAttribute="trailing" constant="59" id="NAf-li-tk0"/>
+                            <constraint firstItem="2ea-NM-pNQ" firstAttribute="centerY" secondItem="Idp-D3-c8n" secondAttribute="centerY" type="default" id="Rey-N8-zhh"/>
                             <constraint firstItem="2ea-NM-pNQ" firstAttribute="top" secondItem="d9Z-1R-jtd" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Twk-Sj-Rdb"/>
                             <constraint firstItem="Idp-D3-c8n" firstAttribute="centerX" secondItem="ZuK-MP-GRZ" secondAttribute="centerX" type="default" id="U8D-3E-8Ms"/>
+                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="60" id="UTY-tF-8lX"/>
                             <constraint firstItem="d9Z-1R-jtd" firstAttribute="centerX" secondItem="0qV-fz-5JE" secondAttribute="centerX" type="default" id="Vkt-Hn-zLi"/>
-                            <constraint firstItem="u0W-1K-Lqj" firstAttribute="centerX" secondItem="60Q-5M-rDU" secondAttribute="centerX" type="default" id="eWC-3O-t7a"/>
-                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="leading" secondItem="u0W-1K-Lqj" secondAttribute="leading" type="default" id="gVx-M6-400"/>
+                            <constraint firstItem="u0W-1K-Lqj" firstAttribute="trailing" secondItem="Sp5-8P-iVK" secondAttribute="trailing" type="default" id="WLf-Yp-got"/>
+                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="271" id="Whs-jZ-mrE"/>
+                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="baseline" secondItem="Eak-dI-BAo" secondAttribute="baseline" type="default" id="cBu-1l-kKU" colorLabel="IBBuiltInLabel-Orange"/>
+                            <constraint firstItem="0qV-fz-5JE" firstAttribute="baseline" secondItem="EYK-jG-iau" secondAttribute="baseline" type="default" id="d0Q-el-YtL"/>
+                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="leading" secondItem="u0W-1K-Lqj" secondAttribute="leading" type="default" id="hBK-xq-A2T"/>
                             <constraint firstItem="2ea-NM-pNQ" firstAttribute="centerX" secondItem="d9Z-1R-jtd" secondAttribute="centerX" type="default" id="iQt-KE-OEn"/>
-                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="87" id="jYW-St-rNb"/>
-                            <constraint firstItem="ZuK-MP-GRZ" firstAttribute="baseline" secondItem="d9Z-1R-jtd" secondAttribute="baseline" type="default" id="pCN-pf-WP5"/>
+                            <constraint firstItem="zzi-e2-Kqa" firstAttribute="top" secondItem="Sp5-8P-iVK" secondAttribute="top" type="default" id="ldf-Eu-sEk"/>
                             <constraint firstItem="EYK-jG-iau" firstAttribute="centerX" secondItem="Eak-dI-BAo" secondAttribute="centerX" type="default" id="pGP-FF-o2w"/>
-                            <constraint firstAttribute="trailing" secondItem="Eak-dI-BAo" secondAttribute="trailing" constant="83" id="u5d-bK-C3y"/>
+                            <constraint firstAttribute="bottom" secondItem="u0W-1K-Lqj" secondAttribute="bottom" constant="71" id="r88-f4-YAJ"/>
                             <constraint firstItem="0qV-fz-5JE" firstAttribute="top" secondItem="zzi-e2-Kqa" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ziF-ij-tgk"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Goban" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
+                    <navigationItem key="navigationItem" title="Goban Version 1.0" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="yPS-ha-F2Z">
                             <connections>
                                 <action selector="pressedBack:" destination="2" id="Lgu-Ld-xZC"/>
@@ -168,14 +242,20 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="blackCapturedStoneCountLabel" destination="2ea-NM-pNQ" id="1pP-da-lNJ"/>
+                        <outlet property="blackCapturedStonesStaticLabel" destination="d9Z-1R-jtd" id="MEL-jM-xqD"/>
                         <outlet property="blackRemainingTimeLabel" destination="0qV-fz-5JE" id="SbX-3k-axF"/>
+                        <outlet property="blackRemainingTimeStaticLabel" destination="zzi-e2-Kqa" id="i5G-p8-gTE"/>
+                        <outlet property="mainMenuButton" destination="Sp5-8P-iVK" id="TZ2-hu-5ju"/>
+                        <outlet property="resignButton" destination="u0W-1K-Lqj" id="eR5-Wm-ZiM"/>
                         <outlet property="whiteCapturedStoneCountLabel" destination="Idp-D3-c8n" id="0Zv-9H-moA"/>
+                        <outlet property="whiteCapturedStonesStaticLabel" destination="ZuK-MP-GRZ" id="d35-gD-50R"/>
                         <outlet property="whiteRemainingTimeLabel" destination="EYK-jG-iau" id="Yi4-3Y-jiY"/>
+                        <outlet property="whiteRemainingTimeStaticLabel" destination="Eak-dI-BAo" id="RSE-vG-UqI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1705" y="-271"/>
+            <point key="canvasLocation" x="1745" y="-271"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Yxs-wb-xzF">
@@ -221,16 +301,31 @@
                 <relationship kind="action" name="pressedBack:"/>
                 <relationship kind="action" name="pressedResign:"/>
                 <relationship kind="outlet" name="blackCapturedStoneCountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="blackCapturedStonesStaticLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="blackRemainingTimeStaticLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="mainMenuButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="resignButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="whiteCapturedStoneCountLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="whiteCapturedStonesStaticLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="whiteRemainingTimeLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="whiteRemainingTimeStaticLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="MainMenuViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MainMenuViewController.h"/>
             <relationships>
-                <relationship kind="action" name="pressedBack:"/>
                 <relationship kind="action" name="pressedLoad:"/>
+                <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="NSLayoutConstraint"/>
+                <relationship kind="outlet" name="blackRemainingTimeStaticLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="blackStonesCapturedLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="blackStonesCapturedStaticLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="gameButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="loadGameButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="whiteRemainingTimeLabel" candidateClass="NSLayoutConstraint"/>
+                <relationship kind="outlet" name="whiteRemainingTimeStaticLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="whiteStonesCapturedLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="whiteStonesCapturedStaticLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">

@@ -15,6 +15,17 @@
 
 @implementation GobanViewController
 
+@synthesize mainMenuButton;
+@synthesize resignButton;
+@synthesize whiteCapturedStoneCountLabel;
+@synthesize whiteCapturedStonesStaticLabel;
+@synthesize blackCapturedStoneCountLabel;
+@synthesize blackCapturedStonesStaticLabel;
+@synthesize whiteRemainingTimeLabel;
+@synthesize whiteRemainingTimeStaticLabel;
+@synthesize blackRemainingTimeLabel;
+@synthesize blackRemainingTimeStaticLabel;
+
 //Go board declared as a global variable
 Goban *goBoard;
 NSTimer *gameClock;
@@ -24,10 +35,31 @@ NSTimer *gameClock;
     // Add the main view image    
     CALayer *sublayer = [CALayer layer];
     sublayer.backgroundColor = [UIColor blackColor].CGColor;
-    //sublayer.frame = CGRectMake(self.view.layer.bounds.origin.x,self.view.layer.bounds.origin.y,self.view.layer.bounds.size.width, self.view.layer.bounds.size.height);
     sublayer.frame = CGRectMake(0,0,768,768);
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
+        
+    // Draw the buttons
+    UIImage *buttonImage = [[UIImage imageNamed:@"orangeButton.png"]
+                            resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
+    UIImage *buttonImageHighlight = [[UIImage imageNamed:@"orangeButtonHighlight.png"]
+                                     resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
+    // Set the background for any states you plan to use
+    [mainMenuButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [mainMenuButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
+    [resignButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [resignButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
+    
+    //Set the color of the buttons
+    self.blackCapturedStonesStaticLabel.textColor = [UIColor orangeColor];
+    self.whiteCapturedStonesStaticLabel.textColor = [UIColor orangeColor];
+    self.blackCapturedStoneCountLabel.textColor = [UIColor orangeColor];
+    self.whiteCapturedStoneCountLabel.textColor = [UIColor orangeColor];
+    self.whiteRemainingTimeLabel.textColor = [UIColor orangeColor];
+    self.whiteRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
+    self.blackRemainingTimeLabel.textColor = [UIColor orangeColor];
+    self.blackRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
+    self.view.backgroundColor = [UIColor blackColor];
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];

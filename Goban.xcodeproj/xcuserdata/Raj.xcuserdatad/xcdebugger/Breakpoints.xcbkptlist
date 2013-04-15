@@ -13,7 +13,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "76"
          endingLineNumber = "76"
-         landmarkName = "-isLegalMove:andForColumnValue:"
+         landmarkName = "-saveBoardToServer"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -26,7 +26,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "457"
          endingLineNumber = "457"
-         landmarkName = "-checkLifeOfStone:andForColumnValue:"
+         landmarkName = "-checkLifeOfAdjacentEnemyStones:andForColumnValue:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -39,7 +39,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "110"
          endingLineNumber = "110"
-         landmarkName = "-isLegalMove:andForColumnValue:"
+         landmarkName = "-saveBoardToServer"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
