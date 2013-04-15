@@ -268,6 +268,22 @@ NSTimer *gameClock;
 
 }
 
+- (IBAction)pressedResign:(id)sender
+{
+    if([goBoard.turn isEqualToString:@"B"])
+    {
+        //Show warning
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Black resigned" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+        //Show warning
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"White resigned" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
 - (void) startTimer {
     gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
@@ -350,14 +366,14 @@ NSTimer *gameClock;
     if([goBoard.turn isEqualToString:@"B"])
     {
         //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Loss by time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Black ran out of time!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
     else
     {
 
         //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"Loss by time" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"White ran out of time!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
 

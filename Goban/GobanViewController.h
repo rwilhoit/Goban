@@ -11,12 +11,12 @@
 #import "Goban.h"
 
 @interface GobanViewController : UIViewController {
-    //BOOL isBlacksTurn;
 }
 - (IBAction)pressedBack:(id)sender;
+- (IBAction)pressedResign:(id)sender;
 
 -(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
--(void)score;
+-(void)scoreGame;
 -(void)startTimer;
 -(void)timerCallback;
 -(void)timeUp;
