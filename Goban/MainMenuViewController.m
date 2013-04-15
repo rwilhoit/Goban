@@ -7,6 +7,7 @@
 //
 
 #import "MainMenuViewController.h"
+#import "GobanViewController.h"
 
 @interface MainMenuViewController ()
 
@@ -33,6 +34,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)pressedLoad:(id)sender
+{
+    NSLog(@"Pressed load");
+    // Need to load a goban object based on what's on the server
+    
 }
 
 @end
