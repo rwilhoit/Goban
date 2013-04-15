@@ -23,6 +23,9 @@
 @synthesize komi;
 @synthesize redrawBoardNeeded;
 
+@synthesize responseData;
+@synthesize serverId;
+
 -(id)init:(NSMutableArray *) goBoard
 {
     if (self = [super init])
@@ -34,6 +37,7 @@
 
 -(id)init
 {
+    self.responseData = [[NSMutableData alloc] init];
     return [super init];
 }
 
@@ -52,6 +56,109 @@
     
     NSLog(@"%@", printRow);
 }
+
+-(void)saveBoardToServer{
+    // Use localhost for debugging with a local server
+    // Use the heroku url for production
+    //NSString *server_prefix = @"localhost:3000";
+    NSString *server_prefix = @"goban-server.herokuapp.com";
+    
+    if (serverId) {
+        // Url for the request
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
+        
+        // Since we already have the id, this is an update call
+        // So the PUT http method is used
+        NSMutableURLRequest *request =
+        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
+        [request setHTTPMethod:@"PUT"];
+        
+        // Serialize the board into a string, replacing the +'s since it causes errors server side
+        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [self serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
+        
+        // Set the right headers so the server doesn't choke
+        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        // Make the request, using this object as the delegate
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        /*
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
+        NSString *str = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+        
+        NSLog(@"%@", str);
+         */
+        
+    } else {
+        // Url for the request
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games", server_prefix];
+        
+        // We're making a new game on the server, so it's an http POST
+        NSMutableURLRequest *request =
+        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
+        [request setHTTPMethod:@"POST"];
+        
+        // Serialize the board and set it in the request body
+        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [self serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
+        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // Make the request
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
+}
+
+-(NSString *)serializeBoard {
+    NSMutableString *board_string = [[NSMutableString alloc] init];
+    for(int i=0;i<COLUMN_LENGTH+1; i++)
+    {
+        for(int j=0; j<ROW_LENGTH+1; j++)
+        {
+            [board_string appendString:self.goban[j][i]];
+        }
+    }
+    return (NSString *)board_string;
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    [self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [self.responseData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    // Show error
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Once this method is invoked, "responseData" contains the complete result
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
+    NSString *response_id = (NSString*)[json objectForKey:@"_id"];
+    if (response_id) {
+        serverId = (NSString*)[json objectForKey:@"_id"];
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
+        
+        NSError *error;
+        BOOL succeed = [serverId writeToFile:[documentsDirectory stringByAppendingPathComponent:@"id.txt"]
+                                  atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        if (!succeed){
+            // Handle error here
+        }
+
+    }
+}
+
 
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
 {
