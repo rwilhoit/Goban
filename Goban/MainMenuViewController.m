@@ -47,7 +47,7 @@
 
         // Update the view (don't think this is necessary)
         //[gobanViewController up
-
+        [gobanViewController loadBoardFromServer];
 
     }
     else if([[segue identifier] isEqualToString:@"startGameSegue"])

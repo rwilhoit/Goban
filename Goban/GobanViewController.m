@@ -447,11 +447,19 @@ NSTimer *gameClock;
 //Loading from the server
 - (void)loadBoardFromServer
 {
+    //NSString *server_prefix = @"localhost:3000";
     NSString *server_prefix = @"goban-server.herokuapp.com";
-    if (serverId)
-    {
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
+    NSString *saved_server_id = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+    
+    NSLog(@"Saved server ID is %@", saved_server_id);
+    
+    if (saved_server_id) {
         // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, saved_server_id];
         // Since we already have the id, this is an update call
         // So the GET http method is used
         NSMutableURLRequest *request =
@@ -464,7 +472,7 @@ NSTimer *gameClock;
         //[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         
         // Make the request, using this object as the delegate
-        //[[NSURLConnection alloc] initWithRequest:request delegate:goBoard];
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
         
         //Get the board down from the server
         
@@ -549,6 +557,7 @@ NSTimer *gameClock;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    NSLog(@"connection callback");
     // Once this method is invoked, "responseData" contains the complete result
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
     NSString *response_id = (NSString*)[json objectForKey:@"_id"];
@@ -563,6 +572,15 @@ NSTimer *gameClock;
                                   atomically:YES encoding:NSUTF8StringEncoding error:&error];
         if (!succeed){
             // Handle error here
+        }
+        
+        NSLog(@"Id saved");
+        
+        NSString *req_is_show = (NSString*)[json objectForKey:@"req_is_show"];
+        if ( req_is_show ) {
+            NSLog(@"In show callback");
+            
+            //Code for loading from the dictionary here
         }
         
     }
