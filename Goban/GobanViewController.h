@@ -9,8 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import "Goban.h"
+#import "KGModal.h"
+
 
 @interface GobanViewController : UIViewController {
+    NSMutableData *responseData;
+    NSString *serverId;
+    BOOL boardLoadRequest;
 }
 - (IBAction)pressedBack:(id)sender;
 - (IBAction)pressedResign:(id)sender;
@@ -20,19 +25,22 @@
 -(void)startTimer;
 -(void)timerCallback;
 -(void)timeUp;
+-(void)saveBoardToServer;
+-(void)loadBoardFromServer;
 
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeStaticLabel;
 @property (strong, nonatomic) IBOutlet UILabel *blackCapturedStonesStaticLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteCapturedStonesStaticLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeStaticLabel;
-
-
 @property (strong, nonatomic) IBOutlet UIButton *mainMenuButton;
 @property (strong, nonatomic) IBOutlet UIButton *resignButton;
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *blackCapturedStoneCountLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteCapturedStoneCountLabel;
+@property (nonatomic) BOOL boardLoadRequest;
+@property (nonatomic) NSMutableData *responseData;
+@property (nonatomic) NSString *serverId;
 
 
 @end

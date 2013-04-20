@@ -25,14 +25,20 @@
 @synthesize whiteRemainingTimeStaticLabel;
 @synthesize blackRemainingTimeLabel;
 @synthesize blackRemainingTimeStaticLabel;
+@synthesize boardLoadRequest;
+@synthesize responseData;
+@synthesize serverId;
 
 //Go board declared as a global variable
 Goban *goBoard;
 NSTimer *gameClock;
 
 - (void)viewDidLoad
-{
-    // Add the main view image    
+{    
+    //Initialize the response data variable
+    self.responseData = [[NSMutableData alloc] init];
+
+    // Add the main view image
     CALayer *sublayer = [CALayer layer];
     sublayer.backgroundColor = [UIColor blackColor].CGColor;
     sublayer.frame = CGRectMake(0,0,768,768);
@@ -60,10 +66,31 @@ NSTimer *gameClock;
     self.blackRemainingTimeLabel.textColor = [UIColor orangeColor];
     self.blackRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
     self.view.backgroundColor = [UIColor blackColor];
+    [self.blackRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.blackRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.whiteRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.whiteRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.whiteCapturedStoneCountLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.whiteCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.blackCapturedStoneCountLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    [self.blackCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
 
+    
+    //check if board load is needed
+    if(boardLoadRequest)
+    {
+        //Load board
+        NSLog(@"Board load request set successfully");
+    }
+    else
+    {
+        NSLog(@"Board load request not set");
+        //encapsulate the board initialization below in an else statement
+    }
+    
     goBoard.goban = [NSMutableArray arrayWithObjects:
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
@@ -105,7 +132,7 @@ NSTimer *gameClock;
     
     //Set the komi count to a default (for now) of 6.5
     [goBoard setKomi:6.5];
-    
+
     //Set it to black's turn
     [goBoard setTurn:@"B"];
     
@@ -132,9 +159,9 @@ NSTimer *gameClock;
         rowValue = (int)floor(touchPoint.x/40.4210526316);
         columnValue = (int)floor(touchPoint.y/40.4210526316);
     }];
-        
-    NSLog(@"Row coordinate: %d", rowValue);
-    NSLog(@"Column coordinate: %d", columnValue);
+    
+    //NSLog(@"Row coordinate: %d", rowValue);
+    //NSLog(@"Column coordinate: %d", columnValue);
     
     //Check if new move is legal
     if([goBoard isLegalMove:rowValue andForColumnValue:columnValue])
@@ -145,22 +172,22 @@ NSTimer *gameClock;
             goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
             
             //Play black's turn
-            NSLog(@"Played black's turn");
+            //NSLog(@"Played black's turn");
             goBoard.goban[rowValue][columnValue] = @"B";
             
             if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
             {
-                NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
+                //NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
             }
             else
             {
-                NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
+                //NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
             }
             
             //Increment the move number
-            NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
+            //NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
-            NSLog(@"Incremented move number: %d", goBoard.moveNumber);
+            //NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
@@ -170,6 +197,9 @@ NSTimer *gameClock;
             
             //Update the captured stone count
             self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedWhiteStones];
+            
+            //Save to server
+            [self saveBoardToServer];
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
@@ -186,26 +216,29 @@ NSTimer *gameClock;
             
             if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
             {
-                NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
+                //NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
             }
             else
             {
-                NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
+                //NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
             }
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Increment the move number
-            NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
+            //NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
-            NSLog(@"Incremented move number: %d", goBoard.moveNumber);
+            //NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
             //Draw the entire board again, or just the new move
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
             //Update the captured stone count
             self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedBlackStones];
+            
+            //Save to server
+            [self saveBoardToServer];
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
@@ -355,7 +388,7 @@ NSTimer *gameClock;
         {
             result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
             self.blackRemainingTimeLabel.text = result;
-            NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
+            //NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
         }
     }
     else if([goBoard.turn isEqualToString:@"W"])
@@ -410,6 +443,131 @@ NSTimer *gameClock;
     }
 
 }
+
+//Loading from the server
+- (void)loadBoardFromServer
+{
+    NSString *server_prefix = @"goban-server.herokuapp.com";
+    if (serverId)
+    {
+        // Url for the request
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
+        // Since we already have the id, this is an update call
+        // So the GET http method is used
+        NSMutableURLRequest *request =
+        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
+        [request setHTTPMethod:@"GET"];
+        NSLog(@"%@",request.HTTPBody);
+        // Set the right headers so the server doesn't choke
+        //[request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+        //[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        //[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        // Make the request, using this object as the delegate
+        //[[NSURLConnection alloc] initWithRequest:request delegate:goBoard];
+        
+        //Get the board down from the server
+        
+        //Convert the board to a string
+    }
+}
+
+
+//Saving to server
+-(void)saveBoardToServer
+{
+    // Use localhost for debugging with a local server
+    // Use the heroku url for production
+    //NSString *server_prefix = @"localhost:3000";
+    NSString *server_prefix = @"goban-server.herokuapp.com";
+    
+    if (serverId)
+    {
+        // Url for the request
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
+        
+        // Since we already have the id, this is an update call
+        // So the PUT http method is used
+        NSMutableURLRequest *request =
+        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
+        [request setHTTPMethod:@"PUT"];
+        
+        // Serialize the board into a string, replacing the +'s since it causes errors server side
+        NSString *postString = [[NSString stringWithFormat:@"board_string=%@&black_captures=%@&white_captures=%@&black_time=%@&white_time=%@", [goBoard serializeBoard], self.blackCapturedStoneCountLabel.text, self.whiteCapturedStoneCountLabel.text, self.blackRemainingTimeLabel.text, self.whiteRemainingTimeLabel.text] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
+        
+        // Set the right headers so the server doesn't choke
+        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        
+        // Make the request, using this object as the delegate
+        [[NSURLConnection alloc] initWithRequest:request delegate:goBoard];
+        
+        /*
+         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+         NSString *documentsDirectory = [paths objectAtIndex:0];
+         NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
+         NSString *str = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
+         
+         NSLog(@"%@", str);
+         */
+        
+    }
+    else
+    {
+        // Url for the request
+        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games", server_prefix];
+        
+        // We're making a new game on the server, so it's an http POST
+        NSMutableURLRequest *request =
+        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
+        [request setHTTPMethod:@"POST"];
+        
+        // Serialize the board and set it in the request body
+        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [goBoard serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
+        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // Make the request
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    [self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    [self.responseData appendData:data];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    // Show error
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Once this method is invoked, "responseData" contains the complete result
+    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
+    NSString *response_id = (NSString*)[json objectForKey:@"_id"];
+    if (response_id) {
+        serverId = (NSString*)[json objectForKey:@"_id"];
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
+        
+        NSError *error;
+        BOOL succeed = [serverId writeToFile:[documentsDirectory stringByAppendingPathComponent:@"id.txt"]
+                                  atomically:YES encoding:NSUTF8StringEncoding error:&error];
+        if (!succeed){
+            // Handle error here
+        }
+        
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {

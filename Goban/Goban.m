@@ -23,9 +23,6 @@
 @synthesize komi;
 @synthesize redrawBoardNeeded;
 
-@synthesize responseData;
-@synthesize serverId;
-
 -(id)init:(NSMutableArray *) goBoard
 {
     if (self = [super init])
@@ -37,7 +34,6 @@
 
 -(id)init
 {
-    self.responseData = [[NSMutableData alloc] init];
     return [super init];
 }
 
@@ -57,61 +53,8 @@
     NSLog(@"%@", printRow);
 }
 
--(void)saveBoardToServer{
-    // Use localhost for debugging with a local server
-    // Use the heroku url for production
-    //NSString *server_prefix = @"localhost:3000";
-    NSString *server_prefix = @"goban-server.herokuapp.com";
-    
-    if (serverId) {
-        // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
-        
-        // Since we already have the id, this is an update call
-        // So the PUT http method is used
-        NSMutableURLRequest *request =
-        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
-        [request setHTTPMethod:@"PUT"];
-        
-        // Serialize the board into a string, replacing the +'s since it causes errors server side
-        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [self serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
-        
-        // Set the right headers so the server doesn't choke
-        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request, using this object as the delegate
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        
-        /*
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
-        NSString *str = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-        
-        NSLog(@"%@", str);
-         */
-        
-    } else {
-        // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games", server_prefix];
-        
-        // We're making a new game on the server, so it's an http POST
-        NSMutableURLRequest *request =
-        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
-        [request setHTTPMethod:@"POST"];
-        
-        // Serialize the board and set it in the request body
-        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [self serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
-        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        // Make the request
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    }
-}
-
--(NSString *)serializeBoard {
+-(NSString *)serializeBoard
+{
     NSMutableString *board_string = [[NSMutableString alloc] init];
     for(int i=0;i<COLUMN_LENGTH+1; i++)
     {
@@ -123,62 +66,25 @@
     return (NSString *)board_string;
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    [self.responseData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [self.responseData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    // Show error
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    // Once this method is invoked, "responseData" contains the complete result
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
-    NSString *response_id = (NSString*)[json objectForKey:@"_id"];
-    if (response_id) {
-        serverId = (NSString*)[json objectForKey:@"_id"];
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
-        
-        NSError *error;
-        BOOL succeed = [serverId writeToFile:[documentsDirectory stringByAppendingPathComponent:@"id.txt"]
-                                  atomically:YES encoding:NSUTF8StringEncoding error:&error];
-        if (!succeed){
-            // Handle error here
-        }
-
-    }
-}
-
-
 -(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
 {
-    NSLog(@"Start of From isInBounds...");
-    NSLog(@"rowValue = %d and columnValue = %d", rowValue, columnValue);
-    NSLog(@"ROW_LENGTH = %d and COLUMN_LENGTH = %d", ROW_LENGTH, COLUMN_LENGTH);
+    //NSLog(@"Start of From isInBounds...");
+    //NSLog(@"rowValue = %d and columnValue = %d", rowValue, columnValue);
+    //NSLog(@"ROW_LENGTH = %d and COLUMN_LENGTH = %d", ROW_LENGTH, COLUMN_LENGTH);
     if(rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH)
     {
-        NSLog(@"(End of isInBounds) Stone was out of bounds");
+        //NSLog(@"(End of isInBounds) Stone was out of bounds");
         return NO;
     }
     
-    NSLog(@"(End of isInBounds) Stone was in bounds");
+    //NSLog(@"(End of isInBounds) Stone was in bounds");
     return YES;
 }
 
 -(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue
 {
-    NSLog(@"Row coordingate: %d", rowValue);
-    NSLog(@"Columns coordinate: %d", columnValue);
+    //NSLog(@"Row coordingate: %d", rowValue);
+    //NSLog(@"Columns coordinate: %d", columnValue);
 
     if(![self isInBounds:rowValue andForColumnValue:columnValue])
     {
@@ -219,7 +125,7 @@
     {
         NSLog(@"Saving the state of the board");
         //Save the state of the board first
-        NSLog(@"Initializing the saved state board");
+        //NSLog(@"Initializing the saved state board");
         
         //Initialize a double array
         NSMutableArray *savedStateOfBoard = [NSMutableArray arrayWithObjects:
@@ -242,7 +148,7 @@
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-        NSLog(@"Initialized the board");
+        //NSLog(@"Initialized the board");
         for(int i=0;i<[self.goban count];i++)
         {
             for(int j=0;j<[self.goban count];j++)
@@ -261,14 +167,14 @@
                 }
             }
         } //State of the board saved
-        NSLog(@"Saved the state of the board");
+        //NSLog(@"Saved the state of the board");
 
         //Just play the move and then set it back after you know if it's legal or not
         int tempWhiteCaptureCount = self.capturedWhiteStones;
         int tempBlackCaptureCount = self.capturedBlackStones;
         self.goban[rowValue][columnValue] = self.turn;
         [self checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
-        NSLog(@"THIS IS WHERE THE BOARD GOES CRAZY");
+        //NSLog(@"THIS IS WHERE THE BOARD GOES CRAZY");
         [self printBoardToConsole];
         
         //Check if any adjacent stones died, once they died, check if they match the previous board and if they do, we have a ko, if they don't then we don't
@@ -338,7 +244,7 @@
                 NSLog(@"Ko not found, checking for suicides");
             }
             
-            NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);            
+            //NSLog(@"It is %@'s turn so the enemy color is %@", self.turn, enemyColor);
             NSLog(@"Setting the board back to its saved state");
             //Setting the board back to its saved state
             for(int i=0;i<[self.goban count];i++)
@@ -382,7 +288,7 @@
             }
             
             //Set the board back
-            NSLog(@"Setting the board back to its saved state");
+            //NSLog(@"Setting the board back to its saved state");
             //Setting the board back to its saved state
             for(int i=0;i<[self.goban count];i++)
             {
@@ -407,7 +313,7 @@
             self.goban[rowValue][columnValue] = @"+";
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
-            NSLog(@"Set board back to its previous state");
+            //NSLog(@"Set board back to its previous state");
             [self printBoardToConsole];
             
             if(suicide)
@@ -445,8 +351,8 @@
 -(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
 {
     //Verify row and coordinate values
-    NSLog(@"Row coordingate: %d", rowValue);
-    NSLog(@"Columns coordinate: %d", columnValue);
+    //NSLog(@"Row coordingate: %d", rowValue);
+    //NSLog(@"Columns coordinate: %d", columnValue);
     
     //Get my color and my opponent's color
     NSString *myColor = self.goban[rowValue][columnValue];
@@ -454,90 +360,90 @@
     if([myColor isEqualToString:@"B"])
     {
         opponentColor = @"W";
-        NSLog(@"My opponent's color is %@", opponentColor);
+        //NSLog(@"My opponent's color is %@", opponentColor);
     }
     else
     {
         opponentColor = @"B";
-        NSLog(@"My opponent's color is %@", opponentColor);
+        //NSLog(@"My opponent's color is %@", opponentColor);
     }
     
     //Check adjacent enemy stones
     //Check right
-    NSLog(@"About to check right enemy stone where rowValue = %d and columnValue = %d", (rowValue+1), columnValue);
+    //NSLog(@"About to check right enemy stone where rowValue = %d and columnValue = %d", (rowValue+1), columnValue);
     if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:opponentColor])
     {
-        NSLog(@"Checking right enemy stone");
+        //NSLog(@"Checking right enemy stone");
         [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
     }
     else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
     {
-        NSLog(@"Space to the right of stone was a free space");
+        //NSLog(@"Space to the right of stone was a free space");
     }
     else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:myColor])
     {
-        NSLog(@"Space to the right of stone was my color");
+        //NSLog(@"Space to the right of stone was my color");
     }
     else
     {
-        NSLog(@"Right enemy stone was out of bounds or was not an enemy");
+        //NSLog(@"Right enemy stone was out of bounds or was not an enemy");
     }
     //Check left
-    NSLog(@"About to check left enemy stone");    
+    //NSLog(@"About to check left enemy stone");
     if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:opponentColor])
     {
-        NSLog(@"Checking left enemy stone");
+        //NSLog(@"Checking left enemy stone");
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
     else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
     {
-        NSLog(@"Space to the left of stone was a free space");
+        //NSLog(@"Space to the left of stone was a free space");
     }
     else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:myColor])
     {
-        NSLog(@"Space to the left of stone was my color");
+        //NSLog(@"Space to the left of stone was my color");
     }
     else
     {
-        NSLog(@"Left enemy stone was out of bounds or was not an enemy");
+        //NSLog(@"Left enemy stone was out of bounds or was not an enemy");
     }
     //Check down
-    NSLog(@"About to check down enemy stone");    
+    //NSLog(@"About to check down enemy stone");
     if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:opponentColor])
     {
-        NSLog(@"Checking down enemy stone");
+        //NSLog(@"Checking down enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
     else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
     {
-        NSLog(@"Space to the down of stone was a free space");
+        //NSLog(@"Space to the down of stone was a free space");
     }
     else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:myColor])
     {
-        NSLog(@"Space to the down of stone was my color");
+        //NSLog(@"Space to the down of stone was my color");
     }
     else
     {
-        NSLog(@"Down enemy stone was out of bounds or was not an enemy");
+        //NSLog(@"Down enemy stone was out of bounds or was not an enemy");
     }
     //Check up
-    NSLog(@"About to check up enemy stone");    
+    //NSLog(@"About to check up enemy stone");
     if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:opponentColor])
     {
-        NSLog(@"Checking up enemy stone");
+        //NSLog(@"Checking up enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
     }
     else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
     {
-        NSLog(@"Space to the up of stone was a free space");
+        //NSLog(@"Space to the up of stone was a free space");
     }
     else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:myColor])
     {
-        NSLog(@"Space to the up of stone was my color");
+        //NSLog(@"Space to the up of stone was my color");
     }
     else
     {
-        NSLog(@"Up enemy stone was out of bounds or was not an enemy");
+        //NSLog(@"Up enemy stone was out of bounds or was not an enemy");
     }
 }
 
@@ -563,8 +469,8 @@
     Stone *vertex = [[Stone alloc] init];
     [vertex setColumnValue:columnValue];
     [vertex setRowValue:rowValue];
-    NSLog(@"Set column value to: %d", vertex.columnValue);
-    NSLog(@"Set row value to: %d", vertex.rowValue);
+    //NSLog(@"Set column value to: %d", vertex.columnValue);
+    //NSLog(@"Set row value to: %d", vertex.rowValue);
         
     //Push the root node into the queue (I don't actually think this is how you do it)
     // 1. Mark the root as visited.
@@ -578,13 +484,13 @@
     //Check all spots around where the vertex is
     
     //Check spot to the right of vertex
-    NSLog(@"Checking spot to the right of the vertex");
+    //NSLog(@"Checking spot to the right of the vertex");
     if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue])
     {        
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
         {
-            NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+            //NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue+1];
@@ -601,25 +507,25 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Free space found to the right. Stone or stone cluster is alive (found at vertex)");
-            NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);        
-            NSLog(@"STONES ARE ALIVE (RIGHT)");
+            //NSLog(@"Free space found to the right. Stone or stone cluster is alive (found at vertex)");
+            //NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+            //NSLog(@"STONES ARE ALIVE (RIGHT)");
         }
         else
         {
             //If it is an ally piece, then what do we do?
-            NSLog(@"PROBABLY AN ENEMY STONE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);            
-            NSLog(@"Free space not found (right) and piece was most likely an enemy stone (found at vertex)");
+            //NSLog(@"PROBABLY AN ENEMY STONE RIGHT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+            //NSLog(@"Free space not found (right) and piece was most likely an enemy stone (found at vertex)");
         }
     }
     //Check spot to the left of the vertex
-    NSLog(@"Checking spot to the left of the vertex");
+    //NSLog(@"Checking spot to the left of the vertex");
     if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && stonesAreDead)
     {
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
         {
-            NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
+            //NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue-1];
@@ -635,15 +541,15 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Free space found to the left. Stone or stone cluster is alive (found at vertex)");
-            NSLog(@"FREE SPACE TO THE LEFT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
-            NSLog(@"STONES ARE ALIVE (LEFT)");
+            //NSLog(@"Free space found to the left. Stone or stone cluster is alive (found at vertex)");
+            //NSLog(@"FREE SPACE TO THE LEFT AT LOCATION (%d,%d)", vertex.rowValue-1,vertex.columnValue);
+            //NSLog(@"STONES ARE ALIVE (LEFT)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
-            NSLog(@"PROBABLY AN ENEMY STONE LEFT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
-            NSLog(@"Free space not found (left) and piece was most likely an enemy stone (found at vertex)");
+            //NSLog(@"PROBABLY AN ENEMY STONE LEFT AT LOCATION (%d,%d)", vertex.rowValue+1,vertex.columnValue);
+            //NSLog(@"Free space not found (left) and piece was most likely an enemy stone (found at vertex)");
         }
     }
     //Check spot below the vertex
@@ -652,7 +558,7 @@
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
         {
-            NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
+            //NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue];
@@ -668,14 +574,14 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Free space found to the down. Stone or stone cluster is alive (found at vertex)");
-            NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
-            NSLog(@"STONES ARE ALIVE (DOWN)");
+            //NSLog(@"Free space found to the down. Stone or stone cluster is alive (found at vertex)");
+            //NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
+            //NSLog(@"STONES ARE ALIVE (DOWN)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
-            NSLog(@"Free space not found (down) and piece was most likely an enemy stone (found at vertex)");
+            //NSLog(@"Free space not found (down) and piece was most likely an enemy stone (found at vertex)");
 
         }
     }
@@ -685,7 +591,7 @@
         //If it is an ally color, add it to the visited queue and the actual queue
         if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
         {
-            NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+            //NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] init];
             [point setRowValue:vertex.rowValue];
@@ -701,30 +607,30 @@
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            NSLog(@"Free space found to the down. Stone or stone cluster is alive (found at vertex)");
-            NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
-            NSLog(@"STONES ARE ALIVE (UP)");
+            //NSLog(@"Free space found to the down. Stone or stone cluster is alive (found at vertex)");
+            //NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+            //NSLog(@"STONES ARE ALIVE (UP)");
         }
         else
         {
             //If this piece is a random piece, a wall piece, or something else, then just do nothing.
-            NSLog(@"PROBABLY AN ENEMY STONE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
-            NSLog(@"Free space not found (up) and piece was not an ally stone (found at vertex)");
+            //NSLog(@"PROBABLY AN ENEMY STONE UP AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue-1);
+            //NSLog(@"Free space not found (up) and piece was not an ally stone (found at vertex)");
         }
     }
     
-    NSLog(@"Checking nodes past the vertex, size of queue: %d", [queue count]);
-    NSLog(@"Number of visited stones as we are going into the loop: %d", [visitedNodes count]);
+    //NSLog(@"Checking nodes past the vertex, size of queue: %d", [queue count]);
+    //NSLog(@"Number of visited stones as we are going into the loop: %d", [visitedNodes count]);
     for(int i=0;i<[visitedNodes count];i++)
     {
         Stone *visitedNode = visitedNodes[i];
-        NSLog(@"Node stored at position %d is: (%d,%d)", i,visitedNode.rowValue,visitedNode.columnValue);
+        //NSLog(@"Node stored at position %d is: (%d,%d)", i,visitedNode.rowValue,visitedNode.columnValue);
     }
     
     //Loop until the queue is empty
     while([queue count] > 0) 
     {
-        NSLog(@"Checking nodes past the vertex (inside loop)");
+        //NSLog(@"Checking nodes past the vertex (inside loop)");
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
         
@@ -738,7 +644,7 @@
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
+                //NSLog(@"ALLY STONE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
                 //Syntax from documentation: - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
@@ -753,15 +659,15 @@
             //If it is a free space then we're done!
             else if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
+                //NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                NSLog(@"Stone or stone cluster is alive");                
+                //NSLog(@"Stone or stone cluster is alive");
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
+                //NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue+1,topOfQueue.columnValue);
             }
         }
         //Check spot to the left of the vertex
@@ -770,7 +676,7 @@
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
+                //NSLog(@"ALLY STONE TO THE LEFT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
                 [point setRowValue:topOfQueue.rowValue-1];
@@ -783,15 +689,15 @@
             }
             else if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
+                //NSLog(@"FREE SPACE TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                NSLog(@"Stone or stone cluster is alive");                
+                //NSLog(@"Stone or stone cluster is alive");
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
+                //NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue-1,topOfQueue.columnValue);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
@@ -801,7 +707,7 @@
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
+                //NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
                 [point setRowValue:topOfQueue.rowValue];
@@ -814,15 +720,15 @@
             }
             else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
+                //NSLog(@"FREE SPACE TO THE DOWN AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                NSLog(@"Stone or stone cluster is alive");
+                //NSLog(@"Stone or stone cluster is alive");
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
+                //NSLog(@"MOST LIKELY AN ENEMY TO THE RIGHT AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue+1);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
@@ -832,7 +738,7 @@
             //If it is an ally color, add it to the visited queue and the actual queue
             if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:allyColor])
             {
-                NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
+                //NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //Create a new point and insert it into the queue
                 Stone *point = [[Stone alloc] init];
                 [point setRowValue:topOfQueue.rowValue];
@@ -845,15 +751,15 @@
             }
             else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:goal])
             {
-                NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
+                //NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                NSLog(@"Stone or stone cluster is alive");
+                //NSLog(@"Stone or stone cluster is alive");
             }
             else
             {
-                NSLog(@"MOST LIKELY AN ENEMY TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
+                //NSLog(@"MOST LIKELY AN ENEMY TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
                 //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
@@ -862,7 +768,7 @@
     //If stones are dead, set them back to unplayed spots
     if(stonesAreDead)
     {
-        NSLog(@"Killing stones (should not be called after stones are determined to be alive)");
+        //NSLog(@"Killing stones (should not be called after stones are determined to be alive)");
         [self printBoardToConsole];
         [self killStones:visitedNodes];
     }
@@ -879,20 +785,20 @@
     NSString *dyingColor = self.goban[stone.rowValue][stone.columnValue];
     if([dyingColor isEqualToString:@"B"])
     {
-        NSLog(@"Old number of captured black stones: %d", self.capturedBlackStones);
+        //NSLog(@"Old number of captured black stones: %d", self.capturedBlackStones);
         //Add the number of dead stones to black's captured stone count
         [self setPreviousCapturedBlackStones:self.capturedBlackStones];
         [self setCapturedBlackStones:(self.capturedBlackStones + [stonesToKill count])];
-        NSLog(@"New number of captured black stones: %d", self.capturedBlackStones);
+        //NSLog(@"New number of captured black stones: %d", self.capturedBlackStones);
     }
     else
     {
         //Add the number of dead stones to white's dead stone count
-        NSLog(@"Old number of captured white stones: %d", self.capturedWhiteStones);
+        //NSLog(@"Old number of captured white stones: %d", self.capturedWhiteStones);
         //Add the number of dead stones to white's captured stone count
         [self setPreviousCapturedWhiteStones:self.capturedWhiteStones];
         [self setCapturedWhiteStones:(self.capturedWhiteStones + [stonesToKill count])];
-        NSLog(@"New number of captured white stones: %d", self.capturedWhiteStones);
+        //NSLog(@"New number of captured white stones: %d", self.capturedWhiteStones);
     }
         
     //This takes the nodes from the visited Nodes array and sets them back to "+"
@@ -900,7 +806,7 @@
     {
         stone = stonesToKill[i];
         self.goban[stone.rowValue][stone.columnValue] = @"+";
-        NSLog(@"KILLING STONE at row %d and column %d", stone.rowValue, stone.columnValue);
+        //NSLog(@"KILLING STONE at row %d and column %d", stone.rowValue, stone.columnValue);
     }
     NSLog(@"Killed stones");
     [self printBoardToConsole];

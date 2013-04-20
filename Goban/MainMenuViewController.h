@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MainMenuViewController : UIViewController {
+    BOOL loadGameOnLoad;
     
 }
 
@@ -22,7 +23,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *whiteStonesCapturedLabel;
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
+@property (nonatomic) BOOL loadGameOnLoad;
 
 - (IBAction)pressedLoad:(id)sender;
+- (void)showAction:(id)sender;
 
 @end

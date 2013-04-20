@@ -15,6 +15,7 @@
 		35758E05171CACF500C35531 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 35758E01171CACF500C35531 /* Icon.png */; };
 		35758E06171CACF500C35531 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 35758E02171CACF500C35531 /* Icon-72@2x.png */; };
 		35758E07171CACF500C35531 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 35758E03171CACF500C35531 /* Icon-72.png */; };
+		35A65D6C171E2B9000A0A950 /* KGModal.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A65D6A171E2B9000A0A950 /* KGModal.m */; };
 		35C8733816F7EE6600A828B9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35C8733716F7EE6600A828B9 /* QuartzCore.framework */; };
 		35C8733B16F8197700A828B9 /* Goban.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C8733A16F8197700A828B9 /* Goban.m */; };
 		35C8733E16F8218900A828B9 /* Stone.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C8733D16F8218800A828B9 /* Stone.m */; };
@@ -45,6 +46,8 @@
 		35758E01171CACF500C35531 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		35758E02171CACF500C35531 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		35758E03171CACF500C35531 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		35A65D6A171E2B9000A0A950 /* KGModal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGModal.m; sourceTree = "<group>"; };
+		35A65D6B171E2B9000A0A950 /* KGModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGModal.h; sourceTree = "<group>"; };
 		35C8733716F7EE6600A828B9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		35C8733916F8197700A828B9 /* Goban.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Goban.h; sourceTree = "<group>"; };
 		35C8733A16F8197700A828B9 /* Goban.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Goban.m; sourceTree = "<group>"; };
@@ -125,6 +128,8 @@
 		35CCC7AD16F6A3500012D577 /* Goban */ = {
 			isa = PBXGroup;
 			children = (
+				35A65D6A171E2B9000A0A950 /* KGModal.m */,
+				35A65D6B171E2B9000A0A950 /* KGModal.h */,
 				35C8733916F8197700A828B9 /* Goban.h */,
 				35C8733A16F8197700A828B9 /* Goban.m */,
 				35C8733C16F8218800A828B9 /* Stone.h */,
@@ -247,6 +252,7 @@
 				35C8733B16F8197700A828B9 /* Goban.m in Sources */,
 				35C8733E16F8218900A828B9 /* Stone.m in Sources */,
 				35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */,
+				35A65D6C171E2B9000A0A950 /* KGModal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
