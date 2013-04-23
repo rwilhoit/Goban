@@ -45,8 +45,6 @@
         [gobanViewController setBoardLoadRequest:YES];
         NSLog(@"Load game selected");
 
-        // Update the view (don't think this is necessary)
-        //[gobanViewController up
         [gobanViewController loadBoardFromServer];
 
     }

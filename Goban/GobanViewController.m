@@ -84,14 +84,14 @@ NSTimer *gameClock;
     {
         //Load board
         NSLog(@"Board load request set successfully");
+        
+        //Set redraw needed
+        [goBoard setRedrawBoardNeeded:YES];
     }
     else
     {
-        NSLog(@"Board load request not set");
-        //encapsulate the board initialization below in an else statement
-    }
-    
-    goBoard.goban = [NSMutableArray arrayWithObjects:
+        NSLog(@"Initializing new board");
+        goBoard.goban = [NSMutableArray arrayWithObjects:
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
@@ -111,36 +111,37 @@ NSTimer *gameClock;
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-    
-     [goBoard printBoardToConsole];
+        [goBoard printBoardToConsole];
 
-    //Set the moveNumber
-    [goBoard setMoveNumber:0];
-    NSLog(@"Move number: %d", goBoard.moveNumber);
+        //Set the number of captured white stones
+        [goBoard setCapturedWhiteStones:0];
+        
+        //Set the number of captured black stones
+        [goBoard setCapturedBlackStones:0];
+        
+        //Set redraw needed
+        [goBoard setRedrawBoardNeeded:NO];
+        
+    }
     
-    //Set the number of white stones
-    [goBoard setWhiteStones:0];
+        //Set the moveNumber
+        [goBoard setMoveNumber:0];
     
-    //Set the number of black stones
-    [goBoard setBlackStones:0];
+        //Set the number of white stones
+        [goBoard setWhiteStones:0];
     
-    //Set the number of captured white stones
-    [goBoard setCapturedWhiteStones:0];
+        //Set the number of black stones
+        [goBoard setBlackStones:0];
     
-    //Set the number of captured black stones
-    [goBoard setCapturedBlackStones:0];
-    
-    //Set the komi count to a default (for now) of 6.5
-    [goBoard setKomi:6.5];
+        //Set the komi count to a default (for now) of 6.5
+        [goBoard setKomi:6.5];
 
-    //Set it to black's turn
-    [goBoard setTurn:@"B"];
+        //Set it to black's turn
+        [goBoard setTurn:@"B"];
+
     
-    //Set redraw needed
-    [goBoard setRedrawBoardNeeded:NO];
-    
-    //Start the timer
-    [self startTimer];
+        //Start the timer
+        [self startTimer];
     
      [super viewDidLoad];
 }
@@ -561,28 +562,97 @@ NSTimer *gameClock;
     // Once this method is invoked, "responseData" contains the complete result
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
     NSString *response_id = (NSString*)[json objectForKey:@"_id"];
-    if (response_id) {
+    if (response_id)
+    {
         serverId = (NSString*)[json objectForKey:@"_id"];
-        
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
-        
         NSError *error;
         BOOL succeed = [serverId writeToFile:[documentsDirectory stringByAppendingPathComponent:@"id.txt"]
                                   atomically:YES encoding:NSUTF8StringEncoding error:&error];
-        if (!succeed){
-            // Handle error here
+        if (!succeed)
+        {
+            NSLog(@"Connection error");
+            //Consider setting board to NOT load
         }
         
-        NSLog(@"Id saved");
+        NSLog(@"ID saved");
         
         NSString *req_is_show = (NSString*)[json objectForKey:@"req_is_show"];
-        if ( req_is_show ) {
+        if(req_is_show)
+        {
             NSLog(@"In show callback");
-            
             //Code for loading from the dictionary here
+            NSLog(@"Size of the dictionary is: %d", [json count]);
+
+            NSLog(@"%@",[json objectForKey:@"board_string"]);
+            NSString *boardString = [[json objectForKey:@"board_string"] stringByReplacingOccurrencesOfString:@"0" withString:@"+"];
+            NSMutableArray *deserializedBoard = [NSMutableArray arrayWithObjects:
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
+                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
+
+            int counter = 0;
+            for(int i=0;i<[deserializedBoard count]; i++)
+            {
+                for(int j=0;j<[deserializedBoard[i] count]; j++)
+                {
+                    if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"+"])
+                    {
+                        //Do nothing
+                    }
+                    else
+                    {
+                        NSLog(@"Crashed here 4");
+                        if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"])
+                        {
+                            deserializedBoard[j][i] = @"B";
+                        }
+                        else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"W"])
+                        {
+                            deserializedBoard[j][i] = @"W";
+                        }
+                        else
+                        {
+                            //else nothing
+                        }
+                    }
+                    counter++;
+                }
+            }
+            
+            //Set the board
+            [goBoard setGoban:deserializedBoard];
+            [goBoard printBoardToConsole];
+            //Setting the blackCaptures
+            self.blackCapturedStoneCountLabel.text = [json objectForKey:@"black_captures"];
+            //Setting the white captures
+            self.whiteCapturedStoneCountLabel.text = [json objectForKey:@"white_captures"];
+            //Setting the black time
+            self.blackRemainingTimeLabel.text = [json objectForKey:@"black_time"];
+            //Setting the white time
+            self.whiteRemainingTimeLabel.text = [json objectForKey:@"white_time"];
+            //Set that we need to load the board
+            boardLoadRequest = YES;
+            NSLog(@"Board loaded from server");
+            [self drawBoardForNewMove:0 andForColumn:0];
         }
-        
     }
 }
 

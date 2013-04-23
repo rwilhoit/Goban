@@ -39,7 +39,7 @@
                                 </state>
                                 <connections>
                                     <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="2tv-JG-JcP"/>
-                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="loadGameSegue" id="dxb-ht-9Vd"/>
+                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="loadGameSegue" animates="NO" id="dxb-ht-9Vd"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Black Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUB-Qj-03Q">
@@ -339,6 +339,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Qgq-LO-El9"/>
+        <segue reference="dxb-ht-9Vd"/>
     </inferredMetricsTieBreakers>
 </document>
