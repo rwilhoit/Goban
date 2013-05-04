@@ -83,7 +83,7 @@
     infoLabelRect.origin.y = CGRectGetMaxY(welcomeLabelRect)+5;
     infoLabelRect.size.height -= CGRectGetMinY(infoLabelRect);
     UILabel *infoLabel = [[UILabel alloc] initWithFrame:infoLabelRect];
-    infoLabel.text = @"Goban is an multiplayer tabletop Go app.\n Just select new or load game to play!";
+    infoLabel.text = @"Goban is a multiplayer tabletop Go app.\n Select new or load game to play! \n This version uses Chinese scoring.";
     infoLabel.numberOfLines = 6;
     infoLabel.textColor = [UIColor whiteColor];
     infoLabel.textAlignment = NSTextAlignmentCenter;
@@ -134,10 +134,7 @@
     [self.whiteStonesCapturedLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.whiteStonesCapturedStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.blackStonesCapturedLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackStonesCapturedStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-
-
-    
+    [self.blackStonesCapturedStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];    
     
     [super viewDidLoad];
 	// Do any additional setup after loading the view.

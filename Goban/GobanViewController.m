@@ -411,16 +411,27 @@ NSTimer *gameClock;
     if(goBoard.whitePassed && goBoard.blackPassed && ![self.passButton.title isEqualToString:@"Done"])
     {
         [self.passButton setTitle:@"Done"];
+        [gameClock invalidate];
         [self setCurrentlyMarkingStonesAsDead:YES];
+    }
+    else if([self.passButton.title isEqualToString:@"Done"])
+    {
+        [self scoreGame];
+    }
+    else
+    {
+        //else nothing
     }
 }
 
-- (void) startTimer {
+- (void) startTimer
+{
     gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
 
 //Countdown blacks timer if it is black's turn
-- (void) timerCallback {
+- (void) timerCallback
+{
     NSMutableString *result = [[NSMutableString alloc] init];
     int iMinutes = 25;
     int iSeconds = 0;
@@ -541,8 +552,6 @@ NSTimer *gameClock;
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
         
         //Get the board down from the server
-        
-        //Convert the board to a string
     }
 }
 
@@ -723,14 +732,70 @@ NSTimer *gameClock;
 -(void)scoreGame
 {
     NSLog(@"Called scoreGame");
+    int points = 0;
+    NSString *addingPointsFor = [[NSMutableString alloc] init];
     
-    //This function already exists implicitely...
-    
-    //Change the title of the pass button to done and when done is pressed, call the function to score the game
+    for(int i=0;i<COLUMN_LENGTH+1; i++)
+    {
+        for(int j=0; j<ROW_LENGTH+1; j++)
+        {
+            if([goBoard.goban[j][i] isEqualToString:@"+"] || [goBoard.goban[j][i] isEqualToString:@"w"] || [goBoard.goban[j][i] isEqualToString:@"b"])
+            {
+                if([addingPointsFor isEqualToString:@"B"])
+                {
+                    [goBoard setBlackStones:(goBoard.blackStones+1)];
+                }
+                else if([addingPointsFor isEqualToString:@"W"])
+                {
+                    [goBoard setWhiteStones:(goBoard.whiteStones+1)];
+                }
+                else
+                {
+                    points++;
+                }
+            }
+            else if([goBoard.goban[j][i] isEqualToString:@"B"])
+            {
+                addingPointsFor = @"B";
+                [goBoard setBlackStones:(goBoard.blackStones+points+1)];
+                points = 0;
+                
+            }
+            else if([goBoard.goban[j][i] isEqualToString:@"W"])
+            {
+                addingPointsFor = @"W";
+                [goBoard setWhiteStones:(goBoard.whiteStones+points+1)];
+                points = 0;
+            }
+            else
+            {
+                //Else nothing
+            }
+        }
+        addingPointsFor = @"Nobody";
+    }
 
-    //If a black stone is marked, the piece drawn at that space turns transparent black, white gets a point and that piece gets turned into a spot for black
+    //Convert both to floats and add the komi value to white
+    int blackScore = (double)goBoard.blackStones + (double)goBoard.capturedWhiteStones;
+    double whiteScore = (double)goBoard.whiteStones + (double)goBoard.capturedBlackStones + goBoard.komi;
     
-    //If a white stone is marked, the piece drawn at that space turns transparent white, black gets a point and that piece gets turned into a spot for white
+    NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures = %.1f",goBoard.blackStones, goBoard.capturedWhiteStones, blackScore, goBoard.whiteStones, goBoard.capturedBlackStones, whiteScore];
+   
+    if(blackScore > whiteScore)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else if(whiteScore > blackScore)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Tie?" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)didReceiveMemoryWarning
