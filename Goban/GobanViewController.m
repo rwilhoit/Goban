@@ -28,6 +28,7 @@
 @synthesize boardLoadRequest;
 @synthesize responseData;
 @synthesize serverId;
+@synthesize currentlyMarkingStonesAsDead;
 
 //Go board declared as a global variable
 Goban *goBoard;
@@ -78,7 +79,6 @@ NSTimer *gameClock;
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
 
-    
     //check if board load is needed
     if(boardLoadRequest)
     {
@@ -136,9 +136,12 @@ NSTimer *gameClock;
         //Set the komi count to a default (for now) of 6.5
         [goBoard setKomi:6.5];
 
+        //Set both pass variables to false
+        [goBoard setWhitePassed:NO];
+        [goBoard setBlackPassed:NO];
+    
         //Set it to black's turn
         [goBoard setTurn:@"B"];
-
     
         //Start the timer
         [self startTimer];
@@ -160,12 +163,27 @@ NSTimer *gameClock;
         rowValue = (int)floor(touchPoint.x/40.4210526316);
         columnValue = (int)floor(touchPoint.y/40.4210526316);
     }];
-    
-    //NSLog(@"Row coordinate: %d", rowValue);
-    //NSLog(@"Column coordinate: %d", columnValue);
-    
-    //Check if new move is legal
-    if([goBoard isLegalMove:rowValue andForColumnValue:columnValue])
+
+    //Check if we are marking stones as dead
+    if(self.currentlyMarkingStonesAsDead && [goBoard isInBounds:rowValue andForColumnValue:columnValue])
+    {
+        NSLog(@"Marking stone as dead");
+        if([goBoard.goban[rowValue][columnValue] isEqualToString:@"B"])
+        {
+            [goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"B"];
+            [self drawBoardForNewMove:0 andForColumn:0];
+        }
+        else if([goBoard.goban[rowValue][columnValue] isEqualToString:@"W"])
+        {
+            [goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"W"];
+            [self drawBoardForNewMove:0 andForColumn:0];
+        }
+        else
+        {
+            //Else nothing
+        }
+    }
+    else if([goBoard isLegalMove:rowValue andForColumnValue:columnValue]) //Check if new move is legal
     {
         if([goBoard.turn isEqualToString:@"B"])
         {
@@ -173,7 +191,6 @@ NSTimer *gameClock;
             goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
             
             //Play black's turn
-            //NSLog(@"Played black's turn");
             goBoard.goban[rowValue][columnValue] = @"B";
             
             if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
@@ -186,9 +203,7 @@ NSTimer *gameClock;
             }
             
             //Increment the move number
-            //NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
-            //NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
@@ -201,6 +216,10 @@ NSTimer *gameClock;
             
             //Save to server
             [self saveBoardToServer];
+            
+            //Set the pass variables to NO
+            [goBoard setBlackPassed:NO];
+            [goBoard setWhitePassed:NO];
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
@@ -228,9 +247,7 @@ NSTimer *gameClock;
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Increment the move number
-            //NSLog(@"Incrementing the move number: %d", goBoard.moveNumber);
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
-            //NSLog(@"Incremented move number: %d", goBoard.moveNumber);
             
             //Draw the entire board again, or just the new move
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
@@ -240,6 +257,10 @@ NSTimer *gameClock;
             
             //Save to server
             [self saveBoardToServer];
+            
+            //Set the pass variables to NO
+            [goBoard setBlackPassed:NO];
+            [goBoard setWhitePassed:NO];
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
@@ -259,7 +280,6 @@ NSTimer *gameClock;
     NSLog(@"Stone size: %f", stoneSize);
     if(!goBoard.redrawBoardNeeded)
     {
-        NSLog(@"Drawing just 1 new stone to the board");
         //How do I know which position to draw at?
         if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"B"])
         {
@@ -282,7 +302,6 @@ NSTimer *gameClock;
     }
     else
     {
-        NSLog(@"About to redraw the board");
         CALayer *boardLayer = [CALayer layer];
         boardLayer.frame = CGRectMake(0,0,768,768);
         boardLayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
@@ -306,6 +325,22 @@ NSTimer *gameClock;
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
+                else if([goBoard.goban[j][i] isEqualToString:@"w"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
+                    stoneLayer.opacity = 0.5;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
+                else if([goBoard.goban[j][i] isEqualToString:@"b"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
+                    stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
                 }
                 else
@@ -350,6 +385,36 @@ NSTimer *gameClock;
     }
 }
 
+- (IBAction)pressedPass:(id)sender
+{
+    //Get the current turn and set the pass variable to true then switch the turn
+    if([goBoard.turn isEqualToString:@"B"])
+    {
+        [goBoard setBlackPassed:YES];
+        [goBoard setTurn:@"W"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Passed" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else if([goBoard.turn isEqualToString:@"W"])
+    {
+        [goBoard setWhitePassed:YES];
+        [goBoard setTurn:@"B"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Passed" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    else
+    {
+        NSLog(@"It wasn't anyone's turn...?");
+    }
+    
+    //Change the state of the pass button if both are true and wait for the user to press it
+    if(goBoard.whitePassed && goBoard.blackPassed && ![self.passButton.title isEqualToString:@"Done"])
+    {
+        [self.passButton setTitle:@"Done"];
+        [self setCurrentlyMarkingStonesAsDead:YES];
+    }
+}
+
 - (void) startTimer {
     gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
 }
@@ -373,7 +438,7 @@ NSTimer *gameClock;
         {
             iMinutes--;
             iSeconds = 59;
-            NSLog(@"Reset iSeconds %d", iSeconds);
+            //NSLog(@"Reset iSeconds %d", iSeconds);
         }
         else
         {
@@ -418,7 +483,7 @@ NSTimer *gameClock;
         {
             result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
             self.whiteRemainingTimeLabel.text = result;
-            NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
+            //NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
         }
     }
     else
@@ -619,7 +684,6 @@ NSTimer *gameClock;
                     }
                     else
                     {
-                        NSLog(@"Crashed here 4");
                         if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"])
                         {
                             deserializedBoard[j][i] = @"B";
@@ -656,6 +720,18 @@ NSTimer *gameClock;
     }
 }
 
+-(void)scoreGame
+{
+    NSLog(@"Called scoreGame");
+    
+    //This function already exists implicitely...
+    
+    //Change the title of the pass button to done and when done is pressed, call the function to score the game
+
+    //If a black stone is marked, the piece drawn at that space turns transparent black, white gets a point and that piece gets turned into a spot for black
+    
+    //If a white stone is marked, the piece drawn at that space turns transparent white, black gets a point and that piece gets turned into a spot for white
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -663,9 +739,5 @@ NSTimer *gameClock;
     // Dispose of any resources that can be recreated.
 }
 
--(void)score
-{
-    NSLog(@"Called score");
-}
 
 @end

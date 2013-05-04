@@ -238,7 +238,11 @@
                                 <action selector="pressedBack:" destination="2" id="Lgu-Ld-xZC"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Pass" id="hEf-w3-Lmb"/>
+                        <barButtonItem key="rightBarButtonItem" title="Pass" id="hEf-w3-Lmb">
+                            <connections>
+                                <action selector="pressedPass:" destination="2" id="73O-1p-EG4"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -247,6 +251,7 @@
                         <outlet property="blackRemainingTimeLabel" destination="0qV-fz-5JE" id="SbX-3k-axF"/>
                         <outlet property="blackRemainingTimeStaticLabel" destination="zzi-e2-Kqa" id="i5G-p8-gTE"/>
                         <outlet property="mainMenuButton" destination="Sp5-8P-iVK" id="TZ2-hu-5ju"/>
+                        <outlet property="passButton" destination="hEf-w3-Lmb" id="tiP-lE-fUX"/>
                         <outlet property="resignButton" destination="u0W-1K-Lqj" id="eR5-Wm-ZiM"/>
                         <outlet property="whiteCapturedStoneCountLabel" destination="Idp-D3-c8n" id="0Zv-9H-moA"/>
                         <outlet property="whiteCapturedStonesStaticLabel" destination="ZuK-MP-GRZ" id="d35-gD-50R"/>
@@ -300,12 +305,14 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GobanViewController.h"/>
             <relationships>
                 <relationship kind="action" name="pressedBack:"/>
+                <relationship kind="action" name="pressedPass:"/>
                 <relationship kind="action" name="pressedResign:"/>
                 <relationship kind="outlet" name="blackCapturedStoneCountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="blackCapturedStonesStaticLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="blackRemainingTimeStaticLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="mainMenuButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="passButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="resignButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="whiteCapturedStoneCountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="whiteCapturedStonesStaticLabel" candidateClass="UILabel"/>

@@ -40,7 +40,8 @@
 @property (nonatomic) int previousCapturedWhiteStones;
 @property (nonatomic) double komi;
 @property (nonatomic) BOOL redrawBoardNeeded;
-
+@property (nonatomic) BOOL whitePassed;
+@property (nonatomic) BOOL blackPassed;
 
 -(id)init:(NSMutableArray *) goban;
 -(void)printBoardToConsole;
@@ -51,6 +52,7 @@
 -(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue;
 -(void)killStones:(NSMutableArray *)stonesToKill;
 -(void)back;
+-(void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString*)color;
 -(NSString *)serializeBoard;
 
 
