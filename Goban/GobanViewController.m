@@ -29,6 +29,7 @@
 @synthesize responseData;
 @synthesize serverId;
 @synthesize currentlyMarkingStonesAsDead;
+@synthesize currentlyScoringGame;
 
 //Go board declared as a global variable
 Goban *goBoard;
@@ -121,7 +122,6 @@ NSTimer *gameClock;
         
         //Set redraw needed
         [goBoard setRedrawBoardNeeded:NO];
-        
     }
     
         //Set the moveNumber
@@ -139,6 +139,9 @@ NSTimer *gameClock;
         //Set both pass variables to false
         [goBoard setWhitePassed:NO];
         [goBoard setBlackPassed:NO];
+    
+        //Set currently scoring game to NO
+        [self setCurrentlyScoringGame:NO];
     
         //Set it to black's turn
         [goBoard setTurn:@"B"];
@@ -180,7 +183,7 @@ NSTimer *gameClock;
         }
         else
         {
-            //Else nothing
+            //else nothing
         }
     }
     else if([goBoard isLegalMove:rowValue andForColumnValue:columnValue]) //Check if new move is legal
@@ -343,6 +346,20 @@ NSTimer *gameClock;
                     stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
                 }
+                else if([goBoard.goban[j][i] isEqualToString:@"Wp"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+stoneSize/4,stoneSize/2,stoneSize/2);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
+                else if([goBoard.goban[j][i] isEqualToString:@"Bp"])
+                {
+                    CALayer *stoneLayer = [CALayer layer];
+                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+stoneSize/4,stoneSize/2,stoneSize/2);
+                    stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
+                    [self.view.layer addSublayer:stoneLayer];
+                }
                 else
                 {
                     //NSLog(@"Draw nothing at coordinates (%d,%d)",j,i);
@@ -388,14 +405,14 @@ NSTimer *gameClock;
 - (IBAction)pressedPass:(id)sender
 {
     //Get the current turn and set the pass variable to true then switch the turn
-    if([goBoard.turn isEqualToString:@"B"])
+    if([goBoard.turn isEqualToString:@"B"] && ![self.passButton.title isEqualToString:@"Done"])
     {
         [goBoard setBlackPassed:YES];
         [goBoard setTurn:@"W"];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Passed" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
-    else if([goBoard.turn isEqualToString:@"W"])
+    else if([goBoard.turn isEqualToString:@"W"] && ![self.passButton.title isEqualToString:@"Done"])
     {
         [goBoard setWhitePassed:YES];
         [goBoard setTurn:@"B"];
@@ -404,7 +421,7 @@ NSTimer *gameClock;
     }
     else
     {
-        NSLog(@"It wasn't anyone's turn...?");
+        //else nothing
     }
     
     //Change the state of the pass button if both are true and wait for the user to press it
@@ -733,6 +750,7 @@ NSTimer *gameClock;
 {
     NSLog(@"Called scoreGame");
     int points = 0;
+    NSMutableArray *emptySpaces = [[NSMutableArray alloc] init];
     NSString *addingPointsFor = [[NSMutableString alloc] init];
     
     for(int i=0;i<COLUMN_LENGTH+1; i++)
@@ -743,26 +761,53 @@ NSTimer *gameClock;
             {
                 if([addingPointsFor isEqualToString:@"B"])
                 {
+                    //Mark the locations to draw half-stones
+                    goBoard.goban[j][i] = @"Bp";                    
                     [goBoard setBlackStones:(goBoard.blackStones+1)];
                 }
                 else if([addingPointsFor isEqualToString:@"W"])
                 {
+                    //Just draw a half-stone for white at this position
+                    goBoard.goban[j][i] = @"Wp";
                     [goBoard setWhiteStones:(goBoard.whiteStones+1)];
                 }
                 else
                 {
+                    Stone *emptySpace = [[Stone alloc] init];
+                    emptySpace.rowValue = j;
+                    emptySpace.columnValue = i;
+                    [emptySpaces addObject:emptySpace];
                     points++;
                 }
             }
             else if([goBoard.goban[j][i] isEqualToString:@"B"])
             {
+                //Marking any free spaces as black's points
+                if(points > 0)
+                {
+                    for(int i=0;i<[emptySpaces count];i++)
+                    {
+                        Stone *emptySpace = emptySpaces[0];
+                        [emptySpaces removeObjectAtIndex:0];
+                        goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Bp";
+                    }
+                }
                 addingPointsFor = @"B";
                 [goBoard setBlackStones:(goBoard.blackStones+points+1)];
                 points = 0;
-                
             }
             else if([goBoard.goban[j][i] isEqualToString:@"W"])
             {
+                //Marking any free spaces as white's points
+                if(points > 0)
+                {
+                    for(int i=0;i<[emptySpaces count];i++)
+                    {
+                        Stone *topOfQueue = emptySpaces[0];
+                        [emptySpaces removeObjectAtIndex:0];
+                        goBoard.goban[topOfQueue.rowValue][topOfQueue.columnValue] = @"Wp";
+                    }
+                }
                 addingPointsFor = @"W";
                 [goBoard setWhiteStones:(goBoard.whiteStones+points+1)];
                 points = 0;
@@ -774,6 +819,10 @@ NSTimer *gameClock;
         }
         addingPointsFor = @"Nobody";
     }
+    
+    //Redraw the board ot show the scored points
+    [goBoard setRedrawBoardNeeded:YES];
+    [self drawBoardForNewMove:0 andForColumn:0];
 
     //Convert both to floats and add the komi value to white
     int blackScore = (double)goBoard.blackStones + (double)goBoard.capturedWhiteStones;

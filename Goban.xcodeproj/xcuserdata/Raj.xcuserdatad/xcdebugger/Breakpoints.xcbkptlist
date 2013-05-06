@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.m"
-         timestampString = "389396473.229422"
+         timestampString = "389568892.149507"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "782"
-         endingLineNumber = "782"
+         startingLineNumber = "831"
+         endingLineNumber = "831"
          landmarkName = "-scoreGame"
          landmarkType = "5">
       </FileBreakpoint>

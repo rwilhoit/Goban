@@ -44,6 +44,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *whiteCapturedStoneCountLabel;
 @property (nonatomic) BOOL boardLoadRequest;
 @property (nonatomic) BOOL currentlyMarkingStonesAsDead;
+@property (nonatomic) BOOL currentlyScoringGame;
 @property (nonatomic) NSMutableData *responseData;
 @property (nonatomic) NSString *serverId;
 
