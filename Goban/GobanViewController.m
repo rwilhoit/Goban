@@ -748,20 +748,25 @@ NSTimer *gameClock;
 
 -(void)scoreGame
 {
-    NSLog(@"Called scoreGame");
+    NSLog(@"Scoring game");
     int points = 0;
     NSMutableArray *emptySpaces = [[NSMutableArray alloc] init];
     NSString *addingPointsFor = [[NSMutableString alloc] init];
+    int counter = 0;
     
-    for(int i=0;i<COLUMN_LENGTH+1; i++)
+    //Turn off mark stones as dead
+    [self setCurrentlyMarkingStonesAsDead:NO];
+    
+    for(int i=0;i<[goBoard.goban count]; i++)
     {
-        for(int j=0; j<ROW_LENGTH+1; j++)
+        for(int j=0; j<[goBoard.goban count]; j++)
         {
+            NSLog(@"Counter: %d", counter++);
             if([goBoard.goban[j][i] isEqualToString:@"+"] || [goBoard.goban[j][i] isEqualToString:@"w"] || [goBoard.goban[j][i] isEqualToString:@"b"])
             {
                 if([addingPointsFor isEqualToString:@"B"])
                 {
-                    //Mark the locations to draw half-stones
+                    //Mark the locations to draw half-stones for black at this position
                     goBoard.goban[j][i] = @"Bp";                    
                     [goBoard setBlackStones:(goBoard.blackStones+1)];
                 }
@@ -785,11 +790,12 @@ NSTimer *gameClock;
                 //Marking any free spaces as black's points
                 if(points > 0)
                 {
-                    for(int i=0;i<[emptySpaces count];i++)
+                    //NSLog(@"Points need accounting for (black)");
+                    while([emptySpaces count] > 0)
                     {
                         Stone *emptySpace = emptySpaces[0];
-                        [emptySpaces removeObjectAtIndex:0];
                         goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Bp";
+                        [emptySpaces removeObjectAtIndex:0];
                     }
                 }
                 addingPointsFor = @"B";
@@ -801,11 +807,12 @@ NSTimer *gameClock;
                 //Marking any free spaces as white's points
                 if(points > 0)
                 {
-                    for(int i=0;i<[emptySpaces count];i++)
+                   // NSLog(@"Points need accounting for (white)");
+                    while([emptySpaces count] > 0)
                     {
-                        Stone *topOfQueue = emptySpaces[0];
+                        Stone *emptySpace = emptySpaces[0];
+                        goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Wp";
                         [emptySpaces removeObjectAtIndex:0];
-                        goBoard.goban[topOfQueue.rowValue][topOfQueue.columnValue] = @"Wp";
                     }
                 }
                 addingPointsFor = @"W";
@@ -828,7 +835,7 @@ NSTimer *gameClock;
     int blackScore = (double)goBoard.blackStones + (double)goBoard.capturedWhiteStones;
     double whiteScore = (double)goBoard.whiteStones + (double)goBoard.capturedBlackStones + goBoard.komi;
     
-    NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures = %.1f",goBoard.blackStones, goBoard.capturedWhiteStones, blackScore, goBoard.whiteStones, goBoard.capturedBlackStones, whiteScore];
+    NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures + %.1f komi = %.1f",goBoard.blackStones, goBoard.capturedWhiteStones, blackScore, goBoard.whiteStones, goBoard.capturedBlackStones, goBoard.komi, whiteScore];
    
     if(blackScore > whiteScore)
     {
