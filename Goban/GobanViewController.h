@@ -32,10 +32,6 @@
 -(void)saveBoardToServer;
 -(void)loadBoardFromServer;
 
-@property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *blackCapturedStonesStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteCapturedStonesStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeStaticLabel;
 @property (strong, nonatomic) IBOutlet UIButton *mainMenuButton;
 @property (strong, nonatomic) IBOutlet UIButton *resignButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *passButton;

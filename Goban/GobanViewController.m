@@ -18,13 +18,9 @@
 @synthesize mainMenuButton;
 @synthesize resignButton;
 @synthesize whiteCapturedStoneCountLabel;
-@synthesize whiteCapturedStonesStaticLabel;
 @synthesize blackCapturedStoneCountLabel;
-@synthesize blackCapturedStonesStaticLabel;
 @synthesize whiteRemainingTimeLabel;
-@synthesize whiteRemainingTimeStaticLabel;
 @synthesize blackRemainingTimeLabel;
-@synthesize blackRemainingTimeStaticLabel;
 @synthesize boardLoadRequest;
 @synthesize responseData;
 @synthesize serverId;
@@ -59,29 +55,15 @@ NSTimer *gameClock;
     [resignButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
     
     //Set the color of the buttons
-    self.blackCapturedStonesStaticLabel.textColor = [UIColor orangeColor];
-    self.whiteCapturedStonesStaticLabel.textColor = [UIColor orangeColor];
-    self.blackCapturedStoneCountLabel.textColor = [UIColor orangeColor];
-    self.whiteCapturedStoneCountLabel.textColor = [UIColor orangeColor];
-    self.whiteRemainingTimeLabel.textColor = [UIColor orangeColor];
-    self.whiteRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
-    self.blackRemainingTimeLabel.textColor = [UIColor orangeColor];
-    self.blackRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
-    self.view.backgroundColor = [UIColor blackColor];
-    [self.blackRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteCapturedStoneCountLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackCapturedStoneCountLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    self.blackCapturedStoneCountLabel.textColor = [UIColor whiteColor];
+    self.whiteCapturedStoneCountLabel.textColor = [UIColor whiteColor];
+    self.whiteRemainingTimeLabel.textColor = [UIColor whiteColor];
+    self.blackRemainingTimeLabel.textColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor cyanColor];
     
-    //rotate labels in 45 degrees
+    //rotate labels in 180 degrees
     self.whiteCapturedStoneCountLabel.transform = CGAffineTransformMakeRotation(M_PI);
-    self.whiteCapturedStonesStaticLabel.transform = CGAffineTransformMakeRotation(M_PI);
     self.whiteRemainingTimeLabel.transform = CGAffineTransformMakeRotation(M_PI);
-    self.whiteRemainingTimeStaticLabel.transform = CGAffineTransformMakeRotation(M_PI);
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
