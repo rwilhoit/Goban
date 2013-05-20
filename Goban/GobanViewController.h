@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Goban.h"
 #import "KGModal.h"
+#define MIDDLE_OFFSET 96
 
 
 @interface GobanViewController : UIViewController {

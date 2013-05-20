@@ -42,8 +42,8 @@ NSTimer *gameClock;
 
     // Add the main view image
     CALayer *sublayer = [CALayer layer];
-    sublayer.backgroundColor = [UIColor blackColor].CGColor;
-    sublayer.frame = CGRectMake(0,0,768,768);
+    sublayer.backgroundColor = [UIColor whiteColor].CGColor;
+    sublayer.frame = CGRectMake(0,MIDDLE_OFFSET,768,768);
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
         
@@ -76,6 +76,12 @@ NSTimer *gameClock;
     [self.whiteCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.blackCapturedStoneCountLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
     [self.blackCapturedStonesStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
+    
+    //rotate labels in 45 degrees
+    self.whiteCapturedStoneCountLabel.transform = CGAffineTransformMakeRotation(M_PI);
+    self.whiteCapturedStonesStaticLabel.transform = CGAffineTransformMakeRotation(M_PI);
+    self.whiteRemainingTimeLabel.transform = CGAffineTransformMakeRotation(M_PI);
+    self.whiteRemainingTimeStaticLabel.transform = CGAffineTransformMakeRotation(M_PI);
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
@@ -160,11 +166,11 @@ NSTimer *gameClock;
         // Get a single touch and it's location
         UITouch *touch = obj;
         CGPoint touchPoint = [touch locationInView:self.view];
-        NSLog(@"touchPoint: %@, x: %f, y: %f", NSStringFromCGPoint(touchPoint), touchPoint.x, touchPoint.y); //Give me the coordinates of where the user touched
-        NSLog(@"We want to draw at point: %d, %d", (int)floor(touchPoint.x/40.4210526316), (int)floor(touchPoint.y/40.4210526316));
+        NSLog(@"touchPoint: %@, x: %f, y: %f", NSStringFromCGPoint(touchPoint), touchPoint.x, touchPoint.y-MIDDLE_OFFSET); //Give me the coordinates of where the user touched
+        NSLog(@"We want to draw at point: %d, %d", (int)floor(touchPoint.x/40.4210526316), (int)floor((touchPoint.y-MIDDLE_OFFSET)/40.4210526316));
         //Get specific coordinates from touch event
         rowValue = (int)floor(touchPoint.x/40.4210526316);
-        columnValue = (int)floor(touchPoint.y/40.4210526316);
+        columnValue = (int)floor((touchPoint.y-MIDDLE_OFFSET)/40.4210526316);
     }];
 
     //Check if we are marking stones as dead
@@ -195,15 +201,6 @@ NSTimer *gameClock;
             
             //Play black's turn
             goBoard.goban[rowValue][columnValue] = @"B";
-            
-            if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
-            {
-                //NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
-            }
-            else
-            {
-                //NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
-            }
             
             //Increment the move number
             [goBoard setMoveNumber:(goBoard.moveNumber+1)];
@@ -236,15 +233,6 @@ NSTimer *gameClock;
             //Play white's turn
             NSLog(@"Played white's turn");
             goBoard.goban[rowValue][columnValue] = @"W";
-            
-            if([goBoard.previousStateOfBoard[rowValue][columnValue] isEqualToString:goBoard.goban[rowValue][columnValue]])
-            {
-                //NSLog(@"PREVIOUS STATE OF THE BOARD DID NOT SAVE");
-            }
-            else
-            {
-                //NSLog(@"PREVIOUS STATE OF THE BOARD SUCCESSFULLY SAVED: PREVIOUS WAS %@ AND NOW IS %@", goBoard.previousStateOfBoard[rowValue][columnValue], goBoard.goban[rowValue][columnValue]);
-            }
             
             //Check the life of adjacent pieces of the opposite color
             [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
@@ -287,14 +275,14 @@ NSTimer *gameClock;
         if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"B"])
         {
             CALayer *stoneLayer = [CALayer layer];
-            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize,stoneSize,stoneSize);
+            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
             stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
             [self.view.layer addSublayer:stoneLayer];
         }
         else if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"W"])
-        {
+        {    
             CALayer *stoneLayer = [CALayer layer];
-            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize,stoneSize,stoneSize);
+            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
             stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
             [self.view.layer addSublayer:stoneLayer];
         }
@@ -306,7 +294,7 @@ NSTimer *gameClock;
     else
     {
         CALayer *boardLayer = [CALayer layer];
-        boardLayer.frame = CGRectMake(0,0,768,768);
+        boardLayer.frame = CGRectMake(0,MIDDLE_OFFSET,768,768);
         boardLayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
         [self.view.layer addSublayer:boardLayer];
     
@@ -319,21 +307,21 @@ NSTimer *gameClock;
                 if([goBoard.goban[j][i] isEqualToString:@"B"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
                 else if([goBoard.goban[j][i] isEqualToString:@"W"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
                 else if([goBoard.goban[j][i] isEqualToString:@"w"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                     stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
@@ -341,7 +329,7 @@ NSTimer *gameClock;
                 else if([goBoard.goban[j][i] isEqualToString:@"b"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize,stoneSize,stoneSize);
+                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                     stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
@@ -349,14 +337,14 @@ NSTimer *gameClock;
                 else if([goBoard.goban[j][i] isEqualToString:@"Wp"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+stoneSize/4,stoneSize/2,stoneSize/2);
+                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + MIDDLE_OFFSET,stoneSize/2,stoneSize/2);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
                 else if([goBoard.goban[j][i] isEqualToString:@"Bp"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+stoneSize/4,stoneSize/2,stoneSize/2);
+                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + MIDDLE_OFFSET,stoneSize/2,stoneSize/2);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
