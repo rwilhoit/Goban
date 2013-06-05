@@ -53,10 +53,8 @@ NSTimer *gameClock;
     //rotate labels in 180 degrees
     self.whiteCapturedStoneCountLabel.transform = CGAffineTransformMakeRotation(M_PI);
     self.whiteRemainingTimeLabel.transform = CGAffineTransformMakeRotation(M_PI);
-    self.optionsButtonTop.transform =
-        CGAffineTransformMakeRotation(M_PI);
-    self.optionsButtonTop.transform =
-        CGAffineTransformMakeRotation(M_PI);     
+    self.optionsButtonTop.transform = CGAffineTransformMakeRotation(M_PI);
+    self.optionsButtonTop.transform = CGAffineTransformMakeRotation(M_PI);     
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
@@ -416,12 +414,19 @@ NSTimer *gameClock;
                                   otherButtonTitles:@"Undo", @"Pass", @"Resign", nil];
     
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+
+    if([sender tag] == 1)
+    {
+        actionSheet.transform = CGAffineTransformMakeRotation(M_PI);
+    }
+    
     [actionSheet showInView:self.view];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex) {
+    switch (buttonIndex)
+    {
         case 0:
             [self pressedBack];
             break;

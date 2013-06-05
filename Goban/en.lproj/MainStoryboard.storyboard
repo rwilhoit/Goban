@@ -145,6 +145,7 @@
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYK-jG-iau">
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="jsr-qt-Znd"/>
                                     <constraint firstAttribute="width" constant="113" id="wat-nS-W4l"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
@@ -168,7 +169,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhN-du-vtZ">
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="bottonOptions" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhN-du-vtZ">
                                 <constraints>
                                     <constraint firstAttribute="height" constant="43" id="mWd-w9-Sx7"/>
                                 </constraints>
@@ -184,7 +185,7 @@
                                     <action selector="pressedOptions:" destination="2" eventType="touchUpInside" id="Zyn-zM-JXC"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82K-X0-VOG">
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" restorationIdentifier="topOptions" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82K-X0-VOG">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="ywc-Re-ToT"/>
                                 </constraints>
@@ -211,7 +212,6 @@
                             <constraint firstAttribute="bottom" secondItem="LhN-du-vtZ" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="Ouy-EJ-JLP"/>
                             <constraint firstItem="LhN-du-vtZ" firstAttribute="leading" secondItem="82K-X0-VOG" secondAttribute="leading" type="default" id="Thh-rH-KmT"/>
                             <constraint firstItem="82K-X0-VOG" firstAttribute="baseline" secondItem="Idp-D3-c8n" secondAttribute="baseline" type="default" id="XBz-O4-OsQ"/>
-                            <constraint firstItem="82K-X0-VOG" firstAttribute="bottom" secondItem="EYK-jG-iau" secondAttribute="bottom" type="default" id="btt-Gh-QOc"/>
                             <constraint firstItem="82K-X0-VOG" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="294" id="dg8-Jb-Z1k"/>
                             <constraint firstItem="EYK-jG-iau" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="34" id="dnK-eU-1Dd"/>
                             <constraint firstAttribute="bottom" secondItem="2ea-NM-pNQ" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="lX3-hh-xgb"/>
