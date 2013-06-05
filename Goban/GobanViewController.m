@@ -9,14 +9,14 @@
 #import "GobanViewController.h"
 
 
-@interface GobanViewController ()
+@interface GobanViewController () <UIActionSheetDelegate>
 
 @end
 
 @implementation GobanViewController
 
-@synthesize mainMenuButton;
-@synthesize resignButton;
+@synthesize optionsButtonTop;
+@synthesize optionsButtonBottom;
 @synthesize whiteCapturedStoneCountLabel;
 @synthesize blackCapturedStoneCountLabel;
 @synthesize whiteRemainingTimeLabel;
@@ -38,32 +38,25 @@ NSTimer *gameClock;
 
     // Add the main view image
     CALayer *sublayer = [CALayer layer];
-    sublayer.backgroundColor = [UIColor whiteColor].CGColor;
+    sublayer.backgroundColor = [UIColor blackColor].CGColor;
     sublayer.frame = CGRectMake(0,MIDDLE_OFFSET,768,768);
     sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
     [self.view.layer addSublayer:sublayer];
         
-    // Draw the buttons
-    UIImage *buttonImage = [[UIImage imageNamed:@"orangeButton.png"]
-                            resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
-    UIImage *buttonImageHighlight = [[UIImage imageNamed:@"orangeButtonHighlight.png"]
-                                     resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
-    // Set the background for any states you plan to use
-    [mainMenuButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [mainMenuButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
-    [resignButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [resignButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
-    
-    //Set the color of the buttons
+    //Set the color of the labels
     self.blackCapturedStoneCountLabel.textColor = [UIColor whiteColor];
     self.whiteCapturedStoneCountLabel.textColor = [UIColor whiteColor];
     self.whiteRemainingTimeLabel.textColor = [UIColor whiteColor];
     self.blackRemainingTimeLabel.textColor = [UIColor whiteColor];
-    self.view.backgroundColor = [UIColor cyanColor];
+    self.view.backgroundColor = [UIColor blackColor];
     
     //rotate labels in 180 degrees
     self.whiteCapturedStoneCountLabel.transform = CGAffineTransformMakeRotation(M_PI);
     self.whiteRemainingTimeLabel.transform = CGAffineTransformMakeRotation(M_PI);
+    self.optionsButtonTop.transform =
+        CGAffineTransformMakeRotation(M_PI);
+    self.optionsButtonTop.transform =
+        CGAffineTransformMakeRotation(M_PI);     
     
     //Initialize the goBoard and populate it
     goBoard = [[Goban alloc] init];
@@ -340,7 +333,7 @@ NSTimer *gameClock;
     }
 }
 
-- (IBAction)pressedBack:(id)sender
+- (void)pressedBack
 {
     NSLog(@"Pressed back");
     
@@ -356,7 +349,7 @@ NSTimer *gameClock;
 
 }
 
-- (IBAction)pressedResign:(id)sender
+- (void)pressedResign
 {
     if([goBoard.turn isEqualToString:@"B"])
     {
@@ -372,9 +365,10 @@ NSTimer *gameClock;
     }
 }
 
-- (IBAction)pressedPass:(id)sender
+- (void)pressedPass
 {
     //Get the current turn and set the pass variable to true then switch the turn
+    /*
     if([goBoard.turn isEqualToString:@"B"] && ![self.passButton.title isEqualToString:@"Done"])
     {
         [goBoard setBlackPassed:YES];
@@ -408,6 +402,35 @@ NSTimer *gameClock;
     else
     {
         //else nothing
+    } */
+}
+
+- (IBAction)pressedOptions:(id)sender
+{
+    //Pressed Options code
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:@"Options"
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Undo", @"Pass", @"Resign", nil];
+    
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    [actionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+            [self pressedBack];
+            break;
+        case 1:
+            [self pressedPass];
+            break;
+        case 2:
+            [self pressedResign];
+            break;
     }
 }
 

@@ -21,11 +21,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.h"
-         timestampString = "390606877.283957"
+         timestampString = "392076734.426687"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "26"
-         endingLineNumber = "26"
+         startingLineNumber = "27"
+         endingLineNumber = "27"
          landmarkName = "-drawBoardForNewMove:andForColumn:"
          landmarkType = "4">
       </FileBreakpoint>
@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.m"
-         timestampString = "390724498.309283"
+         timestampString = "392106691.036229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "808"
-         endingLineNumber = "808"
+         startingLineNumber = "831"
+         endingLineNumber = "831"
          landmarkName = "-scoreGame"
          landmarkType = "5">
       </FileBreakpoint>
@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.m"
-         timestampString = "390724498.309283"
+         timestampString = "392106691.036229"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "763"
-         endingLineNumber = "763"
+         startingLineNumber = "786"
+         endingLineNumber = "786"
          landmarkName = "-scoreGame"
          landmarkType = "5">
       </FileBreakpoint>

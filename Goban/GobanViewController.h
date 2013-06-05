@@ -19,10 +19,11 @@
     BOOL boardLoadRequest;
     BOOL currentlyMarkingStonesAsDead;
 }
-- (IBAction)pressedBack:(id)sender;
-- (IBAction)pressedResign:(id)sender;
-- (IBAction)pressedPass:(id)sender;
 
+//Actions
+- (IBAction)pressedOptions:(id)sender;
+
+//Backend
 -(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
 -(void)scoreGame;
 -(void)markStonesAsDead;
@@ -32,9 +33,11 @@
 -(void)saveBoardToServer;
 -(void)loadBoardFromServer;
 
-@property (strong, nonatomic) IBOutlet UIButton *mainMenuButton;
-@property (strong, nonatomic) IBOutlet UIButton *resignButton;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *passButton;
+//Menu buttons
+- (void)pressedBack;
+- (void)pressedResign;
+- (void)pressedPass;
+
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *blackCapturedStoneCountLabel;
@@ -44,6 +47,10 @@
 @property (nonatomic) BOOL currentlyScoringGame;
 @property (nonatomic) NSMutableData *responseData;
 @property (nonatomic) NSString *serverId;
+
+@property (strong, nonatomic) IBOutlet UIButton *optionsButtonTop;
+@property (strong, nonatomic) IBOutlet UIButton *optionsButtonBottom;
+
 
 
 @end

@@ -127,7 +127,7 @@
             </objects>
             <point key="canvasLocation" x="1629" y="-1592"/>
         </scene>
-        <!--Goban View Controller - Goban Version 1.0-->
+        <!--Goban View Controller - Goban-->
         <scene sceneID="4">
             <objects>
                 <viewController id="2" customClass="GobanViewController" sceneMemberID="viewController">
@@ -135,39 +135,6 @@
                         <rect key="frame" x="0.0" y="64" width="768" height="916"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sp5-8P-iVK">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="M2V-oC-Yh6"/>
-                                    <constraint firstAttribute="width" constant="225" id="zI6-7b-Ygq"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Main Menu">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="8bo-0q-y8V" kind="modal" identifier="mainMenuSegue" modalTransitionStyle="flipHorizontal" id="XdA-CO-6o9"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u0W-1K-Lqj">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="5dg-rD-VK1"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Resign">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="6vn-YL-3yC"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0qV-fz-5JE">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="102" id="QQ2-pN-dcP"/>
@@ -178,7 +145,6 @@
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EYK-jG-iau">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="51" id="1KG-dt-qXf"/>
                                     <constraint firstAttribute="width" constant="113" id="wat-nS-W4l"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
@@ -202,36 +168,63 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhN-du-vtZ">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="43" id="mWd-w9-Sx7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Options">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressedOptions:" destination="2" eventType="touchUpInside" id="Zyn-zM-JXC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82K-X0-VOG">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="ywc-Re-ToT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Options">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="pressedOptions:" destination="2" eventType="touchUpInside" id="8RZ-uM-WBq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Idp-D3-c8n" firstAttribute="bottom" secondItem="Sp5-8P-iVK" secondAttribute="bottom" type="default" id="2Qz-bW-NdE"/>
                             <constraint firstItem="Idp-D3-c8n" firstAttribute="centerX" secondItem="0qV-fz-5JE" secondAttribute="centerX" type="default" id="3kW-uy-E9A"/>
-                            <constraint firstAttribute="bottom" secondItem="u0W-1K-Lqj" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="4Wr-gy-M7c"/>
                             <constraint firstItem="EYK-jG-iau" firstAttribute="top" secondItem="60Q-5M-rDU" secondAttribute="top" constant="20" symbolic="YES" type="default" id="4Yh-JT-WGA"/>
                             <constraint firstItem="Idp-D3-c8n" firstAttribute="top" secondItem="60Q-5M-rDU" secondAttribute="top" constant="20" symbolic="YES" type="default" id="5hS-pG-yY7"/>
-                            <constraint firstItem="u0W-1K-Lqj" firstAttribute="top" secondItem="0qV-fz-5JE" secondAttribute="top" type="default" id="N6J-Td-Tpx"/>
-                            <constraint firstItem="EYK-jG-iau" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="34" id="NDh-vT-8Vx"/>
+                            <constraint firstItem="82K-X0-VOG" firstAttribute="trailing" secondItem="LhN-du-vtZ" secondAttribute="trailing" type="default" id="OaC-PY-3Ka"/>
                             <constraint firstItem="2ea-NM-pNQ" firstAttribute="leading" secondItem="EYK-jG-iau" secondAttribute="leading" type="default" id="OfW-6f-M1G"/>
-                            <constraint firstItem="u0W-1K-Lqj" firstAttribute="centerX" secondItem="60Q-5M-rDU" secondAttribute="centerX" type="default" id="PYx-6Q-MFE"/>
-                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="leading" secondItem="u0W-1K-Lqj" secondAttribute="leading" type="default" id="TKe-go-0mQ"/>
-                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="top" secondItem="60Q-5M-rDU" secondAttribute="top" constant="20" symbolic="YES" type="default" id="TWG-TF-PDt"/>
-                            <constraint firstItem="Sp5-8P-iVK" firstAttribute="trailing" secondItem="u0W-1K-Lqj" secondAttribute="trailing" type="default" id="iee-Qw-xQc"/>
+                            <constraint firstAttribute="bottom" secondItem="LhN-du-vtZ" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="Ouy-EJ-JLP"/>
+                            <constraint firstItem="LhN-du-vtZ" firstAttribute="leading" secondItem="82K-X0-VOG" secondAttribute="leading" type="default" id="Thh-rH-KmT"/>
+                            <constraint firstItem="82K-X0-VOG" firstAttribute="baseline" secondItem="Idp-D3-c8n" secondAttribute="baseline" type="default" id="XBz-O4-OsQ"/>
+                            <constraint firstItem="82K-X0-VOG" firstAttribute="bottom" secondItem="EYK-jG-iau" secondAttribute="bottom" type="default" id="btt-Gh-QOc"/>
+                            <constraint firstItem="82K-X0-VOG" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="294" id="dg8-Jb-Z1k"/>
+                            <constraint firstItem="EYK-jG-iau" firstAttribute="leading" secondItem="60Q-5M-rDU" secondAttribute="leading" constant="34" id="dnK-eU-1Dd"/>
                             <constraint firstAttribute="bottom" secondItem="2ea-NM-pNQ" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="lX3-hh-xgb"/>
                             <constraint firstAttribute="bottom" secondItem="0qV-fz-5JE" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="uZf-nG-BwE"/>
                             <constraint firstAttribute="trailing" secondItem="0qV-fz-5JE" secondAttribute="trailing" constant="33" id="uj1-f9-NrP"/>
+                            <constraint firstItem="LhN-du-vtZ" firstAttribute="top" secondItem="0qV-fz-5JE" secondAttribute="top" type="default" id="zB3-jY-BNS"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Goban Version 1.0" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
+                    <navigationItem key="navigationItem" title="Goban" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="yPS-ha-F2Z">
                             <connections>
                                 <action selector="pressedBack:" destination="2" id="Lgu-Ld-xZC"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Pass" id="hEf-w3-Lmb">
-                            <connections>
-                                <action selector="pressedPass:" destination="2" id="73O-1p-EG4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -239,16 +232,15 @@
                     <connections>
                         <outlet property="blackCapturedStoneCountLabel" destination="2ea-NM-pNQ" id="1pP-da-lNJ"/>
                         <outlet property="blackRemainingTimeLabel" destination="0qV-fz-5JE" id="SbX-3k-axF"/>
-                        <outlet property="mainMenuButton" destination="Sp5-8P-iVK" id="TZ2-hu-5ju"/>
-                        <outlet property="passButton" destination="hEf-w3-Lmb" id="tiP-lE-fUX"/>
-                        <outlet property="resignButton" destination="u0W-1K-Lqj" id="eR5-Wm-ZiM"/>
+                        <outlet property="optionsButtonBottom" destination="LhN-du-vtZ" id="mNO-bZ-ALo"/>
+                        <outlet property="optionsButtonTop" destination="82K-X0-VOG" id="6GY-zv-pBT"/>
                         <outlet property="whiteCapturedStoneCountLabel" destination="Idp-D3-c8n" id="0Zv-9H-moA"/>
                         <outlet property="whiteRemainingTimeLabel" destination="EYK-jG-iau" id="Yi4-3Y-jiY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1745" y="-271"/>
+            <point key="canvasLocation" x="1727" y="-271"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Yxs-wb-xzF">
@@ -291,14 +283,11 @@
         <class className="GobanViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/GobanViewController.h"/>
             <relationships>
-                <relationship kind="action" name="pressedBack:"/>
-                <relationship kind="action" name="pressedPass:"/>
-                <relationship kind="action" name="pressedResign:"/>
+                <relationship kind="action" name="pressedOptions:"/>
                 <relationship kind="outlet" name="blackCapturedStoneCountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="mainMenuButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="passButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="resignButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="optionsButtonBottom" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="optionsButtonTop" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="whiteCapturedStoneCountLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="whiteRemainingTimeLabel" candidateClass="UILabel"/>
             </relationships>
