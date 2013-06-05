@@ -221,13 +221,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Goban" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="yPS-ha-F2Z">
-                            <connections>
-                                <action selector="pressedBack:" destination="2" id="Lgu-Ld-xZC"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Goban" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="blackCapturedStoneCountLabel" destination="2ea-NM-pNQ" id="1pP-da-lNJ"/>

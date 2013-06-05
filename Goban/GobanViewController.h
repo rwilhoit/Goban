@@ -18,6 +18,8 @@
     NSString *serverId;
     BOOL boardLoadRequest;
     BOOL currentlyMarkingStonesAsDead;
+    BOOL currentlyScoringGame;
+    BOOL topPlayerPressedOptions;
 }
 
 //Actions
@@ -38,6 +40,8 @@
 - (void)pressedResign;
 - (void)pressedPass;
 
+@property (strong, nonatomic) IBOutlet UIButton *optionsButtonTop;
+@property (strong, nonatomic) IBOutlet UIButton *optionsButtonBottom;
 @property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *blackCapturedStoneCountLabel;
@@ -45,12 +49,8 @@
 @property (nonatomic) BOOL boardLoadRequest;
 @property (nonatomic) BOOL currentlyMarkingStonesAsDead;
 @property (nonatomic) BOOL currentlyScoringGame;
+@property (nonatomic) BOOL topPlayerPressedOptions;
 @property (nonatomic) NSMutableData *responseData;
 @property (nonatomic) NSString *serverId;
-
-@property (strong, nonatomic) IBOutlet UIButton *optionsButtonTop;
-@property (strong, nonatomic) IBOutlet UIButton *optionsButtonBottom;
-
-
 
 @end

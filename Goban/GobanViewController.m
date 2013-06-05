@@ -26,6 +26,7 @@
 @synthesize serverId;
 @synthesize currentlyMarkingStonesAsDead;
 @synthesize currentlyScoringGame;
+@synthesize topPlayerPressedOptions;
 
 //Go board declared as a global variable
 Goban *goBoard;
@@ -347,7 +348,7 @@ NSTimer *gameClock;
 
 }
 
-- (void)pressedResign
+- (void)resign
 {
     if([goBoard.turn isEqualToString:@"B"])
     {
@@ -361,6 +362,29 @@ NSTimer *gameClock;
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"White resigned" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }
+}
+
+- (void)pressedResign
+{
+    //Find the current orientation of the options (orient based on that)
+    
+    //Pressed Options code
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:@"Are you sure?"
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Yes", @"No", nil];
+    
+    actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
+    
+    if(topPlayerPressedOptions)
+    {
+        actionSheet.transform = CGAffineTransformMakeRotation(M_PI);
+        topPlayerPressedOptions = NO;
+    }
+    
+    [actionSheet showInView:self.view];
 }
 
 - (void)pressedPass
@@ -418,6 +442,7 @@ NSTimer *gameClock;
     if([sender tag] == 1)
     {
         actionSheet.transform = CGAffineTransformMakeRotation(M_PI);
+        topPlayerPressedOptions = YES;
     }
     
     [actionSheet showInView:self.view];
@@ -425,18 +450,37 @@ NSTimer *gameClock;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    switch (buttonIndex)
+    if([actionSheet.title isEqualToString:@"Options"])
     {
-        case 0:
-            [self pressedBack];
-            break;
-        case 1:
-            [self pressedPass];
-            break;
-        case 2:
-            [self pressedResign];
-            break;
+        switch (buttonIndex)
+        {
+            case 0:
+                [self pressedBack];
+                break;
+            case 1:
+                [self pressedPass];
+                break;
+            case 2:
+                [self pressedResign];
+                break;
+        }
     }
+    else if([actionSheet.title isEqualToString:@"Are you sure?"])
+    {
+        switch (buttonIndex)
+        {
+            case 0:
+                [self resign];
+                break;
+            case 1:
+                break;
+        }
+    }
+    else
+    {
+        //else nothing
+    }
+
 }
 
 - (void) startTimer
