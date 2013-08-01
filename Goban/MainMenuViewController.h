@@ -15,14 +15,7 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *gameButton;
 @property (strong, nonatomic) IBOutlet UIButton *loadGameButton;
-@property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *blackStonesCapturedStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *blackStonesCapturedLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteStonesCapturedStaticLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteStonesCapturedLabel;
-@property (strong, nonatomic) IBOutlet UILabel *blackRemainingTimeLabel;
-@property (strong, nonatomic) IBOutlet UILabel *whiteRemainingTimeLabel;
+
 @property (nonatomic) BOOL loadGameOnLoad;
 
 - (IBAction)pressedLoad:(id)sender;

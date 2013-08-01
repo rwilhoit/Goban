@@ -16,26 +16,33 @@
 @interface GobanViewController : UIViewController {
     NSMutableData *responseData;
     NSString *serverId;
+    NSString *gameRecordHash;
     BOOL boardLoadRequest;
     BOOL currentlyMarkingStonesAsDead;
     BOOL currentlyScoringGame;
     BOOL topPlayerPressedOptions;
 }
 
-//Actions
+// Actions
 - (IBAction)pressedOptions:(id)sender;
 
-//Backend
--(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
--(void)scoreGame;
--(void)markStonesAsDead;
--(void)startTimer;
--(void)timerCallback;
--(void)timeUp;
--(void)saveBoardToServer;
--(void)loadBoardFromServer;
+// Backend
+- (void)createNewGameRecord;
+- (void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
+- (void)drawUI;
+- (NSString *)getCurrentTime;
+- (NSString *)createHashValue;
+- (void)markStonesAsDead;
+- (void)saveBoardToServer;
+- (void)scoreGame;
+- (void)startTimer;
+- (void)loadBoardFromServer;
+- (void)loadBoardFromGameRecord;
+- (void)timerCallback;
+- (void)timeUp;
+- (void)updateGameRecord;
 
-//Menu buttons
+// Menu buttons
 - (void)pressedBack;
 - (void)pressedResign;
 - (void)pressedPass;
@@ -52,5 +59,6 @@
 @property (nonatomic) BOOL topPlayerPressedOptions;
 @property (nonatomic) NSMutableData *responseData;
 @property (nonatomic) NSString *serverId;
+@property (nonatomic) NSString *gameRecordHash;
 
 @end

@@ -17,6 +17,4 @@
 @property (nonatomic) int rowValue;
 @property (nonatomic) int columnValue;
 
--(CALayer *)drawStone;
-
 @end

@@ -7,12 +7,18 @@
 //
 
 #import "GobanAppDelegate.h"
+#import "LoadGameViewController.h"
+#import "GameRecord.h"
+#import "CoreData+MagicalRecord.h"
+
 
 @implementation GobanAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    // Setup MagivalRecord & CoreData
+    [MagicalRecord setupAutoMigratingCoreDataStack];
+    
     return YES;
 }
 							

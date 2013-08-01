@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12D78" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="8bo-0q-y8V">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="8bo-0q-y8V">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
@@ -39,95 +39,77 @@
                                 </state>
                                 <connections>
                                     <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="2tv-JG-JcP"/>
-                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="loadGameSegue" animates="NO" id="dxb-ht-9Vd"/>
+                                    <segue destination="URX-Q0-1zP" kind="modal" id="P8v-9j-bvv"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Black Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LUB-Qj-03Q">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="White Remaining Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yF3-Es-b2x">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KRn-B3-MC1">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWX-Zr-fdn">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Stones Captured" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="624-k5-NU5">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k9J-Dj-h4f">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Stones Captured" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HnR-kP-veJ">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rer-wz-9tm">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="leading" secondItem="WYd-5X-eWi" secondAttribute="leading" constant="60" id="6Lf-5l-OeE"/>
-                            <constraint firstItem="XWX-Zr-fdn" firstAttribute="centerX" secondItem="HnR-kP-veJ" secondAttribute="centerX" type="default" id="6kf-Hr-lhU"/>
-                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="centerX" secondItem="KRn-B3-MC1" secondAttribute="centerX" type="default" id="A5r-rV-Yef"/>
                             <constraint firstItem="cb7-zG-xiy" firstAttribute="trailing" secondItem="Ajm-zs-yFh" secondAttribute="trailing" type="default" id="AzD-N0-9wi"/>
-                            <constraint firstItem="624-k5-NU5" firstAttribute="centerX" secondItem="KRn-B3-MC1" secondAttribute="centerX" type="default" id="ERE-63-LgH"/>
-                            <constraint firstItem="HnR-kP-veJ" firstAttribute="baseline" secondItem="Ajm-zs-yFh" secondAttribute="baseline" type="default" id="FAW-Ha-BQd"/>
-                            <constraint firstItem="rer-wz-9tm" firstAttribute="centerX" secondItem="HnR-kP-veJ" secondAttribute="centerX" type="default" id="IxG-t6-5tZ"/>
-                            <constraint firstItem="624-k5-NU5" firstAttribute="baseline" secondItem="Ajm-zs-yFh" secondAttribute="baseline" type="default" id="UUZ-U2-N39"/>
-                            <constraint firstItem="k9J-Dj-h4f" firstAttribute="top" secondItem="624-k5-NU5" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="YjO-at-WgS"/>
-                            <constraint firstItem="rer-wz-9tm" firstAttribute="centerY" secondItem="k9J-Dj-h4f" secondAttribute="centerY" type="default" id="ZVi-Ip-dCx"/>
-                            <constraint firstItem="XWX-Zr-fdn" firstAttribute="baseline" secondItem="KRn-B3-MC1" secondAttribute="baseline" type="default" id="c0D-Mq-TER"/>
-                            <constraint firstAttribute="bottom" secondItem="k9J-Dj-h4f" secondAttribute="bottom" constant="53" id="eZJ-he-dLN"/>
-                            <constraint firstItem="rer-wz-9tm" firstAttribute="baseline" secondItem="k9J-Dj-h4f" secondAttribute="baseline" type="default" id="eet-fw-8fe"/>
-                            <constraint firstItem="XWX-Zr-fdn" firstAttribute="centerX" secondItem="yF3-Es-b2x" secondAttribute="centerX" type="default" id="fgJ-cy-t6B"/>
+                            <constraint firstItem="cb7-zG-xiy" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" type="default" id="Rqw-ON-y1q"/>
+                            <constraint firstItem="cb7-zG-xiy" firstAttribute="top" secondItem="WYd-5X-eWi" secondAttribute="top" constant="433" id="fze-fC-P95"/>
                             <constraint firstItem="Ajm-zs-yFh" firstAttribute="leading" secondItem="cb7-zG-xiy" secondAttribute="leading" type="default" id="gYk-0q-M4v"/>
-                            <constraint firstItem="LUB-Qj-03Q" firstAttribute="top" secondItem="cb7-zG-xiy" secondAttribute="top" type="default" id="mSK-dX-jd3"/>
-                            <constraint firstItem="yF3-Es-b2x" firstAttribute="baseline" secondItem="LUB-Qj-03Q" secondAttribute="baseline" type="default" id="mWS-5t-q6m"/>
-                            <constraint firstItem="KRn-B3-MC1" firstAttribute="top" secondItem="LUB-Qj-03Q" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ny6-6P-H4a"/>
-                            <constraint firstItem="624-k5-NU5" firstAttribute="centerX" secondItem="k9J-Dj-h4f" secondAttribute="centerX" type="default" id="v2j-Y5-TKY"/>
-                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" type="default" id="vTD-Lq-Kcm"/>
-                            <constraint firstAttribute="trailing" secondItem="yF3-Es-b2x" secondAttribute="trailing" constant="58" id="wJf-TU-vbT"/>
                             <constraint firstItem="Ajm-zs-yFh" firstAttribute="top" secondItem="cb7-zG-xiy" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="y4Y-lY-4fI"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Goban Version 1.0" id="0iP-c2-yQk"/>
                     <connections>
-                        <outlet property="blackRemainingTimeLabel" destination="KRn-B3-MC1" id="vAL-Ec-4ER"/>
-                        <outlet property="blackRemainingTimeStaticLabel" destination="LUB-Qj-03Q" id="kip-T3-4SZ"/>
-                        <outlet property="blackStonesCapturedLabel" destination="k9J-Dj-h4f" id="MFD-lF-PK2"/>
-                        <outlet property="blackStonesCapturedStaticLabel" destination="624-k5-NU5" id="v4R-pS-tfZ"/>
                         <outlet property="gameButton" destination="cb7-zG-xiy" id="g6N-2E-Flm"/>
                         <outlet property="loadGameButton" destination="Ajm-zs-yFh" id="9qX-Bz-1kK"/>
-                        <outlet property="whiteRemainingTimeLabel" destination="XWX-Zr-fdn" id="9xE-0P-Uk2"/>
-                        <outlet property="whiteRemainingTimeStaticLabel" destination="yF3-Es-b2x" id="km3-bM-R56"/>
-                        <outlet property="whiteStonesCapturedLabel" destination="rer-wz-9tm" id="SAz-Ql-d6K"/>
-                        <outlet property="whiteStonesCapturedStaticLabel" destination="HnR-kP-veJ" id="GNg-dB-jVi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GJB-UP-Z6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1629" y="-1592"/>
+            <point key="canvasLocation" x="1719" y="-1701"/>
         </scene>
-        <!--Goban View Controller - Goban-->
+        <!--Load Game View Controller - Game Records-->
+        <scene sceneID="1rP-ro-Z4b">
+            <objects>
+                <tableViewController id="rGy-xh-mBv" customClass="LoadGameViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Z8b-Tf-cKW">
+                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GameRecord" id="wda-x2-H4V">
+                                <rect key="frame" x="0.0" y="22" width="768" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="748" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <connections>
+                                    <segue destination="2ld-2w-BCa" kind="modal" identifier="GobanViewSegue" id="DQX-JW-lLr"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="rGy-xh-mBv" id="Kd6-vU-YdW"/>
+                            <outlet property="delegate" destination="rGy-xh-mBv" id="NjY-oK-WTN"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Game Records" id="Hf2-HL-lUa">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="Usf-42-A0V">
+                            <connections>
+                                <segue destination="8bo-0q-y8V" kind="modal" id="rFO-6l-dSk"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Delete All" id="Cgr-N2-eKR">
+                            <connections>
+                                <action selector="deleteButtonSelected:" destination="rGy-xh-mBv" id="g0E-CT-Ttf"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="2ld-2w-BCa" kind="modal" identifier="GobanViewSegue" id="H9q-J8-C5v"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="74S-z4-W01" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3582" y="-1595"/>
+        </scene>
+        <!--Goban View Controller - Title-->
         <scene sceneID="4">
             <objects>
                 <viewController id="2" customClass="GobanViewController" sceneMemberID="viewController">
@@ -137,9 +119,10 @@
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="60:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0qV-fz-5JE">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="102" id="QQ2-pN-dcP"/>
+                                    <constraint firstAttribute="width" constant="102" id="JEz-eY-OMC"/>
+                                    <constraint firstAttribute="height" constant="43" id="kdv-g8-Mdh"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="TamilSangamMN" family="Tamil Sangam MN" pointSize="40"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -148,7 +131,7 @@
                                     <constraint firstAttribute="height" constant="52" id="jsr-qt-Znd"/>
                                     <constraint firstAttribute="width" constant="113" id="wat-nS-W4l"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="TamilSangamMN" family="Tamil Sangam MN" pointSize="40"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -157,22 +140,20 @@
                                     <constraint firstAttribute="width" constant="24" id="gLZ-pc-NQe"/>
                                     <constraint firstAttribute="height" constant="36" id="k0u-gK-RD0"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="TamilSangamMN" family="Tamil Sangam MN" pointSize="40"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Idp-D3-c8n">
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="DpO-oy-lLx"/>
                                     <constraint firstAttribute="width" constant="43" id="TSe-Km-a1N"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="TamilSangamMN" family="Tamil Sangam MN" pointSize="40"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="bottonOptions" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LhN-du-vtZ">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="mWd-w9-Sx7"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Options">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -217,11 +198,17 @@
                             <constraint firstAttribute="bottom" secondItem="2ea-NM-pNQ" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="lX3-hh-xgb"/>
                             <constraint firstAttribute="bottom" secondItem="0qV-fz-5JE" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="uZf-nG-BwE"/>
                             <constraint firstAttribute="trailing" secondItem="0qV-fz-5JE" secondAttribute="trailing" constant="33" id="uj1-f9-NrP"/>
-                            <constraint firstItem="LhN-du-vtZ" firstAttribute="top" secondItem="0qV-fz-5JE" secondAttribute="top" type="default" id="zB3-jY-BNS"/>
+                            <constraint firstItem="82K-X0-VOG" firstAttribute="top" secondItem="60Q-5M-rDU" secondAttribute="top" constant="28" id="wb1-sg-drF"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Goban" id="qkt-ij-yIh" colorLabel="IBBuiltInLabel-Blue"/>
+                    <navigationItem key="navigationItem" title="Title" id="kZB-aO-Ugt">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="4q9-Yn-Kcd">
+                            <connections>
+                                <segue destination="LQj-x4-bvx" kind="modal" id="fe1-po-ndt"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="blackCapturedStoneCountLabel" destination="2ea-NM-pNQ" id="1pP-da-lNJ"/>
@@ -234,7 +221,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1727" y="-271"/>
+            <point key="canvasLocation" x="3619" y="-311"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Yxs-wb-xzF">
@@ -252,7 +239,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="atV-4t-now" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="665" y="-271"/>
+            <point key="canvasLocation" x="2557" y="-311"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nzQ-Yh-nXF">
@@ -272,46 +259,32 @@
             </objects>
             <point key="canvasLocation" x="665" y="-1592"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="mD0-tR-JtB">
+            <objects>
+                <navigationController id="URX-Q0-1zP" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="GtS-Tw-5dJ">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="rGy-xh-mBv" kind="relationship" relationship="rootViewController" id="rqP-QM-7If"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qxq-gv-5Ii" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2656" y="-1605"/>
+        </scene>
     </scenes>
-    <classes>
-        <class className="GobanViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/GobanViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pressedOptions:"/>
-                <relationship kind="outlet" name="blackCapturedStoneCountLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="optionsButtonBottom" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="optionsButtonTop" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="whiteCapturedStoneCountLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="whiteRemainingTimeLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="MainMenuViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainMenuViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pressedLoad:"/>
-                <relationship kind="outlet" name="blackRemainingTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="blackRemainingTimeStaticLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="blackStonesCapturedLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="blackStonesCapturedStaticLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="gameButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="loadGameButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="whiteRemainingTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="whiteRemainingTimeStaticLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="whiteStonesCapturedLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="whiteStonesCapturedStaticLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="NSLayoutConstraint" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="dxb-ht-9Vd"/>
+        <segue reference="fe1-po-ndt"/>
+        <segue reference="DQX-JW-lLr"/>
     </inferredMetricsTieBreakers>
 </document>

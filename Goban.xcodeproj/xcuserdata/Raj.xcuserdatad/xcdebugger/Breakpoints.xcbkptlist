@@ -7,39 +7,13 @@
          shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Goban/Goban.m"
-         timestampString = "389388624.610002"
+         filePath = "Goban/GobanAppDelegate.m"
+         timestampString = "396890249.649718"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "355"
-         endingLineNumber = "355"
-         landmarkName = "-checkLifeOfAdjacentEnemyStones:andForColumnValue:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Goban/GobanViewController.h"
-         timestampString = "392076734.426687"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "27"
-         endingLineNumber = "27"
-         landmarkName = "-drawBoardForNewMove:andForColumn:"
-         landmarkType = "4">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Goban/Goban.m"
-         timestampString = "389381748.525001"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "125"
-         endingLineNumber = "125"
-         landmarkName = "-isLegalMove:andForColumnValue:"
+         startingLineNumber = "18"
+         endingLineNumber = "18"
+         landmarkName = "-application:didFinishLaunchingWithOptions:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -47,12 +21,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.m"
-         timestampString = "392106691.036229"
+         timestampString = "397061092.606563"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "831"
-         endingLineNumber = "831"
-         landmarkName = "-scoreGame"
+         startingLineNumber = "367"
+         endingLineNumber = "367"
+         landmarkName = "-getCurrentTime"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -60,13 +34,22 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Goban/GobanViewController.m"
-         timestampString = "392106691.036229"
+         timestampString = "397061092.606563"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "786"
-         endingLineNumber = "786"
-         landmarkName = "-scoreGame"
+         startingLineNumber = "688"
+         endingLineNumber = "688"
+         landmarkName = "-updateGameRecord"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
+   <ExceptionBreakpoints>
+      <ExceptionBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         scope = "0"
+         stopOnStyle = "0">
+      </ExceptionBreakpoint>
+   </ExceptionBreakpoints>
 </Bucket>

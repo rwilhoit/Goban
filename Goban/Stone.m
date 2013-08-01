@@ -27,8 +27,4 @@
     return [super init];
 }
 
--(CALayer *)drawStone{
-    return nil;
-}
-
 @end

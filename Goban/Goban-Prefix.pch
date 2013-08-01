@@ -12,3 +12,8 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+//1. Import MagicalRecord Sources
+#define MR_SHORTHAND
+#define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+#import "CoreData+MagicalRecord.h"

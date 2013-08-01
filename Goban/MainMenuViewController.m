@@ -17,14 +17,6 @@
 
 @synthesize gameButton;
 @synthesize loadGameButton;
-@synthesize blackRemainingTimeStaticLabel;
-@synthesize blackRemainingTimeLabel;
-@synthesize blackStonesCapturedStaticLabel;
-@synthesize blackStonesCapturedLabel;
-@synthesize whiteRemainingTimeStaticLabel;
-@synthesize whiteRemainingTimeLabel;
-@synthesize whiteStonesCapturedStaticLabel;
-@synthesize whiteStonesCapturedLabel;
 @synthesize loadGameOnLoad;
 
 
@@ -41,11 +33,13 @@
 {
     if ([[segue identifier] isEqualToString:@"loadGameSegue"])
     {
+        // This was written to load the game from the server and can probably be mostly deleted 
+        
         GobanViewController *gobanViewController = (GobanViewController *)[[segue destinationViewController] topViewController];
         [gobanViewController setBoardLoadRequest:YES];
         NSLog(@"Load game selected");
 
-        [gobanViewController loadBoardFromServer];
+        //[gobanViewController loadBoardFromServer];
 
     }
     else if([[segue identifier] isEqualToString:@"startGameSegue"])
@@ -98,43 +92,11 @@
 - (void)viewDidLoad
 {
     [self showAction:nil];
-    
-    // Add the main view image
-    CALayer *sublayer = [CALayer layer];
-    sublayer.backgroundColor = [UIColor blackColor].CGColor;
-    sublayer.frame = CGRectMake(0,0,768,768);
-    sublayer.contents = (id) [UIImage imageNamed:@"Goban.png"].CGImage;
-    [self.view.layer addSublayer:sublayer];
 
-    // Draw the buttons
-    UIImage *buttonImage = [[UIImage imageNamed:@"orangeButton.png"]
-                            resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
-    UIImage *buttonImageHighlight = [[UIImage imageNamed:@"orangeButtonHighlight.png"]
-                                     resizableImageWithCapInsets:UIEdgeInsetsMake(18, 18, 18, 18)];
-    // Set the background for any states you plan to use
-    [gameButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [gameButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
-    [loadGameButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [loadGameButton setBackgroundImage:buttonImageHighlight forState:UIControlStateHighlighted];
-
-    //Set colors for buttons and background
-    self.view.backgroundColor = [UIColor blackColor];
-    self.blackRemainingTimeLabel.textColor = [UIColor orangeColor];
-    self.blackRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
-    self.blackStonesCapturedLabel.textColor = [UIColor orangeColor];
-    self.blackStonesCapturedStaticLabel.textColor = [UIColor orangeColor];
-    self.whiteRemainingTimeLabel.textColor = [UIColor orangeColor];
-    self.whiteRemainingTimeStaticLabel.textColor = [UIColor orangeColor];
-    self.whiteStonesCapturedLabel.textColor = [UIColor orangeColor];
-    self.whiteStonesCapturedStaticLabel.textColor = [UIColor orangeColor];
-    [self.blackRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteRemainingTimeLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteRemainingTimeStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteStonesCapturedLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.whiteStonesCapturedStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackStonesCapturedLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];
-    [self.blackStonesCapturedStaticLabel setFont:[UIFont fontWithName:@"Arial-BoldMT" size:16]];    
+    // Set the label colors
+    //self.blackStonesCapturedLabel.textColor = [UIColor blackColor];
+    //self.whiteStonesCapturedLabel.textColor = [UIColor blackColor];
+    //self.view.backgroundColor = [UIColor whiteColor];
     
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
@@ -152,9 +114,6 @@
 {
     NSLog(@"Pressed load");
     //Need to set something
-    
-    // Need to load a goban object based on what's on the server
-    
 }
 
 @end
