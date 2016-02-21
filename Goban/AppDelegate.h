@@ -1,5 +1,5 @@
 //
-//  GobanAppDelegate.h
+//  AppDelegate.h
 //  Goban
 //
 //  Created by Raj Wilhoit on 3/17/13.
@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
 
-@interface GobanAppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

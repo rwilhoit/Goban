@@ -10,42 +10,22 @@
 
 @implementation Goban
 
-@synthesize goban;
-@synthesize previousStateOfBoard;
-@synthesize turn;
-@synthesize boardCreationDate;
-@synthesize moveNumber;
-@synthesize whiteStones;
-@synthesize blackStones;
-@synthesize capturedBlackStones;
-@synthesize capturedWhiteStones;
-@synthesize previousCapturedBlackStones;
-@synthesize previousCapturedWhiteStones;
-@synthesize komi;
-@synthesize redrawBoardNeeded;
-@synthesize hashValue;
-
--(id)init:(NSMutableArray *) goBoard
-{
-    if (self = [super init])
-    {
-        self.goban = goBoard;
+-(id)init:(NSMutableArray *) goBoard {
+    if (self = [super init]) {
+        _goban = goBoard;
     }
     return self;
 }
 
--(id)init
-{
+- (id)init {
     return [super init];
 }
 
--(void)printBoardToConsole{
+- (void)printBoardToConsole {
     NSMutableString *printRow = [[NSMutableString alloc] init];
     [printRow appendString:@"\n"];
-    for(int i=0;i<COLUMN_LENGTH+1; i++)
-    {
-        for(int j=0; j<ROW_LENGTH+1; j++)
-        {
+    for(int i = 0 ; i < COLUMN_LENGTH + 1; i++) {
+        for(int j=0; j<ROW_LENGTH+1; j++) {
             [printRow appendString:self.goban[j][i]];
             [printRow appendString:@" "];
         }
@@ -55,21 +35,17 @@
     NSLog(@"%@", printRow);
 }
 
--(NSString *)serializeBoard
-{
+- (NSString *)serializeBoard {
     NSMutableString *board_string = [[NSMutableString alloc] init];
-    for(int i=0;i<COLUMN_LENGTH+1; i++)
-    {
-        for(int j=0; j<ROW_LENGTH+1; j++)
-        {
+    for(int i = 0; i < COLUMN_LENGTH + 1; i++) {
+        for(int j = 0; j < ROW_LENGTH + 1; j++) {
             [board_string appendString:self.goban[j][i]];
         }
     }
-    return (NSString *)board_string;
+    return board_string;
 }
 
--(NSMutableArray *)deserializeBoard:(NSString *)boardString
-{
+- (NSMutableArray *)deserializeBoard:(NSString *)boardString {
     NSMutableArray *deserializedBoard = [NSMutableArray arrayWithObjects:
                                          [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                                          [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
@@ -92,27 +68,17 @@
                                          [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
     
     int counter = 0;
-    for(int i=0;i<[deserializedBoard count]; i++)
-    {
-        for(int j=0;j<[deserializedBoard[i] count]; j++)
-        {
-            if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"+"])
-            {
+    for(int i = 0; i < deserializedBoard.count; i++) {
+        for(int j=0;j<[deserializedBoard[i] count]; j++) {
+            if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"+"]) {
                 //Do nothing
             }
-            else
-            {
-                if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"])
-                {
+            else {
+                if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"]) {
                     deserializedBoard[j][i] = @"B";
                 }
-                else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"W"])
-                {
+                else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"W"]) {
                     deserializedBoard[j][i] = @"W";
-                }
-                else
-                {
-                    //else nothing
                 }
             }
             counter++;
@@ -122,10 +88,9 @@
     return deserializedBoard;
 }
 
--(BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue
-{
-    if(rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH)
-    {
+- (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue {
+    BOOL stoneWasOutOfBounds = rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH;
+    if (stoneWasOutOfBounds) {
         //Stone was out of bounds
         return NO;
     }
@@ -134,17 +99,14 @@
     return YES;
 }
 
--(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue
-{
+-(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue {
     // Check if given move was in bounds
-    if(![self isInBounds:rowValue andForColumnValue:columnValue])
-    {
+    if(![self isInBounds:rowValue andForColumnValue:columnValue]) {
         NSLog(@"Illegal move: move was out of bounds");
         return NO;
     }
     // Check if the move has already been played
-    if(![self.goban[rowValue][columnValue] isEqualToString:@"+"])
-    {
+    if(![self.goban[rowValue][columnValue] isEqualToString:@"+"]) {
         NSLog(@"Illegal move: Move has already been played");
         return NO;
     }
@@ -152,31 +114,30 @@
     // Check if space has liberties still
     BOOL hasLiberties = NO;
     // Check right for liberties
-    if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"] && !hasLiberties)
-    {
+    if(!hasLiberties &&
+       [self isInBounds:(rowValue + 1) andForColumnValue:columnValue] &&
+       [self.goban[rowValue + 1][columnValue] isEqualToString:@"+"]) {
         hasLiberties = YES;
     }
     // Check left for liberties
-    if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"] && !hasLiberties)
-    {
+    if(!hasLiberties && [self isInBounds:(rowValue-1) andForColumnValue:columnValue] &&
+       [self.goban[rowValue-1][columnValue] isEqualToString:@"+"]) {
         hasLiberties = YES;
     }
     // Check down for liberties
-    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"] && !hasLiberties)
-    {
+    if(!hasLiberties &&
+       [self isInBounds:rowValue andForColumnValue:(columnValue+1)] &&
+       [self.goban[rowValue][columnValue+1] isEqualToString:@"+"]) {
         hasLiberties = YES;
     }
     // Check up for liberties
-    if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"] && !hasLiberties)
-    {
+    if(!hasLiberties &&
+       [self isInBounds:rowValue andForColumnValue:(columnValue-1)] &&
+       [self.goban[rowValue][columnValue-1] isEqualToString:@"+"]) {
         hasLiberties = YES;
     }
     // Check if any liberties were found and return NO (and print message) if they weren't
-    if(!hasLiberties)
-    {
-        NSLog(@"Saving the state of the board");
-        
-        //Initialize a double array
+    if(!hasLiberties) {
         NSMutableArray *savedStateOfBoard = [NSMutableArray arrayWithObjects:
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
@@ -199,24 +160,19 @@
                                              [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
 
         // Saving the state of the board
-        for(int i=0;i<[self.goban count];i++)
-        {
-            for(int j=0;j<[self.goban count];j++)
-            {
-                if([self.goban[j][i] isEqualToString:@"+"])
-                {
+        for(int i = 0; i < self.goban.count; i++) {
+            for(int j = 0; j < self.goban.count ; j++) {
+                if([self.goban[j][i] isEqualToString:@"+"]) {
                     savedStateOfBoard[j][i] = @"+";
                 }
-                else if([self.goban[j][i] isEqualToString:@"B"])
-                {
+                else if([self.goban[j][i] isEqualToString:@"B"]) {
                     savedStateOfBoard[j][i] = @"B";
                 }
-                else if([self.goban[j][i] isEqualToString:@"W"])
-                {
+                else if([self.goban[j][i] isEqualToString:@"W"]) {
                     savedStateOfBoard[j][i] = @"W";
                 }
             }
-        } //State of the board saved
+        }
 
         // Play the move and then set it back if it's not legal
         int tempWhiteCaptureCount = self.capturedWhiteStones;
@@ -234,92 +190,67 @@
         NSString *enemyColor = [[NSMutableString alloc] init];
 
         // Check if stones died to the right
-        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
-        {
+        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"]) {
             deathRow = rowValue + 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the left
-        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
-        {
+        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"]) {
             deathRow = rowValue - 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the up
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
-        {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"]) {
             deathRow = rowValue;
             deathColumn = columnValue + 1;
             stonesDied = YES;
         }
         // Check if stones died to the down
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
-        {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"]) {
             deathRow = rowValue;
             deathColumn = columnValue - 1;
             stonesDied = YES;
         }
-        else
-        {
-            NSLog(@"No stones died");
-        }
         
-        if(stonesDied)
-        {
+        if(stonesDied) {
             // Get whose move it is
-            if([self.turn isEqualToString:@"B"])
-            {
+            if([self.turn isEqualToString:@"B"]) {
                 enemyColor = @"W";
             }
-            else
-            {
+            else {
                 enemyColor = @"B";
             }
 
             // Check if this new board matches the previous board
-            if([self.goban isEqualToArray:self.previousStateOfBoard])
-            {
-                NSLog(@"Illegal Move: Ko");
+            if([self.goban isEqualToArray:self.previousStateOfBoard]) {
                 //Show warning
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ko" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
                 koFound = YES;
             }
-            else
-            {
-                NSLog(@"Ko not found, checking for suicides");
-            }
             
-            NSLog(@"Setting the board back to its saved state");
             //Setting the board back to its saved state
-            for(int i=0;i<[self.goban count];i++)
-            {
-                for(int j=0;j<[self.goban count];j++)
-                {
-                    if([savedStateOfBoard[j][i] isEqualToString:@"+"])
-                    {
+            for(int i = 0;i < self.goban.count; i++) {
+                for(int j=0;j<[self.goban count];j++) {
+                    if([savedStateOfBoard[j][i] isEqualToString:@"+"]) {
                         self.goban[j][i] = @"+";
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"])
-                    {
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"]) {
                         self.goban[j][i] = @"B";
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"])
-                    {
+                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"]) {
                         self.goban[j][i] = @"W";
                     }
                 }
-            } //Board set back to its saved state
+            }
 
             //Restore the number of captured stones
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
-            NSLog(@"Board set back to previous state");
             [self printBoardToConsole];
-            if(koFound)
-            {
+            if(koFound) {
                 return NO;                
             }
         }

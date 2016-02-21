@@ -50,7 +50,7 @@
 		35CCC7AC16F6A3500012D577 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CCC7AB16F6A3500012D577 /* CoreGraphics.framework */; };
 		35CCC7B216F6A3500012D577 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7B016F6A3500012D577 /* InfoPlist.strings */; };
 		35CCC7B416F6A3500012D577 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCC7B316F6A3500012D577 /* main.m */; };
-		35CCC7B816F6A3500012D577 /* GobanAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCC7B716F6A3500012D577 /* GobanAppDelegate.m */; };
+		35CCC7B816F6A3500012D577 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35CCC7B716F6A3500012D577 /* AppDelegate.m */; };
 		35CCC7BA16F6A3500012D577 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7B916F6A3500012D577 /* Default.png */; };
 		35CCC7BC16F6A3500012D577 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7BB16F6A3500012D577 /* Default@2x.png */; };
 		35CCC7BE16F6A3500012D577 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 35CCC7BD16F6A3500012D577 /* Default-568h@2x.png */; };
@@ -143,8 +143,8 @@
 		35CCC7B116F6A3500012D577 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		35CCC7B316F6A3500012D577 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35CCC7B516F6A3500012D577 /* Goban-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Goban-Prefix.pch"; sourceTree = "<group>"; };
-		35CCC7B616F6A3500012D577 /* GobanAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GobanAppDelegate.h; sourceTree = "<group>"; };
-		35CCC7B716F6A3500012D577 /* GobanAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GobanAppDelegate.m; sourceTree = "<group>"; };
+		35CCC7B616F6A3500012D577 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		35CCC7B716F6A3500012D577 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		35CCC7B916F6A3500012D577 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		35CCC7BB16F6A3500012D577 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		35CCC7BD16F6A3500012D577 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -320,8 +320,8 @@
 				35C8733A16F8197700A828B9 /* Goban.m */,
 				35C8733C16F8218800A828B9 /* Stone.h */,
 				35C8733D16F8218800A828B9 /* Stone.m */,
-				35CCC7B616F6A3500012D577 /* GobanAppDelegate.h */,
-				35CCC7B716F6A3500012D577 /* GobanAppDelegate.m */,
+				35CCC7B616F6A3500012D577 /* AppDelegate.h */,
+				35CCC7B716F6A3500012D577 /* AppDelegate.m */,
 				35CCC7BF16F6A3500012D577 /* MainStoryboard.storyboard */,
 				35E34D1B171774400073B258 /* MainMenuViewController.h */,
 				35E34D1C171774400073B258 /* MainMenuViewController.m */,
@@ -430,7 +430,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35CCC7B416F6A3500012D577 /* main.m in Sources */,
-				35CCC7B816F6A3500012D577 /* GobanAppDelegate.m in Sources */,
+				35CCC7B816F6A3500012D577 /* AppDelegate.m in Sources */,
 				35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */,
 				35C8733B16F8197700A828B9 /* Goban.m in Sources */,
 				35C8733E16F8218900A828B9 /* Stone.m in Sources */,

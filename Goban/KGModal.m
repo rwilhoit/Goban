@@ -18,18 +18,23 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
 @end
 
 @interface KGModalContainerView : UIView
+
 @property (weak, nonatomic) CALayer *styleLayer;
 @property (strong, nonatomic) UIColor *modalBackgroundColor;
+
 @end
 
 @interface KGModalCloseButton : UIButton
 @end
 
 @interface KGModalViewController : UIViewController
+
 @property (weak, nonatomic) KGModalGradientView *styleView;
+
 @end
 
 @interface KGModal()
+
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UIViewController *contentViewController;
 @property (weak, nonatomic) KGModalViewController *viewController;
@@ -41,7 +46,7 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
 
 @implementation KGModal
 
-+ (id)sharedInstance{
++ (id)sharedInstance {
     static id sharedInstance;
     static dispatch_once_t once;
     dispatch_once(&once, ^{
@@ -320,21 +325,21 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
 - (UIImage *)closeButtonImage{
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0);
     
-    //// General Declarations
+    // General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    //// Color Declarations
+    // Color Declarations
     UIColor *topGradient = [UIColor colorWithRed:0.21 green:0.21 blue:0.21 alpha:0.9];
     UIColor *bottomGradient = [UIColor colorWithRed:0.03 green:0.03 blue:0.03 alpha:0.9];
     
-    //// Gradient Declarations
+    // Gradient Declarations
     NSArray *gradientColors = @[(id)topGradient.CGColor,
                                 (id)bottomGradient.CGColor];
     CGFloat gradientLocations[] = {0, 1};
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
     
-    //// Shadow Declarations
+    // Shadow Declarations
     CGColorRef shadow = [UIColor blackColor].CGColor;
     CGSize shadowOffset = CGSizeMake(0, 1);
     CGFloat shadowBlurRadius = 3;
@@ -343,7 +348,7 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
     CGFloat shadow2BlurRadius = 0;
     
     
-    //// Oval Drawing
+    // Oval Drawing
     UIBezierPath *ovalPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(4, 3, 24, 24)];
     CGContextSaveGState(context);
     [ovalPath addClip];
@@ -357,8 +362,7 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
     [ovalPath stroke];
     CGContextRestoreGState(context);
     
-    
-    //// Bezier Drawing
+    // Bezier Drawing
     UIBezierPath *bezierPath = [UIBezierPath bezierPath];
     [bezierPath moveToPoint:CGPointMake(22.36, 11.46)];
     [bezierPath addLineToPoint:CGPointMake(18.83, 15)];
@@ -381,7 +385,7 @@ NSString *const KGModalGradientViewTapped = @"KGModalGradientViewTapped";
     CGContextRestoreGState(context);
     
     
-    //// Cleanup
+    // Cleanup
     CGGradientRelease(gradient);
     CGColorSpaceRelease(colorSpace);
     
