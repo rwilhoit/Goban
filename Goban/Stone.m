@@ -10,10 +10,12 @@
 
 @implementation Stone
 
--(id)init:(NSNumber *)goStone {
+- (instancetype)initWithWithRow:(int)row column:(int)column {
     if (self = [super init]) {
-        _stone = goStone;
+        _row = row;
+        _column = column;
     }
+    
     return self;
 }
 

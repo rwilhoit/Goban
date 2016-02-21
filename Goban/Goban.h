@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "GobanViewController.h"
 #import "Stone.h"
-#define BOARD_SIZE 361
-#define ROW_LENGTH 18
-#define COLUMN_LENGTH 18
 
 @class Stone;
 
@@ -34,7 +31,7 @@
 @property (nonatomic) BOOL whitePassed;
 @property (nonatomic) BOOL blackPassed;
 
-- (id)init:(NSMutableArray *) goban;
+- (id)initWithSerializedBoard:(NSMutableArray *)goban;
 - (void)printBoardToConsole;
 - (BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue;
 - (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;

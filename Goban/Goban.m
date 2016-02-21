@@ -8,17 +8,17 @@
 
 #import "Goban.h"
 
+#define BOARD_SIZE 361
+#define ROW_LENGTH 18
+#define COLUMN_LENGTH 18
+
 @implementation Goban
 
--(id)init:(NSMutableArray *) goBoard {
+- (id)initWithSerializedBoard:(NSMutableArray *)goBoard {
     if (self = [super init]) {
         _goban = goBoard;
     }
     return self;
-}
-
-- (id)init {
-    return [super init];
 }
 
 - (void)printBoardToConsole {
@@ -314,7 +314,7 @@
         stoneInVisitedNodeList = visitedNodeList[i];
         
         //Check if the coordinates match the coordinates of any nodes in the visited node queue
-        if(stoneInVisitedNodeList.rowValue == rowValueToCheck && stoneInVisitedNodeList.columnValue == columnValueToCheck)
+        if(stoneInVisitedNodeList.row == rowValueToCheck && stoneInVisitedNodeList.column == columnValueToCheck)
         {
             //NSLog(@"Node has been visited");
             hasBeenVisited = YES;
@@ -440,9 +440,7 @@
     
     //BFS
     //Put the coordinates in a point and then add the point to the queue and visited nodes list
-    Stone *vertex = [[Stone alloc] init];
-    [vertex setColumnValue:columnValue];
-    [vertex setRowValue:rowValue];
+    Stone *vertex = [[Stone alloc] initWithWithRow:rowValue column:columnValue];
         
     //Push the root node into the queue (I don't actually think this is how you do it)
     // 1. Mark the root as visited.
@@ -455,15 +453,13 @@
     //Check all spots around where the vertex is
     
     //Check spot to the right of vertex
-    if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue])
+    if([self isInBounds:(vertex.row + 1) andForColumnValue:vertex.column])
     {        
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:allyColor])
+        if([self.goban[vertex.row + 1][vertex.column] isEqualToString:allyColor])
         {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue+1];
-            [point setColumnValue:vertex.columnValue];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row + 1 column:columnValue];
 
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
@@ -471,7 +467,7 @@
             [queue addObject:point];
         }
         //If it is a free space then we're done!
-        else if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:goal])
+        else if([self.goban[vertex.row + 1][vertex.column] isEqualToString:goal])
         {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
@@ -483,93 +479,66 @@
         }
     }
     //Check spot to the left of the vertex
-    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue] && stonesAreDead)
+    if([self isInBounds:(vertex.row - 1) andForColumnValue:vertex.column] && stonesAreDead)
     {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:allyColor])
-        {
+        if([self.goban[vertex.row - 1][vertex.column] isEqualToString:allyColor]) {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue-1];
-            [point setColumnValue:vertex.columnValue];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row - 1 column:vertex.column];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:goal])
-        {
+        else if([self.goban[vertex.row - 1][vertex.column] isEqualToString:goal]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-            //NSLog(@"Free space found to the left. Stone or stone cluster is alive (found at vertex)");
-        }
-        else
-        {
-            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
         }
     }
     //Check spot below the vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)] && stonesAreDead)
-    {
+    if([self isInBounds:vertex.row andForColumnValue:(vertex.column + 1)] && stonesAreDead) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:allyColor])
-        {
+        if([self.goban[vertex.row][vertex.column + 1] isEqualToString:allyColor]) {
             //NSLog(@"ALLY STONE TO THE DOWN AT LOCATION (%d,%d)", vertex.rowValue,vertex.columnValue+1);
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue];
-            [point setColumnValue:vertex.columnValue+1];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row column:vertex.column + 1];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:goal])
-        {
+        else if([self.goban[vertex.row][vertex.column + 1] isEqualToString:goal]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-        }
-        else
-        {
-            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
         }
     }
     //Check the spot above the vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)] && stonesAreDead)
-    {
+    if([self isInBounds:vertex.row andForColumnValue:(vertex.column - 1)] && stonesAreDead) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:allyColor])
-        {
+        if([self.goban[vertex.row][vertex.column - 1] isEqualToString:allyColor]) {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue];
-            [point setColumnValue:vertex.columnValue-1];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row
+                                                   column:vertex.column - 1];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:goal])
-        {
+        else if([self.goban[vertex.row][vertex.column - 1] isEqualToString:goal]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-        }
-        else
-        {
-            //If this piece is a random piece, a wall piece, or something else, then just do nothing.
         }
     }
     
     //Loop until the queue is empty
-    while([queue count] > 0) 
-    {
-        //NSLog(@"Checking nodes past the vertex (inside loop)");
+    while(queue.count > 0) {
+        
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
         
@@ -578,15 +547,14 @@
         
         // 3. Mark all unvisited vertices as visited (only if they aren't visited already!) and check for free spaces around the current node, ending if one is found.
         //Check spot to the right of vertex
-        if([self isInBounds:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue])
-        {
+        if([self isInBounds:(topOfQueue.row + 1) andForColumnValue:topOfQueue.column] && stonesAreDead &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes
+                                forRowValue:(topOfQueue.row + 1)
+                          andForColumnValue:topOfQueue.column]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:allyColor])
-            {
+            if([self.goban[topOfQueue.row + 1][topOfQueue.column] isEqualToString:allyColor]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue+1];
-                [point setColumnValue:topOfQueue.columnValue];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row + 1 column:topOfQueue.column];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -594,194 +562,137 @@
                 [queue addObject:point];
             }
             //If it is a free space then we're done!
-            else if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:goal])
-            {
+            else if([self.goban[topOfQueue.row + 1][topOfQueue.column] isEqualToString:goal]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                //NSLog(@"Stone or stone cluster is alive");
-            }
-            else
-            {
-                //else nothing
             }
         }
         //Check spot to the left of the vertex
-        if([self isInBounds:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue])
-        {
+        if([self isInBounds:(topOfQueue.row - 1) andForColumnValue:topOfQueue.column] && stonesAreDead &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes
+                                forRowValue:(topOfQueue.row - 1)
+                          andForColumnValue:topOfQueue.column]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:allyColor])
-            {
+            if([self.goban[topOfQueue.row - 1][topOfQueue.column] isEqualToString:allyColor]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue-1];
-                [point setColumnValue:topOfQueue.columnValue];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row column:topOfQueue.column - 1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:goal])
-            {
+            else if([self.goban[topOfQueue.row - 1][topOfQueue.column] isEqualToString:goal]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                //NSLog(@"Stone or stone cluster is alive");
-            }
-            else
-            {
-                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
         //Check spot below the vertex
-        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)])
-        {
+        if([self isInBounds:topOfQueue.row andForColumnValue:(topOfQueue.column + 1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.row andForColumnValue:(topOfQueue.column + 1)]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:allyColor])
-            {
+            if([self.goban[topOfQueue.row][topOfQueue.column + 1] isEqualToString:allyColor]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue];
-                [point setColumnValue:topOfQueue.columnValue+1];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row column:topOfQueue.column + 1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:goal])
-            {
+            else if([self.goban[topOfQueue.row][topOfQueue.column + 1] isEqualToString:goal]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-            }
-            else
-            {
-                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
         //Check the spot above the vertex
-        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)] && stonesAreDead && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)])
-        {
+        if([self isInBounds:topOfQueue.row
+          andForColumnValue:(topOfQueue.column - 1)] &&
+           stonesAreDead &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.row andForColumnValue:(topOfQueue.column - 1)]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:allyColor])
-            {
-                //NSLog(@"ALLY STONE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
+            if([self.goban[topOfQueue.row][topOfQueue.column - 1] isEqualToString:allyColor]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue];
-                [point setColumnValue:topOfQueue.columnValue-1];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row column:topOfQueue.column];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:goal])
-            {
-                //NSLog(@"FREE SPACE TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
+            else if([self.goban[topOfQueue.row][topOfQueue.column - 1] isEqualToString:goal]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
-                //NSLog(@"Stone or stone cluster is alive");
-            }
-            else
-            {
-                //NSLog(@"MOST LIKELY AN ENEMY TO THE UP AT LOCATION (%d,%d)", topOfQueue.rowValue,topOfQueue.columnValue-1);
-                //If this piece is a random piece, a wall piece, or something else, then just do nothing.
             }
         }
-    } //End while loop
+    }
     
     //If stones are dead, set them back to unplayed spots
-    if(stonesAreDead)
-    {
-        //NSLog(@"Killing stones (should not be called after stones are determined to be alive)");
+    if(stonesAreDead) {
         [self printBoardToConsole];
         [self killStones:visitedNodes];
     }
 }
 
--(void)killStones:(NSMutableArray *)stonesToKill
-{
-    Stone *stone = [[Stone alloc] init];
-
+-(void)killStones:(NSMutableArray *)stonesToKill {
+    
     //Check what color the stone in the 0th index is to get the color of the stone
-    stone = stonesToKill[0];
+    Stone *stone = stonesToKill[0];
     
     //Get the color of the stones that are dying
-    NSString *dyingColor = self.goban[stone.rowValue][stone.columnValue];
-    if([dyingColor isEqualToString:@"B"])
-    {
-        //NSLog(@"Old number of captured black stones: %d", self.capturedBlackStones);
+    NSString *dyingColor = self.goban[stone.row][stone.column];
+    if([dyingColor isEqualToString:@"B"]) {
         //Add the number of dead stones to black's captured stone count
-        [self setPreviousCapturedBlackStones:self.capturedBlackStones];
-        [self setCapturedBlackStones:(self.capturedBlackStones + [stonesToKill count])];
-        //NSLog(@"New number of captured black stones: %d", self.capturedBlackStones);
+        self.previousCapturedBlackStones = self.capturedBlackStones;
+        self.capturedBlackStones = (self.capturedBlackStones + stonesToKill.count);
     }
-    else
-    {
-        //Add the number of dead stones to white's dead stone count
-        //NSLog(@"Old number of captured white stones: %d", self.capturedWhiteStones);
+    else {
         //Add the number of dead stones to white's captured stone count
-        [self setPreviousCapturedWhiteStones:self.capturedWhiteStones];
-        [self setCapturedWhiteStones:(self.capturedWhiteStones + [stonesToKill count])];
-        //NSLog(@"New number of captured white stones: %d", self.capturedWhiteStones);
+        self.previousCapturedWhiteStones = self.capturedWhiteStones;
+        self.capturedWhiteStones = (self.capturedWhiteStones + [stonesToKill count]);
     }
         
     //This takes the nodes from the visited Nodes array and sets them back to "+"
-    for(int i=0;i<[stonesToKill count]; i++)
-    {
+    for(int i = 0; i < stonesToKill.count; i++) {
         stone = stonesToKill[i];
-        self.goban[stone.rowValue][stone.columnValue] = @"+";
-        //NSLog(@"KILLING STONE at row %d and column %d", stone.rowValue, stone.columnValue);
+        self.goban[stone.row][stone.column] = @"+";
     }
+    
     NSLog(@"Killed stones");
     [self printBoardToConsole];
-    NSLog(@"Board needs to be redrawn");
-    [self setRedrawBoardNeeded:YES];
+    
+    self.redrawBoardNeeded = YES;
 }
 
--(void)back
-{
+- (void)back {
     //restore the board to it's previous state
-    for(int i=0;i<[self.goban count];i++)
-    {
-        for(int j=0;j<[self.goban count];j++)
-        {
-            if([self.previousStateOfBoard[j][i] isEqualToString:@"+"])
-            {
+    for(int i = 0; i < self.goban.count ; i++) {
+        for(int j = 0; j < self.goban.count; j++) {
+            if([self.previousStateOfBoard[j][i] isEqualToString:@"+"]) {
                 self.goban[j][i] = @"+";
             }
-            else if([self.previousStateOfBoard[j][i] isEqualToString:@"B"])
-            {
+            else if([self.previousStateOfBoard[j][i] isEqualToString:@"B"]) {
                 self.goban[j][i] = @"B";
             }
-            else if([self.previousStateOfBoard[j][i] isEqualToString:@"W"])
-            {
+            else if([self.previousStateOfBoard[j][i] isEqualToString:@"W"]) {
                 self.goban[j][i] = @"W";
             }
         }
     }
     
     //Put the turn back also
-    if([self.turn isEqualToString:@"B"])
-    {
-        NSLog(@"Set to white's turn: %@", self.turn);
+    if([self.turn isEqualToString:@"B"]) {
         self.turn = @"W";
-        //isBlacksTurn = NO;
     }
-    else
-    {
+    else {
         self.turn = @"B";
-        NSLog(@"Set to black's turn: %@", self.turn);
-        //isBlacksTurn = YES;
     }
     
     //Put the move count back also
-    if(self.moveNumber > 0)
-    {
+    if(self.moveNumber > 0) {
         [self setMoveNumber:(self.moveNumber-1)];
     }
     
@@ -789,45 +700,31 @@
 
 }
 
--(void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString*)color;
-{
-    NSLog(@"Called markStonesAsDead");
+-(void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString *)color {
     
     //BFS
     //Put the coordinates in a point and then add the point to the queue and visited nodes list
-    Stone *vertex = [[Stone alloc] init];
-    [vertex setColumnValue:columnValue];
-    [vertex setRowValue:rowValue];
+    Stone *vertex = [[Stone alloc] initWithWithRow:rowValue column:columnValue];
     
     // 1. Mark the root as visited.
     NSMutableArray *queue = [[NSMutableArray alloc] init];
     NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
-    if([color isEqualToString:@"B"])
-    {
-        self.goban[vertex.rowValue][vertex.columnValue] = @"b";
+    if([color isEqualToString:@"B"]) {
+        self.goban[vertex.row][vertex.column] = @"b";
     }
-    else if([color isEqualToString:@"W"])
-    {
-        self.goban[vertex.rowValue][vertex.columnValue] = @"w";
-    }
-    else
-    {
-        //Else nothing
+    else if([color isEqualToString:@"W"]) {
+        self.goban[vertex.row][vertex.column] = @"w";
     }
     
     // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
     //Check all spots around where the vertex is
     
     //Check spot to the right of vertex
-    if([self isInBounds:(vertex.rowValue+1) andForColumnValue:vertex.columnValue])
-    {
+    if([self isInBounds:(vertex.row + 1) andForColumnValue:vertex.column]) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue+1][vertex.columnValue] isEqualToString:color])
-        {
+        if([self.goban[vertex.row + 1][vertex.column] isEqualToString:color]) {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:(vertex.rowValue+1)];
-            [point setColumnValue:vertex.columnValue];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row + 1 column:vertex.column];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
@@ -835,34 +732,20 @@
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"])
-            {
-                self.goban[vertex.rowValue+1][vertex.columnValue] = @"b";
+            if([color isEqualToString:@"B"]) {
+                self.goban[vertex.row + 1][vertex.column] = @"b";
             }
-            else if([color isEqualToString:@"W"])
-            {
-                self.goban[vertex.rowValue+1][vertex.columnValue] = @"w";
+            else if([color isEqualToString:@"W"]) {
+                self.goban[vertex.row + 1][vertex.column] = @"w";
             }
-            else
-            {
-                //else nothing
-            }
-        }
-        else
-        {
-            //else nothing
         }
     }
     //Check spot to the left of the vertex
-    if([self isInBounds:(vertex.rowValue-1) andForColumnValue:vertex.columnValue])
-    {
+    if([self isInBounds:(vertex.row - 1) andForColumnValue:vertex.column]) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue-1][vertex.columnValue] isEqualToString:color])
-        {
+        if([self.goban[vertex.row - 1][vertex.column] isEqualToString:color]) {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:(vertex.rowValue-1)];
-            [point setColumnValue:vertex.columnValue];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row column:vertex.column];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
@@ -870,34 +753,22 @@
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"])
-            {
-                self.goban[vertex.rowValue-1][vertex.columnValue] = @"b";
+            if([color isEqualToString:@"B"]) {
+                self.goban[vertex.row - 1][vertex.column] = @"b";
             }
-            else if([color isEqualToString:@"W"])
-            {
-                self.goban[vertex.rowValue-1][vertex.columnValue] = @"w";
+            else if([color isEqualToString:@"W"]) {
+                self.goban[vertex.row-1][vertex.column] = @"w";
             }
-            else
-            {
-                //else nothing
-            }
-        }
-        else
-        {
-            //else nothing
         }
     }
     //Check spot to the up of vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue-1)])
+    if([self isInBounds:vertex.row andForColumnValue:(vertex.column - 1)])
     {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue][vertex.columnValue-1] isEqualToString:color])
+        if([self.goban[vertex.row][vertex.column - 1] isEqualToString:color])
         {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue];
-            [point setColumnValue:vertex.columnValue-1];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row column:vertex.column - 1];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
@@ -907,32 +778,20 @@
             //Change the spot on the board to lowercase
             if([color isEqualToString:@"B"])
             {
-                self.goban[vertex.rowValue][vertex.columnValue-1] = @"b";
+                self.goban[vertex.row][vertex.column - 1] = @"b";
             }
             else if([color isEqualToString:@"W"])
             {
-                self.goban[vertex.rowValue][vertex.columnValue-1] = @"w";
+                self.goban[vertex.row][vertex.column - 1] = @"w";
             }
-            else
-            {
-                //else nothing
-            }
-        }
-        else
-        {
-            //else nothing
         }
     }
     //Check spot to the down of vertex
-    if([self isInBounds:vertex.rowValue andForColumnValue:(vertex.columnValue+1)])
-    {
+    if([self isInBounds:vertex.row andForColumnValue:(vertex.column + 1)]) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.rowValue][vertex.columnValue+1] isEqualToString:color])
-        {
+        if([self.goban[vertex.row][vertex.column + 1] isEqualToString:color]) {
             //Create a new point and insert it into the queue
-            Stone *point = [[Stone alloc] init];
-            [point setRowValue:vertex.rowValue];
-            [point setColumnValue:(vertex.columnValue+1)];
+            Stone *point = [[Stone alloc] initWithWithRow:vertex.row column:vertex.column + 1];
             
             //Mark the object as visited and insert it to the end of the visited queue
             [visitedNodes addObject:point];
@@ -940,30 +799,19 @@
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"])
-            {
-                self.goban[vertex.rowValue][vertex.columnValue+1] = @"b";
+            if([color isEqualToString:@"B"]) {
+                self.goban[vertex.row][vertex.column + 1] = @"b";
             }
-            else if([color isEqualToString:@"W"])
-            {
-                self.goban[vertex.rowValue][vertex.columnValue+1] = @"w";
+            else if([color isEqualToString:@"W"]) {
+                self.goban[vertex.row][vertex.column+1] = @"w";
             }
-            else
-            {
-                //else nothing
-            }
-        }
-        else
-        {
-            //else nothing
         }
     }
     
     //Check if node has been visited is what is broken
     
     //Loop until the queue is empty
-    while([queue count] > 0)
-    {
+    while (queue.count > 0) {
         // 1. Pick the vertex at the head of the queue
         Stone *topOfQueue = queue[0];
         
@@ -972,15 +820,13 @@
         
         // 3. Mark all unvisited vertices as visited (only if they aren't visited already!)
         //Check spot to the right of vertex
-        if([self isInBounds:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue] && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue+1) andForColumnValue:topOfQueue.columnValue])
-        {
+        if([self isInBounds:(topOfQueue.row + 1) andForColumnValue:topOfQueue.column] &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.row + 1)
+                          andForColumnValue:topOfQueue.column]) {
             //Change it's letter to lower case, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] isEqualToString:color])
-            {
+            if([self.goban[topOfQueue.row + 1][topOfQueue.column] isEqualToString:color]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:(topOfQueue.rowValue+1)];
-                [point setColumnValue:topOfQueue.columnValue];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row + 1 column:topOfQueue.column];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -988,34 +834,21 @@
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"])
-                {
-                    self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] = @"b";
+                if([color isEqualToString:@"B"]) {
+                    self.goban[topOfQueue.row + 1][topOfQueue.column] = @"b";
                 }
-                else if([color isEqualToString:@"W"])
-                {
-                    self.goban[topOfQueue.rowValue+1][topOfQueue.columnValue] = @"w";
+                else if([color isEqualToString:@"W"]) {
+                    self.goban[topOfQueue.row + 1][topOfQueue.column] = @"w";
                 }
-                else
-                {
-                    //else nothing
-                }
-            }
-            else
-            {
-                //Else nothing
             }
         }
         //Check spot to the left of the vertex
-        if([self isInBounds:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue] && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.rowValue-1) andForColumnValue:topOfQueue.columnValue])
-        {
+        if([self isInBounds:(topOfQueue.row - 1) andForColumnValue:topOfQueue.column] &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:(topOfQueue.row - 1) andForColumnValue:topOfQueue.column]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] isEqualToString:color])
-            {
+            if([self.goban[topOfQueue.row - 1][topOfQueue.column] isEqualToString:color]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:(topOfQueue.rowValue-1)];
-                [point setColumnValue:topOfQueue.columnValue];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row - 1 column:columnValue];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -1023,34 +856,21 @@
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"])
-                {
-                    self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] = @"b";
+                if([color isEqualToString:@"B"]) {
+                    self.goban[topOfQueue.row - 1][topOfQueue.column] = @"b";
                 }
-                else if([color isEqualToString:@"W"])
-                {
-                    self.goban[topOfQueue.rowValue-1][topOfQueue.columnValue] = @"w";
+                else if([color isEqualToString:@"W"]) {
+                    self.goban[topOfQueue.row - 1][topOfQueue.column] = @"w";
                 }
-                else
-                {
-                    //Else nothing
-                }
-            }
-            else
-            {
-                //Else nothing
             }
         }
         //Check spot below the vertex
-        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)] && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue+1)])
-        {
+        if([self isInBounds:topOfQueue.row andForColumnValue:(topOfQueue.column + 1)] &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.row andForColumnValue:(topOfQueue.column + 1)]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] isEqualToString:color])
-            {
+            if([self.goban[topOfQueue.row][topOfQueue.column + 1] isEqualToString:color]) {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue];
-                [point setColumnValue:topOfQueue.columnValue+1];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row column:topOfQueue.column + 1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -1058,34 +878,22 @@
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"])
-                {
-                    self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] = @"b";
+                if([color isEqualToString:@"B"]) {
+                    self.goban[topOfQueue.row][topOfQueue.column + 1] = @"b";
                 }
-                else if([color isEqualToString:@"W"])
-                {
-                    self.goban[topOfQueue.rowValue][topOfQueue.columnValue+1] = @"w";
+                else if([color isEqualToString:@"W"]) {
+                    self.goban[topOfQueue.row][topOfQueue.column + 1] = @"w";
                 }
-                else
-                {
-                    //else nothing
-                }
-            }
-            else
-            {
-                //Else nothing
             }
         }
         //Check the spot above the vertex
-        if([self isInBounds:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)] && ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.rowValue andForColumnValue:(topOfQueue.columnValue-1)])
-        {
+        if([self isInBounds:topOfQueue.row andForColumnValue:(topOfQueue.column - 1)] &&
+           ![self checkIfNodeHasBeenVisited:visitedNodes forRowValue:topOfQueue.row andForColumnValue:(topOfQueue.column - 1)]) {
             //If it is an ally color, add it to the visited queue and the actual queue
-            if([self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] isEqualToString:color])
+            if([self.goban[topOfQueue.row][topOfQueue.column - 1] isEqualToString:color])
             {
                 //Create a new point and insert it into the queue
-                Stone *point = [[Stone alloc] init];
-                [point setRowValue:topOfQueue.rowValue];
-                [point setColumnValue:topOfQueue.columnValue-1];
+                Stone *point = [[Stone alloc] initWithWithRow:topOfQueue.row column:topOfQueue.column - 1];
                 
                 //Mark the object as visited and insert it to the end of the visited queue
                 [visitedNodes addObject:point];
@@ -1093,28 +901,18 @@
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"])
-                {
-                    self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] = @"b";
+                if([color isEqualToString:@"B"]) {
+                    self.goban[topOfQueue.row][topOfQueue.column - 1] = @"b";
                 }
-                else if([color isEqualToString:@"W"])
-                {
-                    self.goban[topOfQueue.rowValue][topOfQueue.columnValue-1] = @"w";
+                else if([color isEqualToString:@"W"]) {
+                    self.goban[topOfQueue.row][topOfQueue.column - 1] = @"w";
                 }
-                else
-                {
-                    //else nothing
-                }
-            }
-            else
-            {
-                //else nothing
             }
         }
-    } //End while loop
+    }
     
     //Set that the board needs to be redrawn
-    [self setRedrawBoardNeeded:YES];
+    self.redrawBoardNeeded = YES;
 }
 
 @end

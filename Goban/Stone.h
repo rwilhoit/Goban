@@ -10,8 +10,9 @@
 
 @interface Stone : NSObject
 
-@property (weak, nonatomic) NSNumber *stone;
-@property (nonatomic) int rowValue;
-@property (nonatomic) int columnValue;
+@property (nonatomic, readonly) int row;
+@property (nonatomic, readonly) int column;
+
+- (instancetype)initWithWithRow:(int)row column:(int)column;
 
 @end

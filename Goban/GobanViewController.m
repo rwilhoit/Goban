@@ -31,9 +31,6 @@
     self.goBoard = [[Goban alloc] init];
 
     [self initializeBoard];
-    self.goBoard.moveNumber = 0;
-    self.goBoard.whiteStones = 0;
-    self.goBoard.blackStones = 0;
     self.goBoard.turn = @"B";
     
     //Set the komi count to a default (for now) of 6.5
@@ -543,9 +540,7 @@
                     [self.goBoard setWhiteStones:(self.goBoard.whiteStones+1)];
                 }
                 else {
-                    Stone *emptySpace = [[Stone alloc] init];
-                    emptySpace.rowValue = j;
-                    emptySpace.columnValue = i;
+                    Stone *emptySpace = [[Stone alloc] initWithWithRow:j column:i];
                     [emptySpaces addObject:emptySpace];
                     points++;
                 }
@@ -559,7 +554,7 @@
                     while([emptySpaces count] > 0)
                     {
                         Stone *emptySpace = emptySpaces[0];
-                        self.goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Bp";
+                        self.goBoard.goban[emptySpace.row][emptySpace.column] = @"Bp";
                         [emptySpaces removeObjectAtIndex:0];
                     }
                 }
@@ -576,7 +571,7 @@
                     while([emptySpaces count] > 0)
                     {
                         Stone *emptySpace = emptySpaces[0];
-                        self.goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Wp";
+                        self.goBoard.goban[emptySpace.row][emptySpace.column] = @"Wp";
                         [emptySpaces removeObjectAtIndex:0];
                     }
                 }
