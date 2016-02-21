@@ -12,90 +12,37 @@
 
 @interface GobanViewController () <UIActionSheetDelegate>
 
+@property (nonatomic, strong) Goban *goBoard;
+@property (nonatomic, strong) NSTimer *gameClock;
+
 @end
 
 @implementation GobanViewController
 
-@synthesize optionsButtonTop;
-@synthesize optionsButtonBottom;
-@synthesize whiteCapturedStoneCountLabel;
-@synthesize blackCapturedStoneCountLabel;
-@synthesize whiteRemainingTimeLabel;
-@synthesize blackRemainingTimeLabel;
-@synthesize boardLoadRequest;
-@synthesize responseData;
-@synthesize serverId;
-@synthesize gameRecordHash;
-@synthesize currentlyMarkingStonesAsDead;
-@synthesize currentlyScoringGame;
-@synthesize topPlayerPressedOptions;
-
-//Go board declared as a global variable
-Goban *goBoard;
-NSTimer *gameClock;
-
-- (void)viewDidLoad
-{    
-    //Initialize the response data variable
-    self.responseData = [[NSMutableData alloc] init];
-        
-    // Format labels
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
     [self drawUI];
     
     //Initialize the goBoard and populate it
-    goBoard = [[Goban alloc] init];
+    self.goBoard = [[Goban alloc] init];
 
-    //check if board load is needed
-    if(boardLoadRequest)
-    {
-        //Load board
-        NSLog(@"Board load request set successfully");
-    
-        // Load the board from game record
-        [self loadBoardFromGameRecord];
-        
-        //Set redraw needed
-        [goBoard setRedrawBoardNeeded:YES];
-    }
-    else
-    {
-        NSLog(@"Initializing new board");
-        [self initializeBoard];
-    
-        // Set the moveNumber
-        [goBoard setMoveNumber:0];
-    
-        // Set the number of white stones
-        [goBoard setWhiteStones:0];
-    
-        // Set the number of black stones
-        [goBoard setBlackStones:0];
-        
-        // Set it to black's turn
-        [goBoard setTurn:@"B"];
-        
-        // Save the board entity (or update it)
-        [self createNewGameRecord];
-    }
+    [self initializeBoard];
+    self.goBoard.moveNumber = 0;
+    self.goBoard.whiteStones = 0;
+    self.goBoard.blackStones = 0;
+    self.goBoard.turn = @"B";
     
     //Set the komi count to a default (for now) of 6.5
-    [goBoard setKomi:6.5];
-
-    //Set both pass variables to false
-    [goBoard setWhitePassed:NO];
-    [goBoard setBlackPassed:NO];
-    
-    //Set currently scoring game to NO
-    [self setCurrentlyScoringGame:NO];
+    self.goBoard.komi = 6.5;
     
     // Start the timer
     [self startTimer];
-    
-    [super viewDidLoad];
 }
 
 //Where the stones are played
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     __block int rowValue;
     __block int columnValue;
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
@@ -110,156 +57,97 @@ NSTimer *gameClock;
     }];
 
     //Check if we are marking stones as dead
-    if(self.currentlyMarkingStonesAsDead && [goBoard isInBounds:rowValue andForColumnValue:columnValue])
+    if(self.currentlyMarkingStonesAsDead && [self.goBoard isInBounds:rowValue andForColumnValue:columnValue])
     {
         NSLog(@"Marking stone as dead");
-        if([goBoard.goban[rowValue][columnValue] isEqualToString:@"B"])
-        {
-            [goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"B"];
+        if([self.goBoard.goban[rowValue][columnValue] isEqualToString:@"B"]) {
+            [self.goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"B"];
             [self drawBoardForNewMove:0 andForColumn:0];
         }
-        else if([goBoard.goban[rowValue][columnValue] isEqualToString:@"W"])
-        {
-            [goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"W"];
+        else if([self.goBoard.goban[rowValue][columnValue] isEqualToString:@"W"]) {
+            [self.goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:@"W"];
             [self drawBoardForNewMove:0 andForColumn:0];
-        }
-        else
-        {
-            //else nothing
         }
     }
-    else if([goBoard isLegalMove:rowValue andForColumnValue:columnValue]) //Check if new move is legal
-    {
-        if([goBoard.turn isEqualToString:@"B"])
-        {
+    //Check if new move is legal
+    else if([self.goBoard isLegalMove:rowValue andForColumnValue:columnValue]) {
+        if([self.goBoard.turn isEqualToString:@"B"]) {
             //Save the previous state of the board
-            goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
+            self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
             
             //Play black's turn
-            goBoard.goban[rowValue][columnValue] = @"B";
+            self.goBoard.goban[rowValue][columnValue] = @"B";
             
             //Increment the move number
-            [goBoard setMoveNumber:(goBoard.moveNumber+1)];
+            self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
             
             //Check the life of adjacent pieces of the opposite color
-            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
+            [self.goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Draw the entire board again
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
             //Update the captured stone count
-            self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedWhiteStones];
-            
-            //Save to server
-            [self saveBoardToServer];
-            
-            //Save board state
-            [self updateGameRecord];
+            self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedWhiteStones];
             
             //Set the pass variables to NO
-            [goBoard setBlackPassed:NO];
-            [goBoard setWhitePassed:NO];
+            [self.goBoard setBlackPassed:NO];
+            [self.goBoard setWhitePassed:NO];
             
             //Set to white's turn
             NSLog(@"Set to white's turn");
-            [goBoard setTurn:@"W"];
+            [self.goBoard setTurn:@"W"];
         }
-        else
-        {
+        else {
             //Save the previous state of the board
-            goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:goBoard.goban copyItems:YES];
+            self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
             
             //Play white's turn
             NSLog(@"Played white's turn");
-            goBoard.goban[rowValue][columnValue] = @"W";
+            self.goBoard.goban[rowValue][columnValue] = @"W";
             
             //Check the life of adjacent pieces of the opposite color
-            [goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
+            [self.goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
             
             //Increment the move number
-            [goBoard setMoveNumber:(goBoard.moveNumber+1)];
+            self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
             
             //Draw the entire board again, or just the new move
             [self drawBoardForNewMove:rowValue andForColumn:columnValue];
             
             //Update the captured stone count
-            self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.capturedBlackStones];
-            
-            //Save to server
-            [self saveBoardToServer];
-            
-            //Save board
-            [self updateGameRecord];
+            self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedBlackStones];
             
             //Set the pass variables to NO
-            [goBoard setBlackPassed:NO];
-            [goBoard setWhitePassed:NO];
+            self.goBoard.blackPassed = NO;
+            self.goBoard.whitePassed = NO;
             
             //Set to black's turn
             NSLog(@"Set to black's turn");
-            [goBoard setTurn:@"B"];
+            self.goBoard.turn = @"B";
         }
     }
     
     //Print results
-    [goBoard printBoardToConsole];
+    [self.goBoard printBoardToConsole];
     
 }
 
--(NSString *)createHashValue
-{
-    NSString *hashCharacters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    NSMutableString *hash = [[NSMutableString alloc] init];
-    
-    for(int i=0;i<10;i++)
-    {
-        [hash appendFormat:@"%C",[hashCharacters characterAtIndex:arc4random_uniform([hashCharacters length])]];
-    }
-    
-    NSLog(@"Generated hash: %@", hash);
-
-    return hash;
-}
-
--(void)createNewGameRecord
-{
-    // Serialize the current state of the board
-    NSDate *currentDate = [[NSDate alloc] init];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:SS.SSS'Z'"];
-    NSString *localDateString = [dateFormatter stringFromDate:currentDate];
-    
-    //Create new game record entity and set properties
-    GameRecord *gameRecord = [GameRecord createEntity];
-    gameRecord.board = [goBoard serializeBoard];
-    gameRecord.hashValue = [goBoard hashValue];
-    gameRecord.capturedWhiteStones = 0;
-    gameRecord.capturedBlackStones = 0;
-    gameRecord.blackTime = @"60:00";
-    gameRecord.whiteTime = @"60:00";
-    gameRecord.date = localDateString;
-    gameRecord.turn = goBoard.turn;
-    
-    //Save to persistant storage
-    [[NSManagedObjectContext MR_defaultContext] saveToPersistentStoreAndWait];
-}
-
--(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove
-{
+-(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove {
     //Check it we need to redraw the board or just add a stone to it
     float stoneSize = 40.4210526316;
     NSLog(@"Stone size: %f", stoneSize);
-    if(!goBoard.redrawBoardNeeded)
+    if(!self.goBoard.redrawBoardNeeded)
     {
         //How do I know which position to draw at?
-        if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"B"])
+        if([self.goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"B"])
         {
             CALayer *stoneLayer = [CALayer layer];
             stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
             stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
             [self.view.layer addSublayer:stoneLayer];
         }
-        else if([goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"W"])
+        else if([self.goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:@"W"])
         {    
             CALayer *stoneLayer = [CALayer layer];
             stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
@@ -280,25 +168,25 @@ NSTimer *gameClock;
     
         // Check the positions you need to draw at
         NSLog(@"Drawing stones");
-        for(int i=0;i<[goBoard.goban count];i++)
+        for(int i=0;i<[self.goBoard.goban count];i++)
         {
-            for(int j=0;j<[goBoard.goban count];j++)
+            for(int j=0;j<[self.goBoard.goban count];j++)
             {
-                if([goBoard.goban[j][i] isEqualToString:@"B"])
+                if([self.goBoard.goban[j][i] isEqualToString:@"B"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
-                else if([goBoard.goban[j][i] isEqualToString:@"W"])
+                else if([self.goBoard.goban[j][i] isEqualToString:@"W"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
-                else if([goBoard.goban[j][i] isEqualToString:@"w"])
+                else if([self.goBoard.goban[j][i] isEqualToString:@"w"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
@@ -306,7 +194,7 @@ NSTimer *gameClock;
                     stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
                 }
-                else if([goBoard.goban[j][i] isEqualToString:@"b"])
+                else if([self.goBoard.goban[j][i] isEqualToString:@"b"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + MIDDLE_OFFSET,stoneSize,stoneSize);
@@ -314,32 +202,27 @@ NSTimer *gameClock;
                     stoneLayer.opacity = 0.5;
                     [self.view.layer addSublayer:stoneLayer];
                 }
-                else if([goBoard.goban[j][i] isEqualToString:@"Wp"])
+                else if([self.goBoard.goban[j][i] isEqualToString:@"Wp"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + MIDDLE_OFFSET,stoneSize/2,stoneSize/2);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"whiteStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
                 }
-                else if([goBoard.goban[j][i] isEqualToString:@"Bp"])
+                else if([self.goBoard.goban[j][i] isEqualToString:@"Bp"])
                 {
                     CALayer *stoneLayer = [CALayer layer];
                     stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + MIDDLE_OFFSET,stoneSize/2,stoneSize/2);
                     stoneLayer.contents = (id) [UIImage imageNamed:@"blackStone.png"].CGImage;
                     [self.view.layer addSublayer:stoneLayer];
-                }
-                else
-                {
-                    //NSLog(@"Draw nothing at coordinates (%d,%d)",j,i);
                 }
             }
         }
-        [goBoard setRedrawBoardNeeded:NO];
+        self.goBoard.redrawBoardNeeded = NO;
     }
 }
 
-- (void)drawUI
-{
+- (void)drawUI {
     // Add the main view image
     CALayer *sublayer = [CALayer layer];
     sublayer.backgroundColor = [UIColor blackColor].CGColor;
@@ -360,8 +243,8 @@ NSTimer *gameClock;
     self.optionsButtonTop.transform = CGAffineTransformMakeRotation(M_PI);
     self.optionsButtonTop.transform = CGAffineTransformMakeRotation(M_PI);
 }
--(NSString *)getCurrentTime
-{
+
+- (NSString *)getCurrentTime {
     //Set the board creation time
     CFGregorianDate currentGregorianDate = CFAbsoluteTimeGetGregorianDate(CFAbsoluteTimeGetCurrent(), CFTimeZoneCopySystem());
     NSString *currentDate =[NSString stringWithFormat:@"%d-%d-%d at %02d:%02d", (int)currentGregorianDate.month, (int)currentGregorianDate.day, (int)currentGregorianDate.year, currentGregorianDate.hour, currentGregorianDate.minute];
@@ -370,10 +253,9 @@ NSTimer *gameClock;
     return currentDate;
 }
 
-- (void)initializeBoard
-{
+- (void)initializeBoard {
     
-    goBoard.goban = [NSMutableArray arrayWithObjects:
+    self.goBoard.goban = [NSMutableArray arrayWithObjects:
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
@@ -393,77 +275,44 @@ NSTimer *gameClock;
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-    [goBoard printBoardToConsole];
-    
-    // Set the number of captured white stones
-    [goBoard setCapturedWhiteStones:0];
-    
-    // Set the number of captured black stones
-    [goBoard setCapturedBlackStones:0];
-    
-    // Set redraw needed
-    [goBoard setRedrawBoardNeeded:NO];
-    
-    // Create a hash value
-    [goBoard setHashValue:[self createHashValue]];
+    [self.goBoard printBoardToConsole];
 }
 
-- (void)loadBoardFromGameRecord
-{
-    // See what the hash value is
-    NSLog(@"The hash value is: %@", goBoard.hashValue);
-    
-    // Use the hash value to get the rest of the information
-    GameRecord *gameRecord = [GameRecord MR_findFirstByAttribute:@"hashValue" withValue:goBoard.hashValue];
-    
-    // Set the information given the hash
-    [goBoard setGoban:[goBoard deserializeBoard:gameRecord.board]];
-    [goBoard setMoveNumber:[gameRecord.moveNumber intValue]];
-    [goBoard setTurn:gameRecord.turn];
-    self.whiteRemainingTimeLabel.text = gameRecord.whiteTime;
-    self.blackRemainingTimeLabel.text = gameRecord.blackTime;
-    [goBoard setCapturedBlackStones:[gameRecord.capturedBlackStones intValue]];
-    [goBoard setCapturedWhiteStones:[gameRecord.capturedWhiteStones intValue]];
-    
-}
-
-- (void)pressedBack
-{
+- (void)pressedBack {
     NSLog(@"Pressed back");
     
     //restore the board to it's previous state
-    [goBoard back];
+    [self.goBoard back];
     
     //If anything breaks the back button, this would be it
-    [goBoard setRedrawBoardNeeded:YES];
+    self.goBoard.redrawBoardNeeded = YES;
     [self drawBoardForNewMove:0 andForColumn:0];
-    //Reset the number of captured stones
-    self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.previousCapturedWhiteStones];
-    self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", goBoard.previousCapturedBlackStones];
-
-}
-
-- (void)resign
-{
-    if([goBoard.turn isEqualToString:@"B"])
-    {
-        //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Black resigned" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
-    else
-    {
-        //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"White resigned" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
-}
-
-- (void)pressedResign
-{
-    //Find the current orientation of the options (orient based on that)
     
-    //Pressed Options code
+    //Reset the number of captured stones
+    self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.previousCapturedWhiteStones];
+    self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.previousCapturedBlackStones];
+}
+
+- (void)resign {
+    if([self.goBoard.turn isEqualToString:@"B"]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!"
+                                                        message:@"Black resigned"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!"
+                                                        message:@"White resigned"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (void)pressedResign {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                   initWithTitle:@"Are you sure?"
                                   delegate:self
@@ -473,10 +322,9 @@ NSTimer *gameClock;
     
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
     
-    if(topPlayerPressedOptions)
-    {
+    if(self.topPlayerPressedOptions) {
         actionSheet.transform = CGAffineTransformMakeRotation(M_PI);
-        topPlayerPressedOptions = NO;
+        self.topPlayerPressedOptions = NO;
     }
     
     [actionSheet showInView:self.view];
@@ -522,31 +370,24 @@ NSTimer *gameClock;
     } */
 }
 
-- (IBAction)pressedOptions:(id)sender
-{
-    //Pressed Options code
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:@"Options"
-                                  delegate:self
-                                  cancelButtonTitle:@"Cancel"
-                                  destructiveButtonTitle:nil
-                                  otherButtonTitles:@"Undo", @"Pass", @"Resign", nil];
-    
+- (IBAction)pressedOptions:(id)sender {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Options"
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"Undo", @"Pass", @"Resign", nil];
     actionSheet.actionSheetStyle = UIActionSheetStyleDefault;
 
-    if([sender tag] == 1)
-    {
+    if([sender tag] == 1) {
         actionSheet.transform = CGAffineTransformMakeRotation(M_PI);
-        topPlayerPressedOptions = YES;
+        self.topPlayerPressedOptions = YES;
     }
     
     [actionSheet showInView:self.view];
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if([actionSheet.title isEqualToString:@"Options"])
-    {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if([actionSheet.title isEqualToString:@"Options"]) {
         switch (buttonIndex)
         {
             case 0:
@@ -578,18 +419,18 @@ NSTimer *gameClock;
 
 }
 
-- (void) startTimer
-{
-    gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+- (void) startTimer {
+    self.gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self
+                                                    selector:@selector(timerCallback)
+                                                    userInfo:nil
+                                                     repeats:YES];
 }
 
-//Countdown blacks timer if it is black's turn
-- (void) timerCallback
-{
+- (void)timerCallback {
     NSMutableString *result = [[NSMutableString alloc] init];
     int iMinutes = 25;
     int iSeconds = 0;
-    if([goBoard.turn isEqualToString:@"B"]) //Countdown blacks timer if it is black's turn
+    if([self.goBoard.turn isEqualToString:@"B"]) //Countdown blacks timer if it is black's turn
     {
         //NSLog(@"Minutes: %@, Seconds: %@", [self.blackRemainingTimeLabel.text substringToIndex:2], [self.blackRemainingTimeLabel.text substringFromIndex:3]);
         iMinutes = [[self.blackRemainingTimeLabel.text substringToIndex:2] integerValue];
@@ -612,7 +453,7 @@ NSTimer *gameClock;
         
         if(iMinutes < 0)
         {
-            [gameClock invalidate];
+            [self.gameClock invalidate];
             [self timeUp];
         }
         else
@@ -622,7 +463,7 @@ NSTimer *gameClock;
             //NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
         }
     }
-    else if([goBoard.turn isEqualToString:@"W"])
+    else if([self.goBoard.turn isEqualToString:@"W"])
     {
         //NSLog(@"Minutes: %@, Seconds: %@", [self.whiteRemainingTimeLabel.text substringToIndex:2], [self.whiteRemainingTimeLabel.text substringFromIndex:3]);
         iMinutes = [[self.whiteRemainingTimeLabel.text substringToIndex:2] integerValue];
@@ -641,7 +482,7 @@ NSTimer *gameClock;
         
         if(iMinutes < 0)
         {
-            [gameClock invalidate];
+            [self.gameClock invalidate];
             [self timeUp];
         }
         else
@@ -659,7 +500,7 @@ NSTimer *gameClock;
 
 - (void)timeUp
 {
-    if([goBoard.turn isEqualToString:@"B"])
+    if([self.goBoard.turn isEqualToString:@"B"])
     {
         //Show warning
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Black ran out of time!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -674,232 +515,7 @@ NSTimer *gameClock;
 
 }
 
-- (void)updateGameRecord
-{
-    // Get what game to update by using the hash value
-    GameRecord *gameRecord = [GameRecord MR_findFirstByAttribute:@"hashValue" withValue:goBoard.hashValue];
-    
-    // Update everything 
-    gameRecord.board = [goBoard serializeBoard];
-    gameRecord.moveNumber = [NSNumber numberWithInt:goBoard.moveNumber];
-    gameRecord.turn = goBoard.turn;
-    gameRecord.date = [self getCurrentTime];
-    gameRecord.whiteTime = self.whiteRemainingTimeLabel.text;
-    gameRecord.blackTime = self.blackRemainingTimeLabel.text;
-    gameRecord.capturedBlackStones = [NSNumber numberWithInt:goBoard.capturedBlackStones];
-    gameRecord.capturedWhiteStones = [NSNumber numberWithInt:goBoard.capturedWhiteStones];
-}
-
-//Loading from the server
-- (void)loadBoardFromServer
-{
-    //NSString *server_prefix = @"localhost:3000";
-    NSString *server_prefix = @"goban-server.herokuapp.com";
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
-    NSString *saved_server_id = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-    
-    NSLog(@"Saved server ID is %@", saved_server_id);
-    
-    if (saved_server_id) {
-        // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, saved_server_id];
-        // Since we already have the id, this is an update call
-        // So the GET http method is used
-        NSMutableURLRequest *request =
-        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
-        [request setHTTPMethod:@"GET"];
-        NSLog(@"%@",request.HTTPBody);
-        // Set the right headers so the server doesn't choke
-        //[request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        //[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        //[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request, using this object as the delegate
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        
-        //Get the board down from the server
-    }
-}
-
-//Saving to server
--(void)saveBoardToServer
-{
-    // Use localhost for debugging with a local server
-    // Use the heroku url for production
-    //NSString *server_prefix = @"localhost:3000";
-    NSString *server_prefix = @"goban-server.herokuapp.com";
-    
-    if (serverId)
-    {
-        // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games/%@", server_prefix, serverId];
-        
-        // Since we already have the id, this is an update call
-        // So the PUT http method is used
-        NSMutableURLRequest *request =
-        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
-        [request setHTTPMethod:@"PUT"];
-        
-        // Serialize the board into a string, replacing the +'s since it causes errors server side
-        NSString *postString = [[NSString stringWithFormat:@"board_string=%@&black_captures=%@&white_captures=%@&black_time=%@&white_time=%@", [goBoard serializeBoard], self.blackCapturedStoneCountLabel.text, self.whiteCapturedStoneCountLabel.text, self.blackRemainingTimeLabel.text, self.whiteRemainingTimeLabel.text] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
-        
-        // Set the right headers so the server doesn't choke
-        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        
-        // Make the request, using this object as the delegate
-        [[NSURLConnection alloc] initWithRequest:request delegate:goBoard];
-        
-        /*
-         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-         NSString *documentsDirectory = [paths objectAtIndex:0];
-         NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"id.txt"];
-         NSString *str = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:NULL];
-         
-         NSLog(@"%@", str);
-         */
-        
-    }
-    else
-    {
-        // Url for the request
-        NSString *reqURL = [NSString stringWithFormat:@"http://%@/games", server_prefix];
-        
-        // We're making a new game on the server, so it's an http POST
-        NSMutableURLRequest *request =
-        [NSMutableURLRequest requestWithURL:[NSURL URLWithString:reqURL]];
-        [request setHTTPMethod:@"POST"];
-        
-        // Serialize the board and set it in the request body
-        NSString *postString = [[NSString stringWithFormat:@"board_string=%@", [goBoard serializeBoard]] stringByReplacingOccurrencesOfString:@"+" withString:@"0"];
-        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-        
-        // Make the request
-        [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    [self.responseData setLength:0];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    [self.responseData appendData:data];
-}
-
-/*- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    // Show error
-} */
-
-/*- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    NSLog(@"connection callback");
-    // Once this method is invoked, "responseData" contains the complete result
-    NSDictionary *json = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:nil];
-    NSString *response_id = (NSString*)[json objectForKey:@"_id"];
-    if (response_id)
-    {
-        serverId = (NSString*)[json objectForKey:@"_id"];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents directory
-        NSError *error;
-        BOOL succeed = [serverId writeToFile:[documentsDirectory stringByAppendingPathComponent:@"id.txt"]
-                                  atomically:YES encoding:NSUTF8StringEncoding error:&error];
-        if (!succeed)
-        {
-            NSLog(@"Connection error");
-            //Consider setting board to NOT load
-        }
-        
-        NSLog(@"ID saved");
-        
-        NSString *req_is_show = (NSString*)[json objectForKey:@"req_is_show"];
-        if(req_is_show)
-        {
-            NSLog(@"In show callback");
-            //Code for loading from the dictionary here
-            NSLog(@"Size of the dictionary is: %d", [json count]);
-
-            NSLog(@"%@",[json objectForKey:@"board_string"]);
-            NSString *boardString = [[json objectForKey:@"board_string"] stringByReplacingOccurrencesOfString:@"0" withString:@"+"];
-            NSMutableArray *deserializedBoard = [NSMutableArray arrayWithObjects:
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                                 [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-
-            int counter = 0;
-            for(int i=0;i<[deserializedBoard count]; i++)
-            {
-                for(int j=0;j<[deserializedBoard[i] count]; j++)
-                {
-                    if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"+"])
-                    {
-                        //Do nothing
-                    }
-                    else
-                    {
-                        if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"])
-                        {
-                            deserializedBoard[j][i] = @"B";
-                        }
-                        else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"W"])
-                        {
-                            deserializedBoard[j][i] = @"W";
-                        }
-                        else
-                        {
-                            //else nothing
-                        }
-                    }
-                    counter++;
-                }
-            }
-            
-            //Set the board
-            [goBoard setGoban:deserializedBoard];
-            [goBoard printBoardToConsole];
-            
-            //Setting the blackCaptures
-            self.blackCapturedStoneCountLabel.text = [json objectForKey:@"black_captures"];
-            //Setting the white captures
-            self.whiteCapturedStoneCountLabel.text = [json objectForKey:@"white_captures"];
-            //Setting the black time
-            self.blackRemainingTimeLabel.text = [json objectForKey:@"black_time"];
-            //Setting the white time
-            self.whiteRemainingTimeLabel.text = [json objectForKey:@"white_time"];
-            //Set that we need to load the board
-            boardLoadRequest = YES;
-            NSLog(@"Board loaded from server");
-            [self drawBoardForNewMove:0 andForColumn:0];
-        }
-    }
-} */
-
--(void)scoreGame
-{
+-(void)scoreGame {
     NSLog(@"Scoring game");
     int points = 0;
     NSMutableArray *emptySpaces = [[NSMutableArray alloc] init];
@@ -909,27 +525,22 @@ NSTimer *gameClock;
     //Turn off mark stones as dead
     [self setCurrentlyMarkingStonesAsDead:NO];
     
-    for(int i=0;i<[goBoard.goban count]; i++)
-    {
-        for(int j=0; j<[goBoard.goban count]; j++)
-        {
-            NSLog(@"Counter: %d", counter++);
-            if([goBoard.goban[j][i] isEqualToString:@"+"] || [goBoard.goban[j][i] isEqualToString:@"w"] || [goBoard.goban[j][i] isEqualToString:@"b"])
-            {
-                if([addingPointsFor isEqualToString:@"B"])
-                {
+    for(int i = 0 ; i < self.goBoard.goban.count; i++) {
+        for(int j = 0; j< self.goBoard.goban.count; j++) {
+            if([self.goBoard.goban[j][i] isEqualToString:@"+"] ||
+               [self.goBoard.goban[j][i] isEqualToString:@"w"] ||
+               [self.goBoard.goban[j][i] isEqualToString:@"b"]) {
+                if([addingPointsFor isEqualToString:@"B"]) {
                     //Mark the locations to draw half-stones for black at this position
-                    goBoard.goban[j][i] = @"Bp";                    
-                    [goBoard setBlackStones:(goBoard.blackStones+1)];
+                    self.goBoard.goban[j][i] = @"Bp";
+                    [self.goBoard setBlackStones:(self.goBoard.blackStones+1)];
                 }
-                else if([addingPointsFor isEqualToString:@"W"])
-                {
+                else if([addingPointsFor isEqualToString:@"W"]) {
                     //Just draw a half-stone for white at this position
-                    goBoard.goban[j][i] = @"Wp";
-                    [goBoard setWhiteStones:(goBoard.whiteStones+1)];
+                    self.goBoard.goban[j][i] = @"Wp";
+                    [self.goBoard setWhiteStones:(self.goBoard.whiteStones+1)];
                 }
-                else
-                {
+                else {
                     Stone *emptySpace = [[Stone alloc] init];
                     emptySpace.rowValue = j;
                     emptySpace.columnValue = i;
@@ -937,7 +548,7 @@ NSTimer *gameClock;
                     points++;
                 }
             }
-            else if([goBoard.goban[j][i] isEqualToString:@"B"])
+            else if([self.goBoard.goban[j][i] isEqualToString:@"B"])
             {
                 //Marking any free spaces as black's points
                 if(points > 0)
@@ -946,15 +557,15 @@ NSTimer *gameClock;
                     while([emptySpaces count] > 0)
                     {
                         Stone *emptySpace = emptySpaces[0];
-                        goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Bp";
+                        self.goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Bp";
                         [emptySpaces removeObjectAtIndex:0];
                     }
                 }
                 addingPointsFor = @"B";
-                [goBoard setBlackStones:(goBoard.blackStones+points+1)];
+                [self.goBoard setBlackStones:(self.goBoard.blackStones+points+1)];
                 points = 0;
             }
-            else if([goBoard.goban[j][i] isEqualToString:@"W"])
+            else if([self.goBoard.goban[j][i] isEqualToString:@"W"])
             {
                 //Marking any free spaces as white's points
                 if(points > 0)
@@ -963,12 +574,12 @@ NSTimer *gameClock;
                     while([emptySpaces count] > 0)
                     {
                         Stone *emptySpace = emptySpaces[0];
-                        goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Wp";
+                        self.goBoard.goban[emptySpace.rowValue][emptySpace.columnValue] = @"Wp";
                         [emptySpaces removeObjectAtIndex:0];
                     }
                 }
                 addingPointsFor = @"W";
-                [goBoard setWhiteStones:(goBoard.whiteStones+points+1)];
+                [self.goBoard setWhiteStones:(self.goBoard.whiteStones+points+1)];
                 points = 0;
             }
             else
@@ -980,14 +591,14 @@ NSTimer *gameClock;
     }
     
     //Redraw the board ot show the scored points
-    [goBoard setRedrawBoardNeeded:YES];
+    [self.goBoard setRedrawBoardNeeded:YES];
     [self drawBoardForNewMove:0 andForColumn:0];
 
     //Convert both to floats and add the komi value to white
-    int blackScore = (double)goBoard.blackStones + (double)goBoard.capturedWhiteStones;
-    double whiteScore = (double)goBoard.whiteStones + (double)goBoard.capturedBlackStones + goBoard.komi;
+    int blackScore = (double)self.goBoard.blackStones + (double)self.goBoard.capturedWhiteStones;
+    double whiteScore = (double)self.goBoard.whiteStones + (double)self.goBoard.capturedBlackStones + self.goBoard.komi;
     
-    NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures + %.1f komi = %.1f",goBoard.blackStones, goBoard.capturedWhiteStones, blackScore, goBoard.whiteStones, goBoard.capturedBlackStones, goBoard.komi, whiteScore];
+    NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures + %.1f komi = %.1f", self.goBoard.blackStones, self.goBoard.capturedWhiteStones, blackScore, self.goBoard.whiteStones, self.goBoard.capturedBlackStones, self.goBoard.komi, whiteScore];
    
     if(blackScore > whiteScore)
     {
@@ -1006,8 +617,7 @@ NSTimer *gameClock;
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

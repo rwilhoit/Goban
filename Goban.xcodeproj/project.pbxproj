@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		352D6CF21778D91400316232 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 352D6CF11778D91400316232 /* CoreData.framework */; };
-		35499A0417A7007000400B44 /* LoadGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A0317A7007000400B44 /* LoadGameViewController.m */; };
 		35499A0717A7042B00400B44 /* GameRecord.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35499A0517A7042B00400B44 /* GameRecord.xcdatamodeld */; };
 		35499A6017A7066400400B44 /* GameRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A5F17A7066400400B44 /* GameRecord.m */; };
 		35499ACE17A8103200400B44 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A9617A8103200400B44 /* MagicalImportFunctions.m */; };
@@ -65,8 +64,6 @@
 
 /* Begin PBXFileReference section */
 		352D6CF11778D91400316232 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		35499A0217A7007000400B44 /* LoadGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadGameViewController.h; sourceTree = "<group>"; };
-		35499A0317A7007000400B44 /* LoadGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadGameViewController.m; sourceTree = "<group>"; };
 		35499A0617A7042B00400B44 /* GameRecord.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GameRecord.xcdatamodel; sourceTree = "<group>"; };
 		35499A5E17A7066400400B44 /* GameRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameRecord.h; sourceTree = "<group>"; };
 		35499A5F17A7066400400B44 /* GameRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameRecord.m; sourceTree = "<group>"; };
@@ -327,8 +324,6 @@
 				35E34D1C171774400073B258 /* MainMenuViewController.m */,
 				35CCC7C216F6A3500012D577 /* GobanViewController.h */,
 				35CCC7C316F6A3500012D577 /* GobanViewController.m */,
-				35499A0217A7007000400B44 /* LoadGameViewController.h */,
-				35499A0317A7007000400B44 /* LoadGameViewController.m */,
 				35499A0517A7042B00400B44 /* GameRecord.xcdatamodeld */,
 				35499A5E17A7066400400B44 /* GameRecord.h */,
 				35499A5F17A7066400400B44 /* GameRecord.m */,
@@ -436,7 +431,6 @@
 				35C8733E16F8218900A828B9 /* Stone.m in Sources */,
 				35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */,
 				35A65D6C171E2B9000A0A950 /* KGModal.m in Sources */,
-				35499A0417A7007000400B44 /* LoadGameViewController.m in Sources */,
 				35499A0717A7042B00400B44 /* GameRecord.xcdatamodeld in Sources */,
 				35499A6017A7066400400B44 /* GameRecord.m in Sources */,
 				35499ACE17A8103200400B44 /* MagicalImportFunctions.m in Sources */,
@@ -515,7 +509,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -540,7 +534,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;

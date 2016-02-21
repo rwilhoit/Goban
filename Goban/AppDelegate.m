@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import "LoadGameViewController.h"
 #import "GameRecord.h"
 #import "CoreData+MagicalRecord.h"
 

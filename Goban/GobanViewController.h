@@ -13,15 +13,7 @@
 #define MIDDLE_OFFSET 96
 
 
-@interface GobanViewController : UIViewController {
-    NSMutableData *responseData;
-    NSString *serverId;
-    NSString *gameRecordHash;
-    BOOL boardLoadRequest;
-    BOOL currentlyMarkingStonesAsDead;
-    BOOL currentlyScoringGame;
-    BOOL topPlayerPressedOptions;
-}
+@interface GobanViewController : UIViewController
 
 // Actions
 - (IBAction)pressedOptions:(id)sender;
