@@ -88,7 +88,7 @@
         int tempBlackCaptureCount = self.capturedBlackStones;
         self.goban[rowValue][columnValue] = self.turn;
         [self checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
-        [self printBoardToConsole];
+        [BoardSerializationUtility printBoardToConsole:self.goban];
         
         //Check if any adjacent stones died, once they died, check if they match the previous board and if they do, we have a ko, if they don't then we don't
         int deathRow;
@@ -158,7 +158,7 @@
             //Restore the number of captured stones
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
-            [self printBoardToConsole];
+            [BoardSerializationUtility printBoardToConsole:self.goban];
             if(koFound) {
                 return NO;                
             }
@@ -199,7 +199,7 @@
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
             //NSLog(@"Set board back to its previous state");
-            [self printBoardToConsole];
+            [BoardSerializationUtility printBoardToConsole:self.goban];
             
             if(suicide)
             {
@@ -541,7 +541,7 @@
     
     //If stones are dead, set them back to unplayed spots
     if(stonesAreDead) {
-        [self printBoardToConsole];
+        [BoardSerializationUtility printBoardToConsole:self.goban];
         [self killStones:visitedNodes];
     }
 }
@@ -571,7 +571,7 @@
     }
     
     NSLog(@"Killed stones");
-    [self printBoardToConsole];
+    [BoardSerializationUtility printBoardToConsole:self.goban];
     
     self.redrawBoardNeeded = YES;
 }
@@ -605,7 +605,7 @@
         [self setMoveNumber:(self.moveNumber-1)];
     }
     
-    [self printBoardToConsole];
+    [BoardSerializationUtility printBoardToConsole:self.goban];
 
 }
 
