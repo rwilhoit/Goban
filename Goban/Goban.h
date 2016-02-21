@@ -46,5 +46,4 @@
 - (NSString *)serializeBoard;
 - (NSMutableArray *)deserializeBoard:(NSString *)boardString;
 
-
 @end

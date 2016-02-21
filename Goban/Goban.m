@@ -7,6 +7,7 @@
 //
 
 #import "Goban.h"
+#import "BoardSerializationUtility.h"
 
 #define BOARD_SIZE 361
 #define ROW_LENGTH 18
@@ -14,78 +15,13 @@
 
 @implementation Goban
 
+static NSString * const kEmptySpot = @"+";
+
 - (id)initWithSerializedBoard:(NSMutableArray *)goBoard {
     if (self = [super init]) {
         _goban = goBoard;
     }
     return self;
-}
-
-- (void)printBoardToConsole {
-    NSMutableString *printRow = [[NSMutableString alloc] init];
-    [printRow appendString:@"\n"];
-    for(int i = 0 ; i < COLUMN_LENGTH + 1; i++) {
-        for(int j=0; j<ROW_LENGTH+1; j++) {
-            [printRow appendString:self.goban[j][i]];
-            [printRow appendString:@" "];
-        }
-        [printRow appendString:@"\n"];
-    }
-    
-    NSLog(@"%@", printRow);
-}
-
-- (NSString *)serializeBoard {
-    NSMutableString *board_string = [[NSMutableString alloc] init];
-    for(int i = 0; i < COLUMN_LENGTH + 1; i++) {
-        for(int j = 0; j < ROW_LENGTH + 1; j++) {
-            [board_string appendString:self.goban[j][i]];
-        }
-    }
-    return board_string;
-}
-
-- (NSMutableArray *)deserializeBoard:(NSString *)boardString {
-    NSMutableArray *deserializedBoard = [NSMutableArray arrayWithObjects:
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                         [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-    
-    int counter = 0;
-    for(int i = 0; i < deserializedBoard.count; i++) {
-        for(int j=0;j<[deserializedBoard[i] count]; j++) {
-            if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"+"]) {
-                //Do nothing
-            }
-            else {
-                if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"B"]) {
-                    deserializedBoard[j][i] = @"B";
-                }
-                else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:counter]] isEqualToString:@"W"]) {
-                    deserializedBoard[j][i] = @"W";
-                }
-            }
-            counter++;
-        }
-    }
-    
-    return deserializedBoard;
 }
 
 - (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue {
@@ -106,7 +42,7 @@
         return NO;
     }
     // Check if the move has already been played
-    if(![self.goban[rowValue][columnValue] isEqualToString:@"+"]) {
+    if(![self.goban[rowValue][columnValue] isEqualToString:kEmptySpot]) {
         NSLog(@"Illegal move: Move has already been played");
         return NO;
     }
@@ -116,54 +52,35 @@
     // Check right for liberties
     if(!hasLiberties &&
        [self isInBounds:(rowValue + 1) andForColumnValue:columnValue] &&
-       [self.goban[rowValue + 1][columnValue] isEqualToString:@"+"]) {
+       [self.goban[rowValue + 1][columnValue] isEqualToString:kEmptySpot]) {
         hasLiberties = YES;
     }
     // Check left for liberties
     if(!hasLiberties && [self isInBounds:(rowValue-1) andForColumnValue:columnValue] &&
-       [self.goban[rowValue-1][columnValue] isEqualToString:@"+"]) {
+       [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot]) {
         hasLiberties = YES;
     }
     // Check down for liberties
     if(!hasLiberties &&
        [self isInBounds:rowValue andForColumnValue:(columnValue+1)] &&
-       [self.goban[rowValue][columnValue+1] isEqualToString:@"+"]) {
+       [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot]) {
         hasLiberties = YES;
     }
     // Check up for liberties
     if(!hasLiberties &&
        [self isInBounds:rowValue andForColumnValue:(columnValue-1)] &&
-       [self.goban[rowValue][columnValue-1] isEqualToString:@"+"]) {
+       [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot]) {
         hasLiberties = YES;
     }
     // Check if any liberties were found and return NO (and print message) if they weren't
     if(!hasLiberties) {
-        NSMutableArray *savedStateOfBoard = [NSMutableArray arrayWithObjects:
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
-                                             [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
+        NSMutableArray *savedStateOfBoard = [BoardSerializationUtility emptyMutableBoardArray];
 
         // Saving the state of the board
         for(int i = 0; i < self.goban.count; i++) {
             for(int j = 0; j < self.goban.count ; j++) {
-                if([self.goban[j][i] isEqualToString:@"+"]) {
-                    savedStateOfBoard[j][i] = @"+";
+                if([self.goban[j][i] isEqualToString:kEmptySpot]) {
+                    savedStateOfBoard[j][i] = kEmptySpot;
                 }
                 else if([self.goban[j][i] isEqualToString:@"B"]) {
                     savedStateOfBoard[j][i] = @"B";
@@ -190,25 +107,25 @@
         NSString *enemyColor = [[NSMutableString alloc] init];
 
         // Check if stones died to the right
-        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"]) {
+        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:kEmptySpot]) {
             deathRow = rowValue + 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the left
-        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"]) {
+        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot]) {
             deathRow = rowValue - 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the up
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"]) {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot]) {
             deathRow = rowValue;
             deathColumn = columnValue + 1;
             stonesDied = YES;
         }
         // Check if stones died to the down
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"]) {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot]) {
             deathRow = rowValue;
             deathColumn = columnValue - 1;
             stonesDied = YES;
@@ -234,8 +151,8 @@
             //Setting the board back to its saved state
             for(int i = 0;i < self.goban.count; i++) {
                 for(int j=0;j<[self.goban count];j++) {
-                    if([savedStateOfBoard[j][i] isEqualToString:@"+"]) {
-                        self.goban[j][i] = @"+";
+                    if([savedStateOfBoard[j][i] isEqualToString:kEmptySpot]) {
+                        self.goban[j][i] = kEmptySpot;
                     }
                     else if([savedStateOfBoard[j][i] isEqualToString:@"B"]) {
                         self.goban[j][i] = @"B";
@@ -260,7 +177,7 @@
             //Check if the move was a suicide move
             [self checkLifeOfStone:rowValue andForColumnValue:columnValue];
             //If the space is now a + then it was a suicide
-            if([self.goban[rowValue][columnValue] isEqualToString:@"+"])
+            if([self.goban[rowValue][columnValue] isEqualToString:kEmptySpot])
             {
                 suicide = YES;
             }
@@ -270,9 +187,9 @@
             {
                 for(int j=0;j<[self.goban count];j++)
                 {
-                    if([savedStateOfBoard[j][i] isEqualToString:@"+"])
+                    if([savedStateOfBoard[j][i] isEqualToString:kEmptySpot])
                     {
-                        self.goban[j][i] = @"+";
+                        self.goban[j][i] = kEmptySpot;
                     }
                     else if([savedStateOfBoard[j][i] isEqualToString:@"B"])
                     {
@@ -286,7 +203,7 @@
             } //Board set back to its saved state
             
             
-            self.goban[rowValue][columnValue] = @"+";
+            self.goban[rowValue][columnValue] = kEmptySpot;
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
             //NSLog(@"Set board back to its previous state");
@@ -350,7 +267,7 @@
         //NSLog(@"Checking right enemy stone");
         [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
     }
-    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:@"+"])
+    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:kEmptySpot])
     {
         //NSLog(@"Space to the right of stone was a free space");
     }
@@ -369,7 +286,7 @@
         //NSLog(@"Checking left enemy stone");
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
-    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:@"+"])
+    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot])
     {
         //NSLog(@"Space to the left of stone was a free space");
     }
@@ -388,7 +305,7 @@
         //NSLog(@"Checking down enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:@"+"])
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot])
     {
         //NSLog(@"Space to the down of stone was a free space");
     }
@@ -407,7 +324,7 @@
         //NSLog(@"Checking up enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
     }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:@"+"])
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot])
     {
         //NSLog(@"Space to the up of stone was a free space");
     }
@@ -447,7 +364,7 @@
     NSMutableArray *queue = [[NSMutableArray alloc] init];
     NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
     
-    NSString *goal = @"+";
+    NSString *goal = kEmptySpot;
     
     // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
     //Check all spots around where the vertex is
@@ -658,7 +575,7 @@
     //This takes the nodes from the visited Nodes array and sets them back to "+"
     for(int i = 0; i < stonesToKill.count; i++) {
         stone = stonesToKill[i];
-        self.goban[stone.row][stone.column] = @"+";
+        self.goban[stone.row][stone.column] = kEmptySpot;
     }
     
     NSLog(@"Killed stones");
@@ -671,8 +588,8 @@
     //restore the board to it's previous state
     for(int i = 0; i < self.goban.count ; i++) {
         for(int j = 0; j < self.goban.count; j++) {
-            if([self.previousStateOfBoard[j][i] isEqualToString:@"+"]) {
-                self.goban[j][i] = @"+";
+            if([self.previousStateOfBoard[j][i] isEqualToString:kEmptySpot]) {
+                self.goban[j][i] = kEmptySpot;
             }
             else if([self.previousStateOfBoard[j][i] isEqualToString:@"B"]) {
                 self.goban[j][i] = @"B";
@@ -700,7 +617,7 @@
 
 }
 
--(void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString *)color {
+- (void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString *)color {
     
     //BFS
     //Put the coordinates in a point and then add the point to the queue and visited nodes list

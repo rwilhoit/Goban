@@ -7,6 +7,7 @@
 //
 
 #import "GobanViewController.h"
+#import "BoardSerializationUtility.h"
 
 @interface GobanViewController () <UIActionSheetDelegate>
 
@@ -127,12 +128,10 @@
         }
     }
     
-    //Print results
-    [self.goBoard printBoardToConsole];
-    
+    [BoardSerializationUtility printBoardToConsole:self.goBoard.goban];
 }
 
--(void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove {
+- (void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove {
     //Check it we need to redraw the board or just add a stone to it
     float stoneSize = 40.4210526316;
     NSLog(@"Stone size: %f", stoneSize);
@@ -274,7 +273,7 @@
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil],
                      [NSMutableArray arrayWithObjects:@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",@"+",nil], nil];
-    [self.goBoard printBoardToConsole];
+    [BoardSerializationUtility printBoardToConsole:self.goBoard.goban];
 }
 
 - (void)pressedBack {
@@ -578,10 +577,6 @@
                 addingPointsFor = @"W";
                 [self.goBoard setWhiteStones:(self.goBoard.whiteStones+points+1)];
                 points = 0;
-            }
-            else
-            {
-                //Else nothing
             }
         }
         addingPointsFor = @"Nobody";
