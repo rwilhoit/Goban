@@ -7,16 +7,10 @@
 //
 
 #import "AppDelegate.h"
-#import "GameRecord.h"
-#import "CoreData+MagicalRecord.h"
-
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Setup MagivalRecord & CoreData
-    [MagicalRecord setupAutoMigratingCoreDataStack];
-    
     return YES;
 }
 							

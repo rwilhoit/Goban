@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		352D6CF21778D91400316232 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 352D6CF11778D91400316232 /* CoreData.framework */; };
-		35499A0717A7042B00400B44 /* GameRecord.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35499A0517A7042B00400B44 /* GameRecord.xcdatamodeld */; };
-		35499A6017A7066400400B44 /* GameRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A5F17A7066400400B44 /* GameRecord.m */; };
 		35499ACE17A8103200400B44 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A9617A8103200400B44 /* MagicalImportFunctions.m */; };
 		35499ACF17A8103200400B44 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A9817A8103200400B44 /* NSAttributeDescription+MagicalDataImport.m */; };
 		35499AD017A8103200400B44 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 35499A9A17A8103200400B44 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -64,9 +62,6 @@
 
 /* Begin PBXFileReference section */
 		352D6CF11778D91400316232 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		35499A0617A7042B00400B44 /* GameRecord.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GameRecord.xcdatamodel; sourceTree = "<group>"; };
-		35499A5E17A7066400400B44 /* GameRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameRecord.h; sourceTree = "<group>"; };
-		35499A5F17A7066400400B44 /* GameRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameRecord.m; sourceTree = "<group>"; };
 		35499A9517A8103200400B44 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		35499A9617A8103200400B44 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		35499A9717A8103200400B44 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -324,9 +319,6 @@
 				35E34D1C171774400073B258 /* MainMenuViewController.m */,
 				35CCC7C216F6A3500012D577 /* GobanViewController.h */,
 				35CCC7C316F6A3500012D577 /* GobanViewController.m */,
-				35499A0517A7042B00400B44 /* GameRecord.xcdatamodeld */,
-				35499A5E17A7066400400B44 /* GameRecord.h */,
-				35499A5F17A7066400400B44 /* GameRecord.m */,
 				35CCC7AE16F6A3500012D577 /* Supporting Files */,
 			);
 			path = Goban;
@@ -431,8 +423,6 @@
 				35C8733E16F8218900A828B9 /* Stone.m in Sources */,
 				35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */,
 				35A65D6C171E2B9000A0A950 /* KGModal.m in Sources */,
-				35499A0717A7042B00400B44 /* GameRecord.xcdatamodeld in Sources */,
-				35499A6017A7066400400B44 /* GameRecord.m in Sources */,
 				35499ACE17A8103200400B44 /* MagicalImportFunctions.m in Sources */,
 				35499ACF17A8103200400B44 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				35499AD017A8103200400B44 /* NSEntityDescription+MagicalDataImport.m in Sources */,
@@ -590,19 +580,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		35499A0517A7042B00400B44 /* GameRecord.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				35499A0617A7042B00400B44 /* GameRecord.xcdatamodel */,
-			);
-			currentVersion = 35499A0617A7042B00400B44 /* GameRecord.xcdatamodel */;
-			path = GameRecord.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 35CCC79C16F6A3500012D577 /* Project object */;
 }

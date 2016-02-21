@@ -7,13 +7,15 @@
 //
 
 #import "GobanViewController.h"
-#import "CoreData+MagicalRecord.h"
-#import "GameRecord.h"
 
 @interface GobanViewController () <UIActionSheetDelegate>
 
 @property (nonatomic, strong) Goban *goBoard;
 @property (nonatomic, strong) NSTimer *gameClock;
+@property (nonatomic) BOOL boardLoadRequest;
+@property (nonatomic) BOOL currentlyMarkingStonesAsDead;
+@property (nonatomic) BOOL currentlyScoringGame;
+@property (nonatomic) BOOL topPlayerPressedOptions;
 
 @end
 
