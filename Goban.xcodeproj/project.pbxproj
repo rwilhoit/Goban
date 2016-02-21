@@ -155,6 +155,7 @@
 		575B81DD1C7A78CF0032193B /* LifeAndDeathAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LifeAndDeathAnalyzer.m; sourceTree = "<group>"; };
 		575B81DF1C7A7C180032193B /* BoardSerializationUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardSerializationUtility.h; sourceTree = "<group>"; };
 		575B81E01C7A7C180032193B /* BoardSerializationUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoardSerializationUtility.m; sourceTree = "<group>"; };
+		575B81E21C7A7E960032193B /* GobanConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GobanConstants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +321,7 @@
 				575B81DD1C7A78CF0032193B /* LifeAndDeathAnalyzer.m */,
 				575B81DF1C7A7C180032193B /* BoardSerializationUtility.h */,
 				575B81E01C7A7C180032193B /* BoardSerializationUtility.m */,
+				575B81E21C7A7E960032193B /* GobanConstants.h */,
 				35C8733C16F8218800A828B9 /* Stone.h */,
 				35C8733D16F8218800A828B9 /* Stone.m */,
 				35CCC7B616F6A3500012D577 /* AppDelegate.h */,

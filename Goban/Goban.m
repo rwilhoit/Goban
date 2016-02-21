@@ -8,14 +8,9 @@
 
 #import "Goban.h"
 #import "BoardSerializationUtility.h"
-
-#define BOARD_SIZE 361
-#define ROW_LENGTH 18
-#define COLUMN_LENGTH 18
+#import "GobanConstants.h"
 
 @implementation Goban
-
-static NSString * const kEmptySpot = @"+";
 
 - (id)initWithSerializedBoard:(NSMutableArray *)goBoard {
     if (self = [super init]) {
@@ -25,14 +20,11 @@ static NSString * const kEmptySpot = @"+";
 }
 
 - (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue {
-    BOOL stoneWasOutOfBounds = rowValue < 0 || rowValue > ROW_LENGTH || columnValue < 0 || columnValue > COLUMN_LENGTH;
-    if (stoneWasOutOfBounds) {
-        //Stone was out of bounds
-        return NO;
-    }
-    
-    //Stone was in bounds
-    return YES;
+    BOOL stoneWasOutOfBounds = rowValue < 0 ||
+                               rowValue > GobanRowLength - 1 ||
+                               columnValue < 0 ||
+                               columnValue > GobanColumnLength - 1;
+    return !stoneWasOutOfBounds;
 }
 
 -(BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue {
@@ -42,7 +34,7 @@ static NSString * const kEmptySpot = @"+";
         return NO;
     }
     // Check if the move has already been played
-    if(![self.goban[rowValue][columnValue] isEqualToString:kEmptySpot]) {
+    if(![self.goban[rowValue][columnValue] isEqualToString:GobanEmptySpotString]) {
         NSLog(@"Illegal move: Move has already been played");
         return NO;
     }
@@ -52,24 +44,24 @@ static NSString * const kEmptySpot = @"+";
     // Check right for liberties
     if(!hasLiberties &&
        [self isInBounds:(rowValue + 1) andForColumnValue:columnValue] &&
-       [self.goban[rowValue + 1][columnValue] isEqualToString:kEmptySpot]) {
+       [self.goban[rowValue + 1][columnValue] isEqualToString:GobanEmptySpotString]) {
         hasLiberties = YES;
     }
     // Check left for liberties
     if(!hasLiberties && [self isInBounds:(rowValue-1) andForColumnValue:columnValue] &&
-       [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot]) {
+       [self.goban[rowValue-1][columnValue] isEqualToString:GobanEmptySpotString]) {
         hasLiberties = YES;
     }
     // Check down for liberties
     if(!hasLiberties &&
        [self isInBounds:rowValue andForColumnValue:(columnValue+1)] &&
-       [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot]) {
+       [self.goban[rowValue][columnValue+1] isEqualToString:GobanEmptySpotString]) {
         hasLiberties = YES;
     }
     // Check up for liberties
     if(!hasLiberties &&
        [self isInBounds:rowValue andForColumnValue:(columnValue-1)] &&
-       [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot]) {
+       [self.goban[rowValue][columnValue-1] isEqualToString:GobanEmptySpotString]) {
         hasLiberties = YES;
     }
     // Check if any liberties were found and return NO (and print message) if they weren't
@@ -79,14 +71,14 @@ static NSString * const kEmptySpot = @"+";
         // Saving the state of the board
         for(int i = 0; i < self.goban.count; i++) {
             for(int j = 0; j < self.goban.count ; j++) {
-                if([self.goban[j][i] isEqualToString:kEmptySpot]) {
-                    savedStateOfBoard[j][i] = kEmptySpot;
+                if([self.goban[j][i] isEqualToString:GobanEmptySpotString]) {
+                    savedStateOfBoard[j][i] = GobanEmptySpotString;
                 }
-                else if([self.goban[j][i] isEqualToString:@"B"]) {
-                    savedStateOfBoard[j][i] = @"B";
+                else if([self.goban[j][i] isEqualToString:GobanBlackSpotString]) {
+                    savedStateOfBoard[j][i] = GobanBlackSpotString;
                 }
-                else if([self.goban[j][i] isEqualToString:@"W"]) {
-                    savedStateOfBoard[j][i] = @"W";
+                else if([self.goban[j][i] isEqualToString:GobanWhiteSpotString]) {
+                    savedStateOfBoard[j][i] = GobanWhiteSpotString;
                 }
             }
         }
@@ -107,25 +99,25 @@ static NSString * const kEmptySpot = @"+";
         NSString *enemyColor = [[NSMutableString alloc] init];
 
         // Check if stones died to the right
-        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:kEmptySpot]) {
+        if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:GobanEmptySpotString]) {
             deathRow = rowValue + 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the left
-        else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot]) {
+        else if([self isInBounds:(rowValue - 1) andForColumnValue:columnValue] && [self.goban[rowValue - 1][columnValue] isEqualToString:GobanEmptySpotString]) {
             deathRow = rowValue - 1;
             deathColumn = columnValue;
             stonesDied = YES;
         }
         // Check if stones died to the up
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot]) {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:GobanEmptySpotString]) {
             deathRow = rowValue;
             deathColumn = columnValue + 1;
             stonesDied = YES;
         }
         // Check if stones died to the down
-        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot]) {
+        else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:GobanEmptySpotString]) {
             deathRow = rowValue;
             deathColumn = columnValue - 1;
             stonesDied = YES;
@@ -133,11 +125,11 @@ static NSString * const kEmptySpot = @"+";
         
         if(stonesDied) {
             // Get whose move it is
-            if([self.turn isEqualToString:@"B"]) {
-                enemyColor = @"W";
+            if([self.turn isEqualToString:GobanBlackSpotString]) {
+                enemyColor = GobanWhiteSpotString;
             }
             else {
-                enemyColor = @"B";
+                enemyColor = GobanBlackSpotString;
             }
 
             // Check if this new board matches the previous board
@@ -151,14 +143,14 @@ static NSString * const kEmptySpot = @"+";
             //Setting the board back to its saved state
             for(int i = 0;i < self.goban.count; i++) {
                 for(int j=0;j<[self.goban count];j++) {
-                    if([savedStateOfBoard[j][i] isEqualToString:kEmptySpot]) {
-                        self.goban[j][i] = kEmptySpot;
+                    if([savedStateOfBoard[j][i] isEqualToString:GobanEmptySpotString]) {
+                        self.goban[j][i] = GobanEmptySpotString;
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"]) {
-                        self.goban[j][i] = @"B";
+                    else if([savedStateOfBoard[j][i] isEqualToString:GobanBlackSpotString]) {
+                        self.goban[j][i] = GobanBlackSpotString;
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"]) {
-                        self.goban[j][i] = @"W";
+                    else if([savedStateOfBoard[j][i] isEqualToString:GobanWhiteSpotString]) {
+                        self.goban[j][i] = GobanWhiteSpotString;
                     }
                 }
             }
@@ -177,7 +169,7 @@ static NSString * const kEmptySpot = @"+";
             //Check if the move was a suicide move
             [self checkLifeOfStone:rowValue andForColumnValue:columnValue];
             //If the space is now a + then it was a suicide
-            if([self.goban[rowValue][columnValue] isEqualToString:kEmptySpot])
+            if([self.goban[rowValue][columnValue] isEqualToString:GobanEmptySpotString])
             {
                 suicide = YES;
             }
@@ -187,23 +179,23 @@ static NSString * const kEmptySpot = @"+";
             {
                 for(int j=0;j<[self.goban count];j++)
                 {
-                    if([savedStateOfBoard[j][i] isEqualToString:kEmptySpot])
+                    if([savedStateOfBoard[j][i] isEqualToString:GobanEmptySpotString])
                     {
-                        self.goban[j][i] = kEmptySpot;
+                        self.goban[j][i] = GobanEmptySpotString;
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"B"])
+                    else if([savedStateOfBoard[j][i] isEqualToString:GobanBlackSpotString])
                     {
-                        self.goban[j][i] = @"B";
+                        self.goban[j][i] = GobanBlackSpotString;
                     }
-                    else if([savedStateOfBoard[j][i] isEqualToString:@"W"])
+                    else if([savedStateOfBoard[j][i] isEqualToString:GobanWhiteSpotString])
                     {
-                        self.goban[j][i] = @"W";
+                        self.goban[j][i] = GobanWhiteSpotString;
                     }
                 }
             } //Board set back to its saved state
             
             
-            self.goban[rowValue][columnValue] = kEmptySpot;
+            self.goban[rowValue][columnValue] = GobanEmptySpotString;
             [self setCapturedWhiteStones:tempWhiteCaptureCount];
             [self setCapturedBlackStones:tempBlackCaptureCount];
             //NSLog(@"Set board back to its previous state");
@@ -248,14 +240,14 @@ static NSString * const kEmptySpot = @"+";
     //Get my color and my opponent's color
     NSString *myColor = self.goban[rowValue][columnValue];
     NSString *opponentColor = [[NSString alloc] init];
-    if([myColor isEqualToString:@"B"])
+    if([myColor isEqualToString:GobanBlackSpotString])
     {
-        opponentColor = @"W";
+        opponentColor = GobanWhiteSpotString;
         //NSLog(@"My opponent's color is %@", opponentColor);
     }
     else
     {
-        opponentColor = @"B";
+        opponentColor = GobanBlackSpotString;
         //NSLog(@"My opponent's color is %@", opponentColor);
     }
     
@@ -267,7 +259,7 @@ static NSString * const kEmptySpot = @"+";
         //NSLog(@"Checking right enemy stone");
         [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
     }
-    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:kEmptySpot])
+    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:GobanEmptySpotString])
     {
         //NSLog(@"Space to the right of stone was a free space");
     }
@@ -286,7 +278,7 @@ static NSString * const kEmptySpot = @"+";
         //NSLog(@"Checking left enemy stone");
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
-    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:kEmptySpot])
+    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:GobanEmptySpotString])
     {
         //NSLog(@"Space to the left of stone was a free space");
     }
@@ -305,7 +297,7 @@ static NSString * const kEmptySpot = @"+";
         //NSLog(@"Checking down enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:kEmptySpot])
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:GobanEmptySpotString])
     {
         //NSLog(@"Space to the down of stone was a free space");
     }
@@ -324,7 +316,7 @@ static NSString * const kEmptySpot = @"+";
         //NSLog(@"Checking up enemy stone");
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
     }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:kEmptySpot])
+    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:GobanEmptySpotString])
     {
         //NSLog(@"Space to the up of stone was a free space");
     }
@@ -346,13 +338,13 @@ static NSString * const kEmptySpot = @"+";
     NSString *enemyColor = [[NSString alloc] init]; //Color of enemy stones
     BOOL stonesAreDead = YES;                       //Flag for if the stones are dead or not
     allyColor = self.goban[rowValue][columnValue];  //Set the ally color to the stone we are checking
-    if([allyColor isEqualToString:@"B"])
+    if([allyColor isEqualToString:GobanBlackSpotString])
     {
-        enemyColor = @"W";
+        enemyColor = GobanWhiteSpotString;
     }
     else
     {
-        enemyColor = @"B";
+        enemyColor = GobanBlackSpotString;
     }
     
     //BFS
@@ -364,7 +356,7 @@ static NSString * const kEmptySpot = @"+";
     NSMutableArray *queue = [[NSMutableArray alloc] init];
     NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
     
-    NSString *goal = kEmptySpot;
+    NSString *goal = GobanEmptySpotString;
     
     // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
     //Check all spots around where the vertex is
@@ -561,7 +553,7 @@ static NSString * const kEmptySpot = @"+";
     
     //Get the color of the stones that are dying
     NSString *dyingColor = self.goban[stone.row][stone.column];
-    if([dyingColor isEqualToString:@"B"]) {
+    if([dyingColor isEqualToString:GobanBlackSpotString]) {
         //Add the number of dead stones to black's captured stone count
         self.previousCapturedBlackStones = self.capturedBlackStones;
         self.capturedBlackStones = (self.capturedBlackStones + stonesToKill.count);
@@ -575,7 +567,7 @@ static NSString * const kEmptySpot = @"+";
     //This takes the nodes from the visited Nodes array and sets them back to "+"
     for(int i = 0; i < stonesToKill.count; i++) {
         stone = stonesToKill[i];
-        self.goban[stone.row][stone.column] = kEmptySpot;
+        self.goban[stone.row][stone.column] = GobanEmptySpotString;
     }
     
     NSLog(@"Killed stones");
@@ -588,24 +580,24 @@ static NSString * const kEmptySpot = @"+";
     //restore the board to it's previous state
     for(int i = 0; i < self.goban.count ; i++) {
         for(int j = 0; j < self.goban.count; j++) {
-            if([self.previousStateOfBoard[j][i] isEqualToString:kEmptySpot]) {
-                self.goban[j][i] = kEmptySpot;
+            if([self.previousStateOfBoard[j][i] isEqualToString:GobanEmptySpotString]) {
+                self.goban[j][i] = GobanEmptySpotString;
             }
-            else if([self.previousStateOfBoard[j][i] isEqualToString:@"B"]) {
-                self.goban[j][i] = @"B";
+            else if([self.previousStateOfBoard[j][i] isEqualToString:GobanBlackSpotString]) {
+                self.goban[j][i] = GobanBlackSpotString;
             }
-            else if([self.previousStateOfBoard[j][i] isEqualToString:@"W"]) {
-                self.goban[j][i] = @"W";
+            else if([self.previousStateOfBoard[j][i] isEqualToString:GobanWhiteSpotString]) {
+                self.goban[j][i] = GobanWhiteSpotString;
             }
         }
     }
     
     //Put the turn back also
-    if([self.turn isEqualToString:@"B"]) {
-        self.turn = @"W";
+    if([self.turn isEqualToString:GobanBlackSpotString]) {
+        self.turn = GobanWhiteSpotString;
     }
     else {
-        self.turn = @"B";
+        self.turn = GobanBlackSpotString;
     }
     
     //Put the move count back also
@@ -626,11 +618,11 @@ static NSString * const kEmptySpot = @"+";
     // 1. Mark the root as visited.
     NSMutableArray *queue = [[NSMutableArray alloc] init];
     NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
-    if([color isEqualToString:@"B"]) {
-        self.goban[vertex.row][vertex.column] = @"b";
+    if([color isEqualToString:GobanBlackSpotString]) {
+        self.goban[vertex.row][vertex.column] = GobanVisitedBlackSpotString;
     }
-    else if([color isEqualToString:@"W"]) {
-        self.goban[vertex.row][vertex.column] = @"w";
+    else if([color isEqualToString:GobanWhiteSpotString]) {
+        self.goban[vertex.row][vertex.column] = GobanVisitedWhiteSpotString;
     }
     
     // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
@@ -649,11 +641,11 @@ static NSString * const kEmptySpot = @"+";
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"]) {
-                self.goban[vertex.row + 1][vertex.column] = @"b";
+            if([color isEqualToString:GobanBlackSpotString]) {
+                self.goban[vertex.row + 1][vertex.column] = GobanVisitedBlackSpotString;
             }
-            else if([color isEqualToString:@"W"]) {
-                self.goban[vertex.row + 1][vertex.column] = @"w";
+            else if([color isEqualToString:GobanWhiteSpotString]) {
+                self.goban[vertex.row + 1][vertex.column] = GobanWhiteSpotString;
             }
         }
     }
@@ -670,11 +662,11 @@ static NSString * const kEmptySpot = @"+";
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"]) {
-                self.goban[vertex.row - 1][vertex.column] = @"b";
+            if([color isEqualToString:GobanBlackSpotString]) {
+                self.goban[vertex.row - 1][vertex.column] = GobanVisitedBlackSpotString;
             }
-            else if([color isEqualToString:@"W"]) {
-                self.goban[vertex.row-1][vertex.column] = @"w";
+            else if([color isEqualToString:GobanBlackSpotString]) {
+                self.goban[vertex.row-1][vertex.column] = GobanVisitedWhiteSpotString;
             }
         }
     }
@@ -693,13 +685,13 @@ static NSString * const kEmptySpot = @"+";
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"])
+            if([color isEqualToString:GobanBlackSpotString])
             {
-                self.goban[vertex.row][vertex.column - 1] = @"b";
+                self.goban[vertex.row][vertex.column - 1] = GobanVisitedBlackSpotString;
             }
-            else if([color isEqualToString:@"W"])
+            else if([color isEqualToString:GobanBlackSpotString])
             {
-                self.goban[vertex.row][vertex.column - 1] = @"w";
+                self.goban[vertex.row][vertex.column - 1] = GobanVisitedWhiteSpotString;
             }
         }
     }
@@ -716,11 +708,11 @@ static NSString * const kEmptySpot = @"+";
             [queue addObject:point];
             
             //Change the spot on the board to lowercase
-            if([color isEqualToString:@"B"]) {
-                self.goban[vertex.row][vertex.column + 1] = @"b";
+            if([color isEqualToString:GobanBlackSpotString]) {
+                self.goban[vertex.row][vertex.column + 1] = GobanVisitedBlackSpotString;
             }
-            else if([color isEqualToString:@"W"]) {
-                self.goban[vertex.row][vertex.column+1] = @"w";
+            else if([color isEqualToString:GobanBlackSpotString]) {
+                self.goban[vertex.row][vertex.column+1] = GobanVisitedWhiteSpotString;
             }
         }
     }
@@ -751,11 +743,11 @@ static NSString * const kEmptySpot = @"+";
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"]) {
-                    self.goban[topOfQueue.row + 1][topOfQueue.column] = @"b";
+                if([color isEqualToString:GobanBlackSpotString]) {
+                    self.goban[topOfQueue.row + 1][topOfQueue.column] = GobanVisitedBlackSpotString;
                 }
-                else if([color isEqualToString:@"W"]) {
-                    self.goban[topOfQueue.row + 1][topOfQueue.column] = @"w";
+                else if([color isEqualToString:GobanWhiteSpotString]) {
+                    self.goban[topOfQueue.row + 1][topOfQueue.column] = GobanWhiteSpotString;
                 }
             }
         }
@@ -773,11 +765,11 @@ static NSString * const kEmptySpot = @"+";
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"]) {
-                    self.goban[topOfQueue.row - 1][topOfQueue.column] = @"b";
+                if([color isEqualToString:GobanBlackSpotString]) {
+                    self.goban[topOfQueue.row - 1][topOfQueue.column] = GobanVisitedBlackSpotString;
                 }
-                else if([color isEqualToString:@"W"]) {
-                    self.goban[topOfQueue.row - 1][topOfQueue.column] = @"w";
+                else if([color isEqualToString:GobanWhiteSpotString]) {
+                    self.goban[topOfQueue.row - 1][topOfQueue.column] = GobanVisitedWhiteSpotString;
                 }
             }
         }
@@ -795,11 +787,11 @@ static NSString * const kEmptySpot = @"+";
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"]) {
-                    self.goban[topOfQueue.row][topOfQueue.column + 1] = @"b";
+                if([color isEqualToString:GobanBlackSpotString]) {
+                    self.goban[topOfQueue.row][topOfQueue.column + 1] = GobanVisitedBlackSpotString;
                 }
-                else if([color isEqualToString:@"W"]) {
-                    self.goban[topOfQueue.row][topOfQueue.column + 1] = @"w";
+                else if([color isEqualToString:GobanWhiteSpotString]) {
+                    self.goban[topOfQueue.row][topOfQueue.column + 1] = GobanVisitedWhiteSpotString;
                 }
             }
         }
@@ -818,11 +810,11 @@ static NSString * const kEmptySpot = @"+";
                 [queue addObject:point];
                 
                 //Change the spot on the board to lowercase
-                if([color isEqualToString:@"B"]) {
-                    self.goban[topOfQueue.row][topOfQueue.column - 1] = @"b";
+                if([color isEqualToString:GobanBlackSpotString]) {
+                    self.goban[topOfQueue.row][topOfQueue.column - 1] = GobanVisitedBlackSpotString;
                 }
-                else if([color isEqualToString:@"W"]) {
-                    self.goban[topOfQueue.row][topOfQueue.column - 1] = @"w";
+                else if([color isEqualToString:GobanWhiteSpotString]) {
+                    self.goban[topOfQueue.row][topOfQueue.column - 1] = GobanVisitedWhiteSpotString;
                 }
             }
         }

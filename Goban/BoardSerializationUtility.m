@@ -7,20 +7,15 @@
 //
 
 #import "BoardSerializationUtility.h"
-
-#define BOARD_SIZE 361
-#define ROW_LENGTH 18
-#define COLUMN_LENGTH 18
+#import "GobanConstants.h"
 
 @implementation BoardSerializationUtility
-
-static NSString * const kEmptySpot = @"+";
 
 + (void)printBoardToConsole:(NSArray *)goban {
     NSMutableString *printRow = [[NSMutableString alloc] init];
     [printRow appendString:@"\n"];
-    for(int i = 0 ; i < COLUMN_LENGTH + 1; i++) {
-        for(int j=0; j < ROW_LENGTH+1; j++) {
+    for(int i = 0 ; i < GobanColumnLength; i++) {
+        for(int j=0; j < GobanRowLength; j++) {
             [printRow appendString:goban[j][i]];
             [printRow appendString:@" "];
         }
@@ -32,8 +27,8 @@ static NSString * const kEmptySpot = @"+";
 
 + (NSString *)serializedBoard:(NSArray *)goban {
     NSMutableString *board_string = [[NSMutableString alloc] init];
-    for(int i = 0; i < COLUMN_LENGTH + 1; i++) {
-        for(int j = 0; j < ROW_LENGTH + 1; j++) {
+    for(int i = 0; i < GobanColumnLength; i++) {
+        for(int j = 0; j < GobanRowLength; j++) {
             [board_string appendString:goban[j][i]];
         }
     }
@@ -41,25 +36,25 @@ static NSString * const kEmptySpot = @"+";
 }
 
 + (NSMutableArray *)boardRow {
-    return [NSMutableArray arrayWithObjects:kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
-            kEmptySpot,
+    return [NSMutableArray arrayWithObjects:GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
+            GobanEmptySpotString,
             nil];
 }
 
@@ -91,12 +86,12 @@ static NSString * const kEmptySpot = @"+";
     int boardPosition = 0;
     for(int i = 0; i < deserializedBoard.count; i++) {
         for(int j = 0;j < [deserializedBoard[i] count]; j++) {
-            if(![[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:kEmptySpot]) {
-                if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:@"B"]) {
-                    deserializedBoard[j][i] = @"B";
+            if(![[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:GobanEmptySpotString]) {
+                if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:GobanBlackSpotString]) {
+                    deserializedBoard[j][i] = GobanBlackSpotString;
                 }
-                else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:@"W"]) {
-                    deserializedBoard[j][i] = @"W";
+                else if([[NSString stringWithFormat:@"%C", [boardString characterAtIndex:boardPosition]] isEqualToString:GobanWhiteSpotString]) {
+                    deserializedBoard[j][i] = GobanWhiteSpotString;
                 }
             }
             boardPosition++;
