@@ -7,21 +7,11 @@
 //
 
 #import "MainMenuViewController.h"
-#import "GobanViewController.h"
-
-@interface MainMenuViewController ()
-
-@end
+#import "KGModal.h"
 
 @implementation MainMenuViewController
 
-@synthesize gameButton;
-@synthesize loadGameButton;
-@synthesize loadGameOnLoad;
-
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -29,36 +19,13 @@
     return self;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"loadGameSegue"])
-    {
-        // This was written to load the game from the server and can probably be mostly deleted 
-        
-        GobanViewController *gobanViewController = (GobanViewController *)[[segue destinationViewController] topViewController];
-        [gobanViewController setBoardLoadRequest:YES];
-        NSLog(@"Load game selected");
-
-        //[gobanViewController loadBoardFromServer];
-
-    }
-    else if([[segue identifier] isEqualToString:@"startGameSegue"])
-    {
-        GobanViewController *gobanViewController = (GobanViewController *)[[segue destinationViewController] topViewController];
-        [gobanViewController setBoardLoadRequest:NO];
-        NSLog(@"New game selected");
-    }
-
-    else
-    {
-        NSLog(@"Load failed");
-    }
-    
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self displayWelcomeAlert];
 }
 
-- (void)showAction:(id)sender{
+- (void)displayWelcomeAlert {
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, 200)];
-    
     CGRect welcomeLabelRect = contentView.bounds;
     welcomeLabelRect.origin.y = 20;
     welcomeLabelRect.size.height = 20;
@@ -77,7 +44,7 @@
     infoLabelRect.origin.y = CGRectGetMaxY(welcomeLabelRect)+5;
     infoLabelRect.size.height -= CGRectGetMinY(infoLabelRect);
     UILabel *infoLabel = [[UILabel alloc] initWithFrame:infoLabelRect];
-    infoLabel.text = @"Goban is a multiplayer tabletop Go app.\n Select new or load game to play! \n This version uses Chinese scoring.";
+    infoLabel.text = @"Goban is a multiplayer tabletop Go app.\nSelect start game to play!\nThis version uses Chinese scoring.";
     infoLabel.numberOfLines = 6;
     infoLabel.textColor = [UIColor whiteColor];
     infoLabel.textAlignment = NSTextAlignmentCenter;
@@ -89,31 +56,8 @@
     [[KGModal sharedInstance] showWithContentView:contentView andAnimated:YES];
 }
 
-- (void)viewDidLoad
-{
-    [self showAction:nil];
-
-    // Set the label colors
-    //self.blackStonesCapturedLabel.textColor = [UIColor blackColor];
-    //self.whiteStonesCapturedLabel.textColor = [UIColor blackColor];
-    //self.view.backgroundColor = [UIColor whiteColor];
-    
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    
-
-}
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (IBAction)pressedLoad:(id)sender
-{
-    NSLog(@"Pressed load");
-    //Need to set something
 }
 
 @end

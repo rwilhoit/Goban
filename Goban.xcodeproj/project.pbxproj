@@ -554,6 +554,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Goban/Goban-Prefix.pch";
 				INFOPLIST_FILE = "Goban/Goban-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rwilhoit.Goban;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -565,6 +567,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Goban/Goban-Prefix.pch";
 				INFOPLIST_FILE = "Goban/Goban-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rwilhoit.Goban;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

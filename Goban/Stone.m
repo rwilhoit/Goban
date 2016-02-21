@@ -9,22 +9,12 @@
 #import "Stone.h"
 
 @implementation Stone
-@synthesize stone;
-@synthesize rowValue;
-@synthesize columnValue;
 
--(id)init:(NSNumber *)goStone
-{
-    if (self = [super init])
-    {
-        self.stone = goStone;
+-(id)init:(NSNumber *)goStone {
+    if (self = [super init]) {
+        _stone = goStone;
     }
     return self;
-}
-
--(id)init
-{
-    return [super init];
 }
 
 @end

@@ -8,17 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainMenuViewController : UIViewController {
-    BOOL loadGameOnLoad;
-    
-}
+@interface MainMenuViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *gameButton;
 @property (strong, nonatomic) IBOutlet UIButton *loadGameButton;
 
 @property (nonatomic) BOOL loadGameOnLoad;
-
-- (IBAction)pressedLoad:(id)sender;
-- (void)showAction:(id)sender;
 
 @end

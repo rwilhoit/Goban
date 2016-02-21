@@ -19,43 +19,26 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cb7-zG-xiy">
-                                <rect key="frame" x="271" y="433" width="225" height="30"/>
+                                <rect key="frame" x="272" y="497" width="225" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="225" id="kVj-ZI-Cvz"/>
+                                    <constraint firstAttribute="width" constant="225" id="50G-ez-fyu"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="New Game">
+                                <state key="normal" title="Start Game">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <segue destination="2" kind="modal" id="ZGh-if-Ttf"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ajm-zs-yFh">
-                                <rect key="frame" x="271" y="471" width="225" height="30"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Load Game">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="pressedResign:" destination="2" eventType="touchUpInside" id="2tv-JG-JcP"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="cb7-zG-xiy" firstAttribute="trailing" secondItem="Ajm-zs-yFh" secondAttribute="trailing" id="AzD-N0-9wi"/>
-                            <constraint firstItem="cb7-zG-xiy" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" id="Rqw-ON-y1q"/>
-                            <constraint firstItem="cb7-zG-xiy" firstAttribute="top" secondItem="WYd-5X-eWi" secondAttribute="top" constant="433" id="fze-fC-P95"/>
-                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="leading" secondItem="cb7-zG-xiy" secondAttribute="leading" id="gYk-0q-M4v"/>
-                            <constraint firstItem="Ajm-zs-yFh" firstAttribute="top" secondItem="cb7-zG-xiy" secondAttribute="bottom" constant="8" symbolic="YES" id="y4Y-lY-4fI"/>
+                            <constraint firstItem="cb7-zG-xiy" firstAttribute="centerX" secondItem="WYd-5X-eWi" secondAttribute="centerX" id="1AQ-1b-zrp"/>
+                            <constraint firstItem="cb7-zG-xiy" firstAttribute="centerY" secondItem="WYd-5X-eWi" secondAttribute="centerY" id="K8T-uW-lA4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Goban Version 1.0" id="0iP-c2-yQk"/>
-                    <connections>
-                        <outlet property="gameButton" destination="cb7-zG-xiy" id="g6N-2E-Flm"/>
-                        <outlet property="loadGameButton" destination="Ajm-zs-yFh" id="9qX-Bz-1kK"/>
-                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1719" y="-1701"/>

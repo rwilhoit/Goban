@@ -8,10 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Stone : NSObject {
-    int rowValue;
-    int columnValue;
-}
+@interface Stone : NSObject
 
 @property (weak, nonatomic) NSNumber *stone;
 @property (nonatomic) int rowValue;
