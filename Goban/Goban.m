@@ -23,6 +23,17 @@
     return self;
 }
 
+- (void)playMoveAtRow:(int)row column:(int)column forColor:(NSString *)color {
+    self.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goban copyItems:YES];
+    self.goban[row][column] = color;
+    [self checkLifeOfAdjacentEnemyStones:row andForColumnValue:column];
+    
+    self.moveNumber = self.moveNumber + 1;
+    self.blackPassed = NO;
+    self.whitePassed = NO;
+    self.turn = [color isEqualToString:GobanBlackSpotString] ? GobanWhiteSpotString : GobanBlackSpotString;
+}
+
 - (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue {
     BOOL stoneWasOutOfBounds = rowValue < 0 ||
                                rowValue > GobanRowLength - 1 ||

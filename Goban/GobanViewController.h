@@ -14,8 +14,6 @@
 @interface GobanViewController : UIViewController
 
 - (IBAction)pressedOptions:(id)sender;
-- (void)drawBoardForNewMove:(int)rowOfNewMove andColumn:(int)columnOfNewMove;
-- (void)markStonesAsDead;
 
 @property (strong, nonatomic) IBOutlet UIButton *optionsButtonTop;
 @property (strong, nonatomic) IBOutlet UIButton *optionsButtonBottom;

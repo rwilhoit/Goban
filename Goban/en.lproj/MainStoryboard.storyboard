@@ -8,7 +8,6 @@
         <!--Goban Version 1.0-->
         <scene sceneID="a10-Hm-hny">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="GJB-UP-Z6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="LQj-x4-bvx" customClass="MainMenuViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zZ7-hp-UD0"/>
@@ -40,6 +39,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Goban Version 1.0" id="0iP-c2-yQk"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GJB-UP-Z6p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1719" y="-1701"/>
         </scene>

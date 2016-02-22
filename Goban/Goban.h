@@ -41,5 +41,6 @@
 - (void)killStones:(NSMutableArray *)stonesToKill;
 - (void)back;
 - (void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString*)color;
+- (void)playMoveAtRow:(int)row column:(int)column forColor:(NSString *)color;
 
 @end

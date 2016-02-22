@@ -32,7 +32,6 @@
 		35E34D1D171774400073B258 /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35E34D1C171774400073B258 /* MainMenuViewController.m */; };
 		35E4640D16FA286A00EBA995 /* Goban.png in Resources */ = {isa = PBXBuildFile; fileRef = 35E4640C16FA286A00EBA995 /* Goban.png */; };
 		39FF33E3171B780E00194084 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 39FF33E2171B780E00194084 /* iTunesArtwork.png */; };
-		575B81DE1C7A78CF0032193B /* LifeAndDeathAnalyzer.m in Sources */ = {isa = PBXBuildFile; fileRef = 575B81DD1C7A78CF0032193B /* LifeAndDeathAnalyzer.m */; };
 		575B81E11C7A7C180032193B /* BoardSerializationUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 575B81E01C7A7C180032193B /* BoardSerializationUtility.m */; };
 /* End PBXBuildFile section */
 
@@ -71,8 +70,6 @@
 		35E34D1C171774400073B258 /* MainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuViewController.m; sourceTree = "<group>"; };
 		35E4640C16FA286A00EBA995 /* Goban.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Goban.png; sourceTree = "<group>"; };
 		39FF33E2171B780E00194084 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
-		575B81DC1C7A78CF0032193B /* LifeAndDeathAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LifeAndDeathAnalyzer.h; sourceTree = "<group>"; };
-		575B81DD1C7A78CF0032193B /* LifeAndDeathAnalyzer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LifeAndDeathAnalyzer.m; sourceTree = "<group>"; };
 		575B81DF1C7A7C180032193B /* BoardSerializationUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardSerializationUtility.h; sourceTree = "<group>"; };
 		575B81E01C7A7C180032193B /* BoardSerializationUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoardSerializationUtility.m; sourceTree = "<group>"; };
 		575B81E21C7A7E960032193B /* GobanConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GobanConstants.h; sourceTree = "<group>"; };
@@ -131,19 +128,16 @@
 		35CCC7AD16F6A3500012D577 /* Goban */ = {
 			isa = PBXGroup;
 			children = (
-				35A65D6A171E2B9000A0A950 /* KGModal.m */,
-				35A65D6B171E2B9000A0A950 /* KGModal.h */,
-				35C8733916F8197700A828B9 /* Goban.h */,
-				35C8733A16F8197700A828B9 /* Goban.m */,
-				575B81DC1C7A78CF0032193B /* LifeAndDeathAnalyzer.h */,
-				575B81DD1C7A78CF0032193B /* LifeAndDeathAnalyzer.m */,
-				575B81DF1C7A7C180032193B /* BoardSerializationUtility.h */,
-				575B81E01C7A7C180032193B /* BoardSerializationUtility.m */,
-				575B81E21C7A7E960032193B /* GobanConstants.h */,
-				35C8733C16F8218800A828B9 /* Stone.h */,
-				35C8733D16F8218800A828B9 /* Stone.m */,
 				35CCC7B616F6A3500012D577 /* AppDelegate.h */,
 				35CCC7B716F6A3500012D577 /* AppDelegate.m */,
+				575B81E21C7A7E960032193B /* GobanConstants.h */,
+				575B81EB1C7ADCFB0032193B /* KGModal */,
+				35C8733916F8197700A828B9 /* Goban.h */,
+				35C8733A16F8197700A828B9 /* Goban.m */,
+				575B81DF1C7A7C180032193B /* BoardSerializationUtility.h */,
+				575B81E01C7A7C180032193B /* BoardSerializationUtility.m */,
+				35C8733C16F8218800A828B9 /* Stone.h */,
+				35C8733D16F8218800A828B9 /* Stone.m */,
 				35CCC7BF16F6A3500012D577 /* MainStoryboard.storyboard */,
 				35E34D1B171774400073B258 /* MainMenuViewController.h */,
 				35E34D1C171774400073B258 /* MainMenuViewController.m */,
@@ -169,6 +163,15 @@
 				35CCC7BD16F6A3500012D577 /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		575B81EB1C7ADCFB0032193B /* KGModal */ = {
+			isa = PBXGroup;
+			children = (
+				35A65D6A171E2B9000A0A950 /* KGModal.m */,
+				35A65D6B171E2B9000A0A950 /* KGModal.h */,
+			);
+			name = KGModal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,7 +249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				575B81DE1C7A78CF0032193B /* LifeAndDeathAnalyzer.m in Sources */,
 				35CCC7B416F6A3500012D577 /* main.m in Sources */,
 				35CCC7B816F6A3500012D577 /* AppDelegate.m in Sources */,
 				35CCC7C416F6A3500012D577 /* GobanViewController.m in Sources */,

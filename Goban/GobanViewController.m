@@ -142,30 +142,13 @@
 
 
 - (void)playMoveAtRow:(int)row column:(int)column forColor:(NSString *)color {
-    //Save the previous state of the board
-    self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
-    
-    self.goBoard.goban[row][column] = color;
-    [self.goBoard checkLifeOfAdjacentEnemyStones:row andForColumnValue:column];
-    
-    //Increment the move number
-    self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
-    
-    //Draw the entire board again, or just the new move
+    [self.goBoard playMoveAtRow:row column:column forColor:color];
     [self drawBoardForNewMove:row andColumn:column];
-    
-    //Set the pass variables to NO
-    self.goBoard.blackPassed = NO;
-    self.goBoard.whitePassed = NO;
-    
     if ([color isEqualToString:GobanBlackSpotString]) {
         self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedWhiteStones];
-        self.goBoard.turn = GobanWhiteSpotString;
-        
     }
     else if ([color isEqualToString:GobanWhiteSpotString]) {
         self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedBlackStones];
-        self.goBoard.turn = GobanBlackSpotString;
     }
 }
 
