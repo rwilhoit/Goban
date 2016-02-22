@@ -12,10 +12,14 @@
 
 @implementation Goban
 
-- (id)initWithSerializedBoard:(NSMutableArray *)goBoard {
-    if (self = [super init]) {
-        _goban = goBoard;
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _goban = [BoardSerializationUtility emptyMutableBoardArray];
+        _turn = GobanBlackSpotString;
+        _komi = GobanKomiAmount;
     }
+    
     return self;
 }
 

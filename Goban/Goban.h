@@ -31,8 +31,6 @@
 @property (nonatomic) BOOL whitePassed;
 @property (nonatomic) BOOL blackPassed;
 
-- (id)initWithSerializedBoard:(NSMutableArray *)goban;
-- (void)printBoardToConsole;
 - (BOOL)isLegalMove:(int)rowValue andForColumnValue:(int)columnValue;
 - (BOOL)isInBounds:(int)rowValue andForColumnValue:(int)columnValue;
 - (BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList
@@ -43,7 +41,5 @@
 - (void)killStones:(NSMutableArray *)stonesToKill;
 - (void)back;
 - (void)markStoneClusterAsDeadFor:(int)rowValue andForColumnValue:(int)columnValue andForColor:(NSString*)color;
-- (NSString *)serializeBoard;
-- (NSMutableArray *)deserializeBoard:(NSString *)boardString;
 
 @end

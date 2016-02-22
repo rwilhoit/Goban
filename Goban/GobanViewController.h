@@ -10,8 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Goban.h"
 #import "KGModal.h"
-#define MIDDLE_OFFSET 96
-
 
 @interface GobanViewController : UIViewController
 
@@ -20,8 +18,7 @@
 
 // Backend
 - (void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
-- (void)drawUI;
-- (NSString *)getCurrentTime;
+- (void)layoutInterface;
 - (void)markStonesAsDead;
 - (void)startTimer;
 - (void)timerCallback;
