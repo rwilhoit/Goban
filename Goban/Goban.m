@@ -239,7 +239,7 @@
     return hasBeenVisited;
 }
 
--(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue;
+-(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue
 {
     //Get my color and my opponent's color
     NSString *myColor = self.goban[rowValue][columnValue];
@@ -334,22 +334,10 @@
     }
 }
 
--(void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue
-{
-    //It is already implied that if we are at this point in the code, then the piece at the given location is a valid piece
-    //Figure out what is an enemy color and what is an ally piece
-    NSString *allyColor = [[NSString alloc] init];  //Color of ally stones
-    NSString *enemyColor = [[NSString alloc] init]; //Color of enemy stones
-    BOOL stonesAreDead = YES;                       //Flag for if the stones are dead or not
-    allyColor = self.goban[rowValue][columnValue];  //Set the ally color to the stone we are checking
-    if([allyColor isEqualToString:GobanBlackSpotString])
-    {
-        enemyColor = GobanWhiteSpotString;
-    }
-    else
-    {
-        enemyColor = GobanBlackSpotString;
-    }
+- (void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue {
+    NSString *allyColor = self.goban[rowValue][columnValue];
+    NSString *enemyColor = [allyColor isEqualToString:GobanBlackSpotString] ? GobanWhiteSpotString : GobanBlackSpotString;
+    BOOL stonesAreDead = YES;
     
     //BFS
     //Put the coordinates in a point and then add the point to the queue and visited nodes list
