@@ -13,21 +13,9 @@
 
 @interface GobanViewController : UIViewController
 
-// Actions
 - (IBAction)pressedOptions:(id)sender;
-
-// Backend
-- (void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove;
-- (void)layoutInterface;
+- (void)drawBoardForNewMove:(int)rowOfNewMove andColumn:(int)columnOfNewMove;
 - (void)markStonesAsDead;
-- (void)startTimer;
-- (void)timerCallback;
-- (void)timeUp;
-
-// Menu buttons
-- (void)pressedBack;
-- (void)pressedResign;
-- (void)pressedPass;
 
 @property (strong, nonatomic) IBOutlet UIButton *optionsButtonTop;
 @property (strong, nonatomic) IBOutlet UIButton *optionsButtonBottom;

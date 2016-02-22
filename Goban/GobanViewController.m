@@ -24,18 +24,16 @@
 @implementation GobanViewController
 
 - (void)viewDidLoad {
-    
     [super viewDidLoad];
-    
-    [self layoutInterface];
     
     self.goBoard = [[Goban alloc] init];
     
-    // Start the timer
+    [self layoutInterface];
     [self startTimer];
 }
 
-//Where the stones are played
+#pragma mark - UIGestureRecognizers
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     int rowValue;
     int columnValue;
@@ -45,155 +43,146 @@
         columnValue = (int)floor((touchPoint.y - GobanMiddleOffsetSize) / GobanSpaceSize);
     }
 
-    //Check if we are marking stones as dead
-    if(self.currentlyMarkingStonesAsDead && [self.goBoard isInBounds:rowValue andForColumnValue:columnValue]) {
-        NSLog(@"Marking stone as dead");
+    if (self.currentlyMarkingStonesAsDead && [self.goBoard isInBounds:rowValue andForColumnValue:columnValue]) {
+        /*
+         * Marking stones as dead
+         */
         if([self.goBoard.goban[rowValue][columnValue] isEqualToString:GobanBlackSpotString]) {
             [self.goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:GobanBlackSpotString];
-            [self drawBoardForNewMove:0 andForColumn:0];
         }
         else if([self.goBoard.goban[rowValue][columnValue] isEqualToString:GobanWhiteSpotString]) {
             [self.goBoard markStoneClusterAsDeadFor:rowValue andForColumnValue:columnValue andForColor:GobanWhiteSpotString];
-            [self drawBoardForNewMove:0 andForColumn:0];
         }
+        [self drawBoardForNewMove:0 andColumn:0];
     }
-    //Check if new move is legal
-    else if([self.goBoard isLegalMove:rowValue andForColumnValue:columnValue]) {
+    else if ([self.goBoard isLegalMove:rowValue andForColumnValue:columnValue]) {
         if([self.goBoard.turn isEqualToString:GobanBlackSpotString]) {
-            //Save the previous state of the board
-            self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
-            
-            //Play black's turn
-            self.goBoard.goban[rowValue][columnValue] = GobanBlackSpotString;
-            
-            //Increment the move number
-            self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
-            
-            //Check the life of adjacent pieces of the opposite color
-            [self.goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
-            
-            //Draw the entire board again
-            [self drawBoardForNewMove:rowValue andForColumn:columnValue];
-            
-            //Update the captured stone count
-            self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedWhiteStones];
-            
-            //Set the pass variables to NO
-            [self.goBoard setBlackPassed:NO];
-            [self.goBoard setWhitePassed:NO];
-            
-            //Set to white's turn
-            NSLog(@"Set to white's turn");
-            [self.goBoard setTurn:GobanWhiteSpotString];
+            [self playMoveAtRow:rowValue column:columnValue forColor:GobanBlackSpotString];
         }
         else {
-            //Save the previous state of the board
-            self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
-            
-            //Play white's turn
-            NSLog(@"Played white's turn");
-            self.goBoard.goban[rowValue][columnValue] = GobanWhiteSpotString;
-            
-            //Check the life of adjacent pieces of the opposite color
-            [self.goBoard checkLifeOfAdjacentEnemyStones:rowValue andForColumnValue:columnValue];
-            
-            //Increment the move number
-            self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
-            
-            //Draw the entire board again, or just the new move
-            [self drawBoardForNewMove:rowValue andForColumn:columnValue];
-            
-            //Update the captured stone count
-            self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedBlackStones];
-            
-            //Set the pass variables to NO
-            self.goBoard.blackPassed = NO;
-            self.goBoard.whitePassed = NO;
-            
-            //Set to black's turn
-            NSLog(@"Set to black's turn");
-            self.goBoard.turn = GobanBlackSpotString;
+            [self playMoveAtRow:rowValue column:columnValue forColor:GobanWhiteSpotString];
         }
     }
     
     [BoardSerializationUtility printBoardToConsole:self.goBoard.goban];
 }
 
-- (void)drawBoardForNewMove:(int)rowValueOfNewMove andForColumn:(int)columnValueOfNewMove {
-    //Check it we need to redraw the board or just add a stone to it
-    float stoneSize = GobanSpaceSize;
-    if(!self.goBoard.redrawBoardNeeded) {
-        // Find which position to draw at
-        if([self.goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:GobanBlackSpotString]) {
+#pragma mark - Board Drawing
+
+- (void)drawNewMoveOnBoardForRow:(int)rowOfNewMove andColumn:(int)columnOfNewMove {
+    CALayer *stoneLayer = [CALayer layer];
+    if([self.goBoard.goban[rowOfNewMove][columnOfNewMove] isEqualToString:GobanBlackSpotString]) {
+        stoneLayer.frame = CGRectMake(rowOfNewMove * GobanSpaceSize,
+                                      columnOfNewMove * GobanSpaceSize + GobanMiddleOffsetSize,
+                                      GobanSpaceSize,
+                                      GobanSpaceSize);
+        stoneLayer.contents = (id)[UIImage imageNamed:GobanBlackStoneFileName].CGImage;
+        [self.view.layer addSublayer:stoneLayer];
+    }
+    else if([self.goBoard.goban[rowOfNewMove][columnOfNewMove] isEqualToString:GobanWhiteSpotString]) {
+        stoneLayer.frame = CGRectMake(rowOfNewMove * GobanSpaceSize,
+                                      columnOfNewMove * GobanSpaceSize + GobanMiddleOffsetSize,
+                                      GobanSpaceSize,
+                                      GobanSpaceSize);
+        stoneLayer.contents = (id)[UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
+    }
+    [self.view.layer addSublayer:stoneLayer];
+}
+
+- (void)drawAllMovesOnBoard {
+    for(int i = 0 ;i < self.goBoard.goban.count; i++) {
+        for(int j = 0; j < self.goBoard.goban.count; j++) {
             CALayer *stoneLayer = [CALayer layer];
-            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-            stoneLayer.contents = (id) [UIImage imageNamed:GobanBlackStoneFileName].CGImage;
-            [self.view.layer addSublayer:stoneLayer];
-        }
-        else if([self.goBoard.goban[rowValueOfNewMove][columnValueOfNewMove] isEqualToString:GobanWhiteSpotString]) {
-            CALayer *stoneLayer = [CALayer layer];
-            stoneLayer.frame = CGRectMake(rowValueOfNewMove*stoneSize,columnValueOfNewMove*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-            stoneLayer.contents = (id)[UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
+            if([self.goBoard.goban[j][i] isEqualToString:GobanBlackSpotString]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize,
+                                              i * GobanSpaceSize + GobanMiddleOffsetSize,
+                                              GobanSpaceSize,
+                                              GobanSpaceSize);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanBlackStoneFileName].CGImage;
+            }
+            else if([self.goBoard.goban[j][i] isEqualToString:GobanWhiteSpotString]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize,
+                                              i * GobanSpaceSize + GobanMiddleOffsetSize,
+                                              GobanSpaceSize,
+                                              GobanSpaceSize);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
+            }
+            else if([self.goBoard.goban[j][i] isEqualToString:@"w"]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize,
+                                              i * GobanSpaceSize + GobanMiddleOffsetSize,
+                                              GobanSpaceSize,
+                                              GobanSpaceSize);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
+                stoneLayer.opacity = 0.5;
+            }
+            else if([self.goBoard.goban[j][i] isEqualToString:@"b"]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize,
+                                              i * GobanSpaceSize + GobanMiddleOffsetSize,
+                                              GobanSpaceSize,
+                                              GobanSpaceSize);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanBlackStoneFileName].CGImage;
+                stoneLayer.opacity = 0.5;
+            }
+            else if([self.goBoard.goban[j][i] isEqualToString:@"Wp"]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize + (GobanSpaceSize / 4),
+                                              i * GobanSpaceSize + (GobanSpaceSize / 4) + GobanMiddleOffsetSize, GobanSpaceSize / 2,GobanSpaceSize / 2);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
+            }
+            else if([self.goBoard.goban[j][i] isEqualToString:@"Bp"]) {
+                stoneLayer.frame = CGRectMake(j * GobanSpaceSize + GobanSpaceSize / 4,
+                                              i * GobanSpaceSize + (GobanSpaceSize / 4) + GobanMiddleOffsetSize,
+                                              GobanSpaceSize / 2,
+                                              GobanSpaceSize/2);
+                stoneLayer.contents = (id)[UIImage imageNamed:GobanBlackStoneFileName].CGImage;
+            }
             [self.view.layer addSublayer:stoneLayer];
         }
     }
-    else {
-        CALayer *boardLayer = [CALayer layer];
-        boardLayer.frame = CGRectMake(0, GobanMiddleOffsetSize, 768, 768);
-        boardLayer.contents = (id) [UIImage imageNamed:GobanBoardImageFileName].CGImage;
-        [self.view.layer addSublayer:boardLayer];
+}
+
+
+- (void)playMoveAtRow:(int)row column:(int)column forColor:(NSString *)color {
+    //Save the previous state of the board
+    self.goBoard.previousStateOfBoard = [[NSMutableArray alloc] initWithArray:self.goBoard.goban copyItems:YES];
     
-        // Check the positions you need to draw at
-        for(int i=0;i<[self.goBoard.goban count];i++)
-        {
-            for(int j=0;j<[self.goBoard.goban count];j++)
-            {
-                if([self.goBoard.goban[j][i] isEqualToString:GobanBlackSpotString])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-                    stoneLayer.contents = (id)[UIImage imageNamed:GobanBlackStoneFileName].CGImage;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-                else if([self.goBoard.goban[j][i] isEqualToString:GobanWhiteSpotString])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-                    stoneLayer.contents = (id) [UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-                else if([self.goBoard.goban[j][i] isEqualToString:@"w"])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-                    stoneLayer.contents = (id) [UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
-                    stoneLayer.opacity = 0.5;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-                else if([self.goBoard.goban[j][i] isEqualToString:@"b"])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize,i*stoneSize + GobanMiddleOffsetSize,stoneSize,stoneSize);
-                    stoneLayer.contents = (id) [UIImage imageNamed:GobanBlackStoneFileName].CGImage;
-                    stoneLayer.opacity = 0.5;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-                else if([self.goBoard.goban[j][i] isEqualToString:@"Wp"])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + GobanMiddleOffsetSize,stoneSize/2,stoneSize/2);
-                    stoneLayer.contents = (id) [UIImage imageNamed:GobanWhiteStoneFileName].CGImage;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-                else if([self.goBoard.goban[j][i] isEqualToString:@"Bp"])
-                {
-                    CALayer *stoneLayer = [CALayer layer];
-                    stoneLayer.frame = CGRectMake(j*stoneSize+stoneSize/4,i*stoneSize+(stoneSize/4) + GobanMiddleOffsetSize,stoneSize/2,stoneSize/2);
-                    stoneLayer.contents = (id) [UIImage imageNamed:GobanBlackStoneFileName].CGImage;
-                    [self.view.layer addSublayer:stoneLayer];
-                }
-            }
-        }
+    self.goBoard.goban[row][column] = color;
+    [self.goBoard checkLifeOfAdjacentEnemyStones:row andForColumnValue:column];
+    
+    //Increment the move number
+    self.goBoard.moveNumber = self.goBoard.moveNumber + 1;
+    
+    //Draw the entire board again, or just the new move
+    [self drawBoardForNewMove:row andColumn:column];
+    
+    //Set the pass variables to NO
+    self.goBoard.blackPassed = NO;
+    self.goBoard.whitePassed = NO;
+    
+    if ([color isEqualToString:GobanBlackSpotString]) {
+        self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedWhiteStones];
+        self.goBoard.turn = GobanWhiteSpotString;
+        
+    }
+    else if ([color isEqualToString:GobanWhiteSpotString]) {
+        self.whiteCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.capturedBlackStones];
+        self.goBoard.turn = GobanBlackSpotString;
+    }
+}
+
+- (void)drawBoard {
+    CALayer *boardLayer = [CALayer layer];
+    boardLayer.frame = CGRectMake(0, GobanMiddleOffsetSize, 768, 768);
+    boardLayer.contents = (id) [UIImage imageNamed:GobanBoardImageFileName].CGImage;
+    [self.view.layer addSublayer:boardLayer];
+}
+
+- (void)drawBoardForNewMove:(int)rowOfNewMove andColumn:(int)columnOfNewMove {
+    if(!self.goBoard.redrawBoardNeeded) {
+        [self drawNewMoveOnBoardForRow:rowOfNewMove andColumn:columnOfNewMove];
+    }
+    else {
+        [self drawBoard];
+        [self drawAllMovesOnBoard];
         self.goBoard.redrawBoardNeeded = NO;
     }
 }
@@ -220,15 +209,14 @@
     self.optionsButtonTop.transform = CGAffineTransformMakeRotation(M_PI);
 }
 
+#pragma mark - Action Sheet
+
 - (void)pressedBack {
-    NSLog(@"Pressed back");
-    
     //restore the board to it's previous state
     [self.goBoard back];
     
-    //If anything breaks the back button, this would be it
     self.goBoard.redrawBoardNeeded = YES;
-    [self drawBoardForNewMove:0 andForColumn:0];
+    [self drawBoardForNewMove:0 andColumn:0];
     
     //Reset the number of captured stones
     self.blackCapturedStoneCountLabel.text = [NSString stringWithFormat:@"%d", self.goBoard.previousCapturedWhiteStones];
@@ -256,7 +244,7 @@
 
 - (void)pressedResign {
     UIActionSheet *actionSheet = [[UIActionSheet alloc]
-                                  initWithTitle:@"Are you sure?"
+                                initWithTitle:@"Are you sure?"
                                   delegate:self
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
@@ -330,8 +318,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if([actionSheet.title isEqualToString:@"Options"]) {
-        switch (buttonIndex)
-        {
+        switch (buttonIndex) {
             case 0:
                 [self pressedBack];
                 break;
@@ -343,10 +330,8 @@
                 break;
         }
     }
-    else if([actionSheet.title isEqualToString:@"Are you sure?"])
-    {
-        switch (buttonIndex)
-        {
+    else if([actionSheet.title isEqualToString:@"Are you sure?"]) {
+        switch (buttonIndex) {
             case 0:
                 [self resign];
                 break;
@@ -354,12 +339,9 @@
                 break;
         }
     }
-    else
-    {
-        //else nothing
-    }
-
 }
+
+#pragma mark - Game Clock
 
 - (void) startTimer {
     self.gameClock = [NSTimer scheduledTimerWithTimeInterval:1 target:self
@@ -369,93 +351,79 @@
 }
 
 - (void)timerCallback {
-    NSMutableString *result = [[NSMutableString alloc] init];
+    NSMutableString *result = [NSMutableString string];
     int iMinutes = 25;
     int iSeconds = 0;
-    if([self.goBoard.turn isEqualToString:GobanBlackSpotString]) //Countdown blacks timer if it is black's turn
-    {
-        //NSLog(@"Minutes: %@, Seconds: %@", [self.blackRemainingTimeLabel.text substringToIndex:2], [self.blackRemainingTimeLabel.text substringFromIndex:3]);
-        iMinutes = [[self.blackRemainingTimeLabel.text substringToIndex:2] integerValue];
-        iSeconds = [[self.blackRemainingTimeLabel.text substringFromIndex:3] integerValue];
-        //NSLog(@"int representation of iSeconds: %d", iSeconds);
-        if(iMinutes < 0)
-        {
+    if([self.goBoard.turn isEqualToString:GobanBlackSpotString]) {
+        iMinutes = [[self.blackRemainingTimeLabel.text substringToIndex:2] intValue];
+        iSeconds = [[self.blackRemainingTimeLabel.text substringFromIndex:3] intValue];
+        if(iMinutes < 0) {
             [self timeUp];
         }
-        else if(iSeconds <= 0)
-        {
+        else if(iSeconds <= 0) {
             iMinutes--;
             iSeconds = 59;
-            //NSLog(@"Reset iSeconds %d", iSeconds);
         }
-        else
-        {
+        else {
             iSeconds--;
         }
         
-        if(iMinutes < 0)
-        {
+        if(iMinutes < 0) {
             [self.gameClock invalidate];
+            self.gameClock = nil;
             [self timeUp];
         }
-        else
-        {
-            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+        else {
+            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds];
             self.blackRemainingTimeLabel.text = result;
-            //NSLog(@"Remaining time of black: %@", self.blackRemainingTimeLabel.text);
         }
     }
-    else if([self.goBoard.turn isEqualToString:GobanWhiteSpotString])
-    {
-        //NSLog(@"Minutes: %@, Seconds: %@", [self.whiteRemainingTimeLabel.text substringToIndex:2], [self.whiteRemainingTimeLabel.text substringFromIndex:3]);
-        iMinutes = [[self.whiteRemainingTimeLabel.text substringToIndex:2] integerValue];
-        iSeconds = [[self.whiteRemainingTimeLabel.text substringFromIndex:3] integerValue];
-        //NSLog(@"int representation of iSeconds: %d", iSeconds);
-        if(iSeconds <= 0)
-        {
+    else if([self.goBoard.turn isEqualToString:GobanWhiteSpotString]) {
+        iMinutes = [[self.whiteRemainingTimeLabel.text substringToIndex:2] intValue];
+        iSeconds = [[self.whiteRemainingTimeLabel.text substringFromIndex:3] intValue];
+        if(iSeconds <= 0) {
             iMinutes--;
             iSeconds = 59;
-            //SLog(@"Reset iSeconds %d", iSeconds);
         }
-        else
-        {
+        else {
             iSeconds--;
         }
         
-        if(iMinutes < 0)
-        {
+        if(iMinutes < 0) {
             [self.gameClock invalidate];
+            self.gameClock = nil;
             [self timeUp];
         }
-        else
-        {
-            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds]; //%d or %i both is ok.
+        else {
+            result = [NSMutableString stringWithFormat:@"%.2d:%.2d",iMinutes,iSeconds];
             self.whiteRemainingTimeLabel.text = result;
-            //NSLog(@"Remaining time of white: %@", self.whiteRemainingTimeLabel.text);
         }
     }
-    else
-    {
-        //Do nothing
-    }
 }
 
-- (void)timeUp
-{
-    if([self.goBoard.turn isEqualToString:GobanBlackSpotString])
-    {
-        //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:@"Black ran out of time!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+- (void)timeUp {
+    NSString *title = nil;
+    NSString *message = nil;
+    NSString *cancelButtonTitle = @"OK";
+    if([self.goBoard.turn isEqualToString:GobanBlackSpotString]) {
+        title = @"White Wins!";
+        message = @"Black ran out of time!";
     }
-    else
-    {
-        //Show warning
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:@"White ran out of time!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+    else {
+        title = @"Black Wins!";
+        message = @"White ran out of time!";
     }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:cancelButtonTitle
+                                          otherButtonTitles:nil];
+    [alert show];
 
 }
+
+#pragma mark - Game Scorings
 
 -(void)scoreGame {
     NSLog(@"Scoring game");
@@ -528,7 +496,7 @@
     
     //Redraw the board ot show the scored points
     [self.goBoard setRedrawBoardNeeded:YES];
-    [self drawBoardForNewMove:0 andForColumn:0];
+    [self drawBoardForNewMove:0 andColumn:0];
 
     //Convert both to floats and add the komi value to white
     int blackScore = (double)self.goBoard.blackStones + (double)self.goBoard.capturedWhiteStones;
@@ -536,27 +504,24 @@
     
     NSString *pointTally = [NSString stringWithFormat:@"Black: %d points + %d captures = %d\nWhite: %d points + %d captures + %.1f komi = %.1f", self.goBoard.blackStones, self.goBoard.capturedWhiteStones, blackScore, self.goBoard.whiteStones, self.goBoard.capturedBlackStones, self.goBoard.komi, whiteScore];
    
-    if(blackScore > whiteScore)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Black Wins!" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+    NSString *title = nil;
+    NSString *cancelButtonTitle = @"OK";
+    if(blackScore > whiteScore) {
+        title = @"Black wins!";
     }
-    else if(whiteScore > blackScore)
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"White Wins!" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+    else if(whiteScore > blackScore) {
+        title = @"White wins!";
     }
-    else
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Tie?" message:pointTally delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+    else {
+        title = @"Tie?";
     }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:pointTally
+                                                   delegate:nil
+                                          cancelButtonTitle:cancelButtonTitle
+                                          otherButtonTitles:nil];
+    [alert show];
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 @end
