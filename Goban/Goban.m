@@ -217,148 +217,64 @@
     return YES;
 }
 
--(BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList forRowValue:(int)rowValueToCheck andForColumnValue:(int)columnValueToCheck
-{
+- (BOOL)checkIfNodeHasBeenVisited:(NSMutableArray *)visitedNodeList
+                     forRowValue:(int)rowValueToCheck
+               andForColumnValue:(int)columnValueToCheck {
     BOOL hasBeenVisited = NO;
-    Stone *stoneInVisitedNodeList = [[Stone alloc] init];
-    
-    for(int i=0;i<[visitedNodeList count];i++)
-    {
+    Stone *stoneInVisitedNodeList = nil;
+    for(int i = 0; i < visitedNodeList.count; i++) {
         stoneInVisitedNodeList = visitedNodeList[i];
         
         //Check if the coordinates match the coordinates of any nodes in the visited node queue
-        if(stoneInVisitedNodeList.row == rowValueToCheck && stoneInVisitedNodeList.column == columnValueToCheck)
-        {
-            //NSLog(@"Node has been visited");
+        if(stoneInVisitedNodeList.row == rowValueToCheck && stoneInVisitedNodeList.column == columnValueToCheck) {
             hasBeenVisited = YES;
             break;
         }
     }
-    //NSLog(@"Count of visited stones: %d", [visitedNodeList count]);
     
     return hasBeenVisited;
 }
 
--(void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue
-{
-    //Get my color and my opponent's color
+- (void)checkLifeOfAdjacentEnemyStones:(int)rowValue andForColumnValue:(int)columnValue {
     NSString *myColor = self.goban[rowValue][columnValue];
-    NSString *opponentColor = [[NSString alloc] init];
-    if([myColor isEqualToString:GobanBlackSpotString])
-    {
-        opponentColor = GobanWhiteSpotString;
-        //NSLog(@"My opponent's color is %@", opponentColor);
-    }
-    else
-    {
-        opponentColor = GobanBlackSpotString;
-        //NSLog(@"My opponent's color is %@", opponentColor);
-    }
+    NSString *opponentColor = [myColor isEqualToString:GobanBlackSpotString] ? GobanWhiteSpotString : GobanBlackSpotString;
     
-    //Check adjacent enemy stones
     //Check right
-    //NSLog(@"About to check right enemy stone where rowValue = %d and columnValue = %d", (rowValue+1), columnValue);
-    if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:opponentColor])
-    {
-        //NSLog(@"Checking right enemy stone");
-        [self checkLifeOfStone:(rowValue+1) andForColumnValue:columnValue];
-    }
-    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:GobanEmptySpotString])
-    {
-        //NSLog(@"Space to the right of stone was a free space");
-    }
-    else if([self isInBounds:(rowValue+1) andForColumnValue:columnValue] && [self.goban[rowValue+1][columnValue] isEqualToString:myColor])
-    {
-        //NSLog(@"Space to the right of stone was my color");
-    }
-    else
-    {
-        //NSLog(@"Right enemy stone was out of bounds or was not an enemy");
+    if ([self isInBounds:(rowValue + 1) andForColumnValue:columnValue] &&
+       [self.goban[rowValue + 1][columnValue] isEqualToString:opponentColor]) {
+        [self checkLifeOfStone:(rowValue + 1) andForColumnValue:columnValue];
     }
     //Check left
-    //NSLog(@"About to check left enemy stone");
-    if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:opponentColor])
-    {
-        //NSLog(@"Checking left enemy stone");
+    if([self isInBounds:(rowValue - 1) andForColumnValue:columnValue] &&
+       [self.goban[rowValue - 1][columnValue] isEqualToString:opponentColor]) {
         [self checkLifeOfStone:(rowValue-1) andForColumnValue:columnValue];
     }
-    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:GobanEmptySpotString])
-    {
-        //NSLog(@"Space to the left of stone was a free space");
-    }
-    else if([self isInBounds:(rowValue-1) andForColumnValue:columnValue] && [self.goban[rowValue-1][columnValue] isEqualToString:myColor])
-    {
-        //NSLog(@"Space to the left of stone was my color");
-    }
-    else
-    {
-        //NSLog(@"Left enemy stone was out of bounds or was not an enemy");
-    }
     //Check down
-    //NSLog(@"About to check down enemy stone");
-    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:opponentColor])
-    {
-        //NSLog(@"Checking down enemy stone");
+    if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:opponentColor]) {
         [self checkLifeOfStone:rowValue andForColumnValue:(columnValue+1)];
     }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:GobanEmptySpotString])
-    {
-        //NSLog(@"Space to the down of stone was a free space");
-    }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue+1)] && [self.goban[rowValue][columnValue+1] isEqualToString:myColor])
-    {
-        //NSLog(@"Space to the down of stone was my color");
-    }
-    else
-    {
-        //NSLog(@"Down enemy stone was out of bounds or was not an enemy");
-    }
     //Check up
-    //NSLog(@"About to check up enemy stone");
-    if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:opponentColor])
-    {
-        //NSLog(@"Checking up enemy stone");
-        [self checkLifeOfStone:rowValue andForColumnValue:(columnValue-1)];
-    }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:GobanEmptySpotString])
-    {
-        //NSLog(@"Space to the up of stone was a free space");
-    }
-    else if([self isInBounds:rowValue andForColumnValue:(columnValue-1)] && [self.goban[rowValue][columnValue-1] isEqualToString:myColor])
-    {
-        //NSLog(@"Space to the up of stone was my color");
-    }
-    else
-    {
-        //NSLog(@"Up enemy stone was out of bounds or was not an enemy");
+    if([self isInBounds:rowValue andForColumnValue:(columnValue - 1)] &&
+       [self.goban[rowValue][columnValue-1] isEqualToString:opponentColor]) {
+        [self checkLifeOfStone:rowValue andForColumnValue:(columnValue - 1)];
     }
 }
 
 - (void)checkLifeOfStone:(int)rowValue andForColumnValue:(int)columnValue {
     NSString *allyColor = self.goban[rowValue][columnValue];
-    NSString *enemyColor = [allyColor isEqualToString:GobanBlackSpotString] ? GobanWhiteSpotString : GobanBlackSpotString;
     BOOL stonesAreDead = YES;
     
-    //BFS
-    //Put the coordinates in a point and then add the point to the queue and visited nodes list
+    //
+    // Do a breadth-first search to determine if the stone is alive
+    //
     Stone *vertex = [[Stone alloc] initWithWithRow:rowValue column:columnValue];
-        
-    //Push the root node into the queue (I don't actually think this is how you do it)
-    // 1. Mark the root as visited.
-    NSMutableArray *queue = [[NSMutableArray alloc] init];
+    NSMutableArray *queue = [NSMutableArray array];
     NSMutableArray *visitedNodes = [NSMutableArray arrayWithObject:vertex];
     
-    NSString *goal = GobanEmptySpotString;
-    
-    // 2. Check for free spaces around the root, mark all nodes of the same color as visited. Add all adjacent nodes to the root as visited
-    //Check all spots around where the vertex is
-    
     //Check spot to the right of vertex
-    if([self isInBounds:(vertex.row + 1) andForColumnValue:vertex.column])
-    {        
+    if([self isInBounds:(vertex.row + 1) andForColumnValue:vertex.column]) {
         //If it is an ally color, add it to the visited queue and the actual queue
-        if([self.goban[vertex.row + 1][vertex.column] isEqualToString:allyColor])
-        {
+        if([self.goban[vertex.row + 1][vertex.column] isEqualToString:allyColor]) {
             //Create a new point and insert it into the queue
             Stone *point = [[Stone alloc] initWithWithRow:vertex.row + 1 column:columnValue];
 
@@ -368,15 +284,10 @@
             [queue addObject:point];
         }
         //If it is a free space then we're done!
-        else if([self.goban[vertex.row + 1][vertex.column] isEqualToString:goal])
-        {
+        else if([self.goban[vertex.row + 1][vertex.column] isEqualToString:GobanEmptySpotString]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
-        }
-        else
-        {
-            //If it is an ally piece, then what do we do?
         }
     }
     //Check spot to the left of the vertex
@@ -392,7 +303,7 @@
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.row - 1][vertex.column] isEqualToString:goal]) {
+        else if([self.goban[vertex.row - 1][vertex.column] isEqualToString:GobanEmptySpotString]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
@@ -411,7 +322,7 @@
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.row][vertex.column + 1] isEqualToString:goal]) {
+        else if([self.goban[vertex.row][vertex.column + 1] isEqualToString:GobanEmptySpotString]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
@@ -430,7 +341,7 @@
             //Insert the object into the end of the queue
             [queue addObject:point];
         }
-        else if([self.goban[vertex.row][vertex.column - 1] isEqualToString:goal]) {
+        else if([self.goban[vertex.row][vertex.column - 1] isEqualToString:GobanEmptySpotString]) {
             //We have found a free space, so remove all objects from the queue
             [queue removeAllObjects];
             stonesAreDead = NO;
@@ -463,7 +374,7 @@
                 [queue addObject:point];
             }
             //If it is a free space then we're done!
-            else if([self.goban[topOfQueue.row + 1][topOfQueue.column] isEqualToString:goal]) {
+            else if([self.goban[topOfQueue.row + 1][topOfQueue.column] isEqualToString:GobanEmptySpotString]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -484,7 +395,7 @@
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.row - 1][topOfQueue.column] isEqualToString:goal]) {
+            else if([self.goban[topOfQueue.row - 1][topOfQueue.column] isEqualToString:GobanEmptySpotString]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -502,7 +413,7 @@
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.row][topOfQueue.column + 1] isEqualToString:goal]) {
+            else if([self.goban[topOfQueue.row][topOfQueue.column + 1] isEqualToString:GobanEmptySpotString]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;
@@ -523,7 +434,7 @@
                 //Insert the object into the end of the queue
                 [queue addObject:point];
             }
-            else if([self.goban[topOfQueue.row][topOfQueue.column - 1] isEqualToString:goal]) {
+            else if([self.goban[topOfQueue.row][topOfQueue.column - 1] isEqualToString:GobanEmptySpotString]) {
                 //We have found a free space, so remove all objects from the queue
                 [queue removeAllObjects];
                 stonesAreDead = NO;

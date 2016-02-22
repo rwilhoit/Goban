@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Goban/Goban.m"
-            timestampString = "477811007.330491"
+            timestampString = "477811530.925921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "544"
-            endingLineNumber = "544"
+            startingLineNumber = "455"
+            endingLineNumber = "455"
             landmarkName = "-killStones:"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Goban/Goban.m"
-            timestampString = "477811007.330491"
+            timestampString = "477811530.925921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "565"
-            endingLineNumber = "565"
+            startingLineNumber = "476"
+            endingLineNumber = "476"
             landmarkName = "-killStones:"
             landmarkType = "5">
          </BreakpointContent>
