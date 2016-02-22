@@ -1,5 +1,4 @@
-
-ban
+#Goban
 
 I made Goban for a hackday project back in 2013 for the UF Killer App competition. I ended up getting 3rd place and $100, and it was my first experience getting paid for my skills as a software developer.
 
